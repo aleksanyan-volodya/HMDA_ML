@@ -1,0 +1,11 @@
+# Settings shared by every experiment.
+
+# Seed for the CV split. Every CV score we compare is computed on the split it
+# produces, so we just fix it here (actually changing it is refused unless
+# the run is started with --allow-fold-change bahahhahahahhahahahaha).
+# The value 42 is arbitrary and carries no meaning... Well, maybe it does, but we don't care.
+fold_seed: 42
+
+# Seeds for model randomness like bagging, feature subsampling.
+# Averaging k independent runs divides the seed-to-seed variance by k (std by sqrt(k)):
+model_seeds: [0, 1, 2, 3, 4]
