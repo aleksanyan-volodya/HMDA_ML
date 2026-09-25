@@ -1,14 +1,15 @@
-"""Verify that the raw input files are byte-identical to the ones we started with.
+"""
+Check the integrity of the raw data files.
 
-Usage:
+How to use:
     uv run python src/check_data.py           # verify, exit 1 on any mismatch
-    uv run python src/check_data.py --write   # (re)record the reference hashes
+    uv run python src/check_data.py --write   # record the reference hashes
 """
 import argparse
 import hashlib
 import sys
 from pathlib import Path
-
+    
 ROOT = Path(__file__).resolve().parents[1]
 CHECKSUMS = ROOT / "configs" / "data_checksums.txt"
 FILES = ["data/raw/train.csv", "data/raw/test.csv", "data/sample_submission.csv"]
