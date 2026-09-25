@@ -21,3 +21,6 @@ I think about paired per-fold differences, a bootstrap CI. More data (for instan
 
 Fold content hash (sha256 of the id-sorted `id,fold` CSV):
 `3762a22f91732e8423074998d2a647865c70be3cbe007161b2356b24fd57b39c`
+
+## validation method
+We will use CV to validate our model and give it to kaggle, and we will try to not overfit watching kaggle score.
