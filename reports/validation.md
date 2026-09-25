@@ -13,5 +13,11 @@ A shuffled K-fold is ok for this task then. We considered "GroupKFold" in two fo
 This reasoning assumes train and test are exchangeable. 
 [Note for Volodya] An adversarial validation must test that assumption, and this section will be revised if it fails.
 
+## Uncertainty about SE
+
+We report $\sigma/\sqrt{k}$ only as a naive lower bound. It assumes independent folds, but fold models share 4/5 (k-1/k) of their training data, so it underestimates the true SE [TODO read the complete reason here (Nadeau & Bengio, 2003; no unbiased estimator exists, Bengio & Grandvalet, 2004)]. 
+
+I think about paired per-fold differences, a bootstrap CI. More data (for instance other HMDA years, if allowed...) would shrink the uncertainty but not remove this bias.
+
 Fold content hash (sha256 of the id-sorted `id,fold` CSV):
 `3762a22f91732e8423074998d2a647865c70be3cbe007161b2356b24fd57b39c`

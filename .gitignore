@@ -21,6 +21,10 @@ Thumbs.db
 # Data
 data/raw
 
+# Per-run predictions: large, and regenerable from commit + config in reports/runs.csv
+oof/
+preds/
+
 # Build and test artifacts
 dist/
 build/

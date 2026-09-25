@@ -13,3 +13,6 @@ n_folds: 5
 # Seeds for model randomness like bagging, feature subsampling.
 # Averaging k independent runs divides the seed-to-seed variance by k (std by sqrt(k)):
 model_seeds: [0, 1, 2, 3, 4]
+
+# Which model to run. No default on purpose: every experiment file must say it.
+model: null
