@@ -5,7 +5,7 @@
 RUN := uv run --locked
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check-data folds test
+.PHONY: help setup check-data folds cv submit test
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -18,6 +18,14 @@ check-data:  ## Verify data/raw files against configs/data_checksums.txt
 
 folds:  ## Build the frozen CV folds (refuses to change an existing split)
 	$(RUN) python src/folds.py
+
+cv:  ## Run and log one experiment: make cv EXP=configs/experiments/<name>.yaml
+	@test -n "$(EXP)" || { echo "usage: make cv EXP=configs/experiments/<name>.yaml"; exit 1; }
+	$(RUN) python src/cv.py $(EXP)
+
+submit:  ## Build a validated submission: make submit RUN_ID=<run_id>
+	@test -n "$(RUN_ID)" || { echo "usage: make submit RUN_ID=<run_id> (see reports/runs.csv)"; exit 1; }
+	$(RUN) python src/submit.py $(RUN_ID)
 
 test:  ## Run the test suite
 	$(RUN) pytest -q
