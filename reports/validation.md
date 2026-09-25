@@ -15,7 +15,7 @@ This reasoning assumes train and test are exchangeable.
 
 ## Uncertainty about SE
 
-We report $\sigma/\sqrt{k}$ only as a naive lower bound. It assumes independent folds, but fold models share 4/5 (k-1/k) of their training data, so it underestimates the true SE [TODO read the complete reason here (Nadeau & Bengio, 2003; no unbiased estimator exists, Bengio & Grandvalet, 2004)]. 
+We report $\sigma/\sqrt{k}$ only as a naive lower bound. It assumes independent folds, but fold models share 3/4 (k-2/k-1) of their training data, so it underestimates the true SE [TODO read the complete reason here (Nadeau & Bengio, 2003; no unbiased estimator exists, Bengio & Grandvalet, 2004)]. 
 
 I think about paired per-fold differences, a bootstrap CI. More data (for instance other HMDA years, if allowed...) would shrink the uncertainty but not remove this bias.
 
