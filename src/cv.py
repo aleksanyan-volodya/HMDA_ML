@@ -6,6 +6,7 @@ Usage:
 import argparse
 import time
 
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
@@ -20,7 +21,10 @@ class ConstantModel:
     """Predicts the training accept rate for every row. All scores are tied, so no row is
     ranked above another and AUC is 0.5 by construction: it checks the pipeline, not a model."""
 
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> "ConstantModel":
+    def __init__(self, cfg: dict):
+        pass
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "ConstantModel":
         self.rate_ = float(y.mean())
         return self
 
@@ -28,7 +32,34 @@ class ConstantModel:
         return np.full(len(X), self.rate_)
 
 
-MODELS = {"constant": ConstantModel}
+class LGBMModel:
+    """LightGBM whose tree count is tuned by an inner CV on the fit part only (nested CV).
+    Inner folds = the outer folds present in the fit part, so no new split is introduced."""
+
+    def __init__(self, cfg: dict):
+        # Single seed for the baseline; seed averaging is TODO 11.2.
+        self.params = {**cfg["lgbm_params"], "seed": cfg["model_seeds"][0]}
+        self.max_rounds = cfg["lgbm_fit"]["max_rounds"]
+        self.patience = cfg["lgbm_fit"]["early_stopping_rounds"]
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "LGBMModel":
+        inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
+        # lgb.cv averages the AUC curves of the inner folds; the tuned tree count is the
+        # peak of that mean curve.
+        history = lgb.cv(self.params, lgb.Dataset(X, y), num_boost_round=self.max_rounds,
+                         folds=inner, callbacks=[lgb.early_stopping(self.patience, verbose=False)])
+        mean_auc = np.asarray(history["valid auc-mean"])
+        if len(mean_auc) >= self.max_rounds:  # early stopping never triggered
+            raise RuntimeError(f"tree search hit max_rounds={self.max_rounds}: raise the cap")
+        self.n_trees_ = int(mean_auc.argmax()) + 1
+        self.booster_ = lgb.train(self.params, lgb.Dataset(X, y), num_boost_round=self.n_trees_)
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.booster_.predict(X)
+
+
+MODELS = {"constant": ConstantModel, "lgbm": LGBMModel}
 
 
 def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float]]:
@@ -43,9 +74,12 @@ def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float]]:
     for k in range(cfg["n_folds"]):
         is_valid = (train["fold"] == k).to_numpy()
         fit_part, valid_part = train[~is_valid], train[is_valid]
-        model = MODELS[cfg["model"]]().fit(fit_part[FEATURES], fit_part[TARGET])
+        model = MODELS[cfg["model"]](cfg).fit(fit_part[FEATURES], fit_part[TARGET],
+                                               fit_part["fold"].to_numpy())
         oof[is_valid] = model.predict(valid_part[FEATURES])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
+        extra = f"  trees {model.n_trees_}" if hasattr(model, "n_trees_") else ""
+        print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}", flush=True)
         # Test prediction = average of the k fold models, càd exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
         test_pred += model.predict(test[FEATURES]) / cfg["n_folds"]
