@@ -1,0 +1,2 @@
+# Reference score that every later cleaning / feature step is measured against.
+model: lgbm

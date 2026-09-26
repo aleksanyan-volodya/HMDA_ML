@@ -16,3 +16,24 @@ model_seeds: [0, 1, 2, 3, 4]
 
 # Which model to run. No default on purpose: every experiment file must say it.
 model: null
+
+# LightGBM: Library defaults are used for anything not listed.
+lgbm_params:
+  objective: binary
+  metric: auc                  # used by early stopping
+  learning_rate: 0.05 
+  num_leaves: 63               # tree complexity: 2^6 - 1, lets a tree combine ~6 conditions (interactions)
+  min_data_in_leaf: 100
+  feature_fraction: 0.8        # each tree sees a random 80% of features: decorrelates trees
+  bagging_fraction: 0.8        # each tree sees a random 80% of rows.
+  bagging_freq: 1              # re-draw the row sample at every tree (0 would disable bagging)
+  lambda_l2: 1.0               # mild L2 penalty on leaf values; 0 = none, the scale of gradients is ~1
+  deterministic: true
+  force_row_wise: true         # required with deterministic, fixes the histogram algorithm choice
+  verbosity: -1
+lgbm_fit:
+  max_rounds: 5000             # upper cap only 
+                               # the search is expected to stop far earlier
+  early_stopping_rounds: 200   # compute saver for the inner search: stop once the inner mean AUC has
+                               # not improved for 200 trees
+                               # at lr 0.05 that is a long plateau
