@@ -45,7 +45,7 @@ Check behind 0.1b and 0.2 (zeros outside the location-unknown rows):
 
 | # | Feature | Why | Source | Trees | Linear |
 |---|---|---|---|---|---|
-| 1.1 | "is_exempt_record" + count of 1111 per row | 2,942 rows carry 1111 in all 14 columns: a row-level fact | 01 (J1) | yes | yes |
+| 1.1 | Count of 1111 per row ("exempt_code_count"); "is_exempt_record" flag for the linear model | 2,942 rows carry 1111 in all 14 columns: a row-level fact. The flag is count ≥ 1, one split for a tree, so trees get the count only | 01 (J1) | count | flag + count |
 | 1.2 | "is_entity_applicant" (applicant_sex = 4) | 2,910 rows with no person-level fields; explains most missing age / income | 02 (2c) | yes | yes |
 | 1.3 | "location_unknown" | 2,117 rows (929 in test) accepted 0.17; drives the census zeros, MSA 99999 and no-AUS overlap. Mostly a manufactured-home effect: 0.016 on manufactured homes (flag 3.2), 0.56 on site-built | 01 (G3), 02 (5c) | yes | yes |
 | 1.4 | "has_coapplicant" = not ("co-applicant_sex" = 5) | the whole signal of the co-applicant columns (~0.55 AUC each); "no co-applicant" is the same ~57.5k rows in sex, race, ethnicity and observed; survives removal of demographics | 02 (1) | yes | yes |
