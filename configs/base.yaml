@@ -17,6 +17,10 @@ model_seeds: [0, 1, 2, 3, 4]
 # Which model to run. No default on purpose: every experiment file must say it.
 model: null
 
+# Feature transforms from src/features.py, applied in this order. Empty = the raw typed
+# columns of src/data.py (what the LightGBM baseline used).
+features: []
+
 # LightGBM: Library defaults are used for anything not listed.
 lgbm_params:
   objective: binary

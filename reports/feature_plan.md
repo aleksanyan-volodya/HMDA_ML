@@ -10,6 +10,15 @@ Three models are in view:
 
 How each block is accepted: it is added to the current accepted feature set, the LightGBM CV is re-run on the frozen folds, and the block is kept if the paired mean gain over the 5 folds is at least 2 x its SE. A block that fails is split and its features are tested one by one; a feature that fails is deleted from the config, not kept "just in case".
 
+## Results so far
+
+Each line compares a run with the reference before it ("make compare"). The reference for the next block is the last adopted run.
+
+| Block | Run | Compared with | Mean AUC | Gain | Corrected SE | Gain / SE | Bootstrap 95% CI | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| baseline | 20260925T234636Z_4626a824 | | 0.90351 | | | | | reference |
+| 0 | 20260930T120507Z_ac79d7b0 | baseline | 0.90446 | +0.00095 | 0.00025 | 3.8 | [+0.00026, +0.00168] | adopted (5 of 5 folds up) |
+
 ## Block 0: representation (cleaning, no new information)
 
 | # | Change | Why | Source | Trees | Linear |
@@ -19,8 +28,8 @@ How each block is accepted: it is added to the current accepted feature set, the
 | 0.2 | "tract_median_age_of_housing_units": -1 -> NaN (5 rows); 0 kept, flag optional | outside the location-unknown rows, 0 is 4,390 rows accepted 0.88, i.e. normal. The 0.65 of 01 mixed in the location-unknown rows | 01 (H1), this plan | yes | CV decides |
 | 0.3 | "total_units" missing -> level "5+"; "conforming_loan_limit" missing -> "not applicable" | the same 437 rows are labelled Multifamily | 02 (2) | yes | yes |
 | 0.4 | Drop "derived_loan_product_type", "derived_dwelling_category" | exact functions of other columns | 02 (2) | yes | no (kept as ready-made crossings) |
-| 0.5 | DTI: ordered band (36 to 49 merged) + numeric midpoint + "dti_is_exact" | mixed format; 36 to 49 is flat | 01 (C3) | yes | band one-hot |
-| 0.6 | Ages: ordered category. Co-applicant age: "no co-applicant" where flag 1.4 says so, missing otherwise. Applicant age blank on entity rows (1.2) = "does not apply" | co-applicant age is blank on 58,693 rows, but 1,127 of them do have a co-applicant: blank != no co-applicant. 94% of the blank applicant ages are entity rows | 02 (2c), this plan | yes | yes |
+| 0.5 | DTI. Trees: rank of the ordered levels ("dti_order", 0 = "<20%" … 18 = ">60%"), replacing the text column. Linear: ordered band (36 to 49 merged), one-hot | mixed format, and as text the levels sort wrongly. Trees only use order, so the rank keeps everything; a midpoint would need invented values for the open-ended "<20%" and ">60%" | 01 (C3) | rank | band one-hot |
+| 0.6 | Ages: ordered (trees: rank 0 = "<25" … 6 = ">74", replacing the text columns). Co-applicant age: "no co-applicant" where flag 1.4 says so, missing otherwise. Applicant age blank on entity rows (1.2) = "does not apply" | co-applicant age is blank on 58,693 rows, but 1,127 of them do have a co-applicant: blank != no co-applicant. 94% of the blank applicant ages are entity rows | 02 (2c), this plan | yes | yes |
 | 0.7 | "loan_term" as category: 360, 300, 240, 180, 120, other, missing | signal sits in exact values (tree 14.5 vs linear <= 7.2) | 02 (3b) | keep numeric | yes |
 | 0.8 | "derived_msa-md" = 99999 kept as its own level ("outside any MSA"), not NaN | 15,200 rows over 1,669 counties, accepted 0.75: rural areas, not missing. The location-unknown rows are also 99999, flag 1.3 separates them | 01 (G4) | yes | yes |
 

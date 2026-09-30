@@ -12,7 +12,8 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from config import load_config
-from data import FEATURES, TARGET, load
+from data import TARGET, load
+from features import build
 from folds import folds_hash, load_folds
 from runlog import log_run
 
@@ -62,10 +63,12 @@ class LGBMModel:
 MODELS = {"constant": ConstantModel, "lgbm": LGBMModel}
 
 
-def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float]]:
+def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
     if cfg["model"] not in MODELS:
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
     train, test = load()
+    train, test, features = build(train, test, cfg["features"])
+    print(f"{len(features)} features", flush=True)
     train = train.merge(load_folds(cfg), on="id", how="left", validate="1:1")
 
     oof = np.full(len(train), np.nan)
@@ -74,20 +77,20 @@ def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float]]:
     for k in range(cfg["n_folds"]):
         is_valid = (train["fold"] == k).to_numpy()
         fit_part, valid_part = train[~is_valid], train[is_valid]
-        model = MODELS[cfg["model"]](cfg).fit(fit_part[FEATURES], fit_part[TARGET],
+        model = MODELS[cfg["model"]](cfg).fit(fit_part[features], fit_part[TARGET],
                                                fit_part["fold"].to_numpy())
-        oof[is_valid] = model.predict(valid_part[FEATURES])
+        oof[is_valid] = model.predict(valid_part[features])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
         extra = f"  trees {model.n_trees_}" if hasattr(model, "n_trees_") else ""
         print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}", flush=True)
         # Test prediction = average of the k fold models, càd exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
-        test_pred += model.predict(test[FEATURES]) / cfg["n_folds"]
+        test_pred += model.predict(test[features]) / cfg["n_folds"]
 
     assert not np.isnan(oof).any(), "some train rows never received an OOF prediction"
     oof_df = train[["id", "fold", TARGET]].assign(pred=oof)
     test_df = test[["id"]].assign(pred=test_pred)
-    return oof_df, test_df, fold_auc
+    return oof_df, test_df, fold_auc, features
 
 
 if __name__ == "__main__":
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     cfg = load_config(args.experiment)
     t0 = time.perf_counter()
-    oof_df, test_df, fold_auc = run_cv(cfg)
+    oof_df, test_df, fold_auc, features = run_cv(cfg)
     wall = time.perf_counter() - t0
     auc = np.array(fold_auc)
     # SE = std / sqrt(k). Known to understate uncertainty (folds share training rows);
@@ -108,6 +111,6 @@ if __name__ == "__main__":
           f"[{test_df.pred.min():.6f}, {test_df.pred.max():.6f}]")
     # Logging is the default: a score that was seen but not logged cannot be cited later.
     if not args.no_log:
-        run_id = log_run(cfg, args.experiment, FEATURES, folds_hash(load_folds(cfg)),
+        run_id = log_run(cfg, args.experiment, features, folds_hash(load_folds(cfg)),
                          fold_auc, wall, oof_df, test_df)
         print(f"logged run {run_id}")
