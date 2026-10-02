@@ -8,7 +8,7 @@ Three models are in view:
 - Linear: the logistic regression baseline. Needs shapes and crossings given explicitly.
 - Fair: the model without protected attributes and without process artefacts. Its exact column list waits for the leakage verdicts.
 
-How each block is accepted: it is added to the current accepted feature set, the LightGBM CV is re-run on the frozen folds, and the block is kept if the paired mean gain over the 5 folds is at least 2 x its SE. A block that fails is split and its features are tested one by one; a feature that fails is deleted from the config, not kept "just in case".
+How each block is accepted: it is added to the current accepted feature set, the LightGBM CV is re-run on the frozen folds, and the block is kept if the paired mean gain over the 5 folds is at least 2 x its SE. A failed block is split and its features tested one by one only if it is borderline (gain between 0 and 2 SE) or if there is a stated reason to expect its items to cancel out. A block clearly at zero (|gain| < 1 SE) is rejected as a whole: each extra test at the 2 SE threshold has a ~2.3% chance of adopting noise, so splitting 5 items would give ~11% chance of letting one in. A feature that fails is deleted from the config, not kept "just in case".
 
 ## Results so far
 
@@ -18,6 +18,7 @@ Each line compares a run with the reference before it ("make compare"). The refe
 |---|---|---|---|---|---|---|---|---|
 | baseline | 20260925T234636Z_4626a824 | | 0.90351 | | | | | reference |
 | 0 | 20260930T120507Z_ac79d7b0 | baseline | 0.90446 | +0.00095 | 0.00025 | 3.8 | [+0.00026, +0.00168] | adopted (5 of 5 folds up) |
+| 1 | 20260930T123536Z_409b82cd | block 0 | 0.90437 | −0.00009 | 0.00044 | −0.2 | [−0.00075, +0.00033] | rejected for trees (2 of 5 folds up). Flags stay in "src/features.py" for the linear and fair models |
 
 ## Block 0: representation (cleaning, no new information)
 
@@ -114,6 +115,6 @@ Crossings: DTI band x loan type, DTI band x LTV band, construction x loan type, 
 
 ## Open questions (their answers can change the plan)
 
-- Data dictionary (official HMDA documentation): meaning of 1111, housing age 0, tract income % = 0, "aus-1" = 7, credit score types 11 to 15, sex = 4, the reported LTV definition, loan terms > 360 or < 12 months.
+- Data dictionary: mostly answered in "reports/refs/hmda_dictionary.md" (2026-09-30). 1111 = Exempt (lender-level partial exemption); sex = 4 = not applicable (non-natural person, confirms 1.2); "aus-1" = 7 = internal proprietary system; credit score types 11 to 15 = FICO 9 / 8 / 10 / 10T, VantageScore 4.0; the reported LTV is the combined LTV (confirms 2.2); blank "total_units" = 5 or more units (confirms 0.3). Still open: housing age 0, tract income % = 0, loan terms > 360 or < 12 months, the data year.
 - Leakage verdicts: "preapproval", "initially_payable_to_institution", "aus-1", "location_unknown", "manufactured_location_unknown", the property-block missingness. These decide the fair model's list, not the trees' list.
   - "initially_payable_to_institution" = 3 deserves a name of its own in that list: it is the only sharp segment outside the plan's flags (1,566 rows, none accepted, 10% of all denials; 1,069 of them carry no plan flag, 02 (6b)). Trees already get it through the raw column, so it adds nothing for them. The clean / fair model must exclude it explicitly.
