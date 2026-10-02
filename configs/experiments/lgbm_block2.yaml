@@ -1,0 +1,16 @@
+# Block 2 of reports/feature_plan.md (ratios), on top of the adopted block 0.
+# Block 1 was rejected for trees, so it is not included.
+# Compared against the block 0 run 20260930T120507Z_ac79d7b0 with "make compare".
+model: lgbm
+features:
+  # block 0 (adopted)
+  - census_zero_to_nan            # 0.1
+  - tract_income_zero_to_nan      # 0.1b
+  - housing_age_negative_to_nan   # 0.2
+  - multifamily_levels            # 0.3
+  - drop_derived_duplicates       # 0.4
+  - dti_order                     # 0.5
+  - age_order                     # 0.6
+  # block 2 (2.4, loan / income, is linear-only: it failed the rule for trees in notebook 02)
+  - computed_ltv                  # 2.1 + 2.2
+  - property_to_income            # 2.3

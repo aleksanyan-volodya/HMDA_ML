@@ -19,6 +19,8 @@ Each line compares a run with the reference before it ("make compare"). The refe
 | baseline | 20260925T234636Z_4626a824 | | 0.90351 | | | | | reference |
 | 0 | 20260930T120507Z_ac79d7b0 | baseline | 0.90446 | +0.00095 | 0.00025 | 3.8 | [+0.00026, +0.00168] | adopted (5 of 5 folds up) |
 | 1 | 20260930T123536Z_409b82cd | block 0 | 0.90437 | −0.00009 | 0.00044 | −0.2 | [−0.00075, +0.00033] | rejected for trees (2 of 5 folds up). Flags stay in "src/features.py" for the linear and fair models |
+| 2 | 20261002T135847Z_03f5980a | block 0 | 0.90790 | +0.00344 | 0.00072 | 4.8 | [+0.00231, +0.00412] | adopted (5 of 5 folds up) |
+| 4.3 (drop raw county and MSA ids) | 20261002T141818Z_f7f2dc68 | block 2 | 0.91695 | +0.00904 | 0.00056 | 16.3 | [+0.00827, +0.01074] | adopted (5 of 5 folds up). Trees per fold 60-79 -> 121-192: the raw levels made the model overfit |
 
 ## Block 0: representation (cleaning, no new information)
 

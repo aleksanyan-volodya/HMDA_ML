@@ -23,8 +23,11 @@ cv:  ## Run and log one experiment: make cv EXP=configs/experiments/<name>.yaml
 	@test -n "$(EXP)" || { echo "usage: make cv EXP=configs/experiments/<name>.yaml"; exit 1; }
 	$(RUN) python src/cv.py $(EXP)
 
-compare:  ## Paired gain of one run over another: make compare BASE=<run_id> NEW=<run_id>
-	@test -n "$(BASE)" -a -n "$(NEW)" || { echo "usage: make compare BASE=<run_id> NEW=<run_id> (see reports/runs.csv)"; exit 1; }
+# NEW defaults to the last run logged in reports/runs.csv (first column of the last line).
+NEW ?= $(shell tail -n 1 reports/runs.csv | cut -d, -f1)
+
+compare:  ## Paired gain over a reference run: make compare BASE=<run_id> [NEW=<run_id>, default: latest run]
+	@test -n "$(BASE)" -a -n "$(NEW)" || { echo "usage: make compare BASE=<run_id> [NEW=<run_id>] (see reports/runs.csv)"; exit 1; }
 	$(RUN) python src/compare.py $(BASE) $(NEW)
 
 submit:  ## Build a validated submission: make submit RUN_ID=<run_id>

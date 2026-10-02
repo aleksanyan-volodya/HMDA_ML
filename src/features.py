@@ -113,6 +113,24 @@ def income_le_0(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def computed_ltv(df: pd.DataFrame) -> pd.DataFrame:
+    """[2.1, 2.2] The reported LTV is HMDA's combined LTV: all debt secured by the property / its
+    value. This loan alone / property value is a different quantity, in the same unit (%).
+    Their gap is the share of the property's value already pledged to other liens.
+    NaN when a part is missing (loan_amount and property_value are never <= 0)."""
+    df["computed_ltv"] = 100 * df.loan_amount / df.property_value
+    df["ltv_gap"] = df.loan_to_value_ratio - df.computed_ltv
+    return df
+
+
+def property_to_income(df: pd.DataFrame) -> pd.DataFrame:
+    """[2.3] Price of the property in years of income. income is in $ thousands, hence x 1000.
+    NaN when income is missing or <= 0 (a ratio to a non-positive income has no meaning)."""
+    income_dollars = (df.income * 1000).where(df.income > 0)
+    df["property_to_income"] = df.property_value / income_dollars
+    return df
+
+
 # name -> (transform or None, columns it removes from the feature list, columns it adds)
 TRANSFORMS = {
     "census_zero_to_nan": (census_zero_to_nan, [], []),
@@ -128,6 +146,11 @@ TRANSFORMS = {
     "location_unknown": (location_unknown, [], ["location_unknown"]),
     "has_coapplicant": (has_coapplicant, [], ["has_coapplicant"]),
     "income_le_0": (income_le_0, [], ["income_le_0"]),
+    "computed_ltv": (computed_ltv, [], ["computed_ltv", "ltv_gap"]),
+    "property_to_income": (property_to_income, [], ["property_to_income"]),
+    # [4.3] diagnostic: remove the two high-cardinality geography ids (2,898 and 418 levels).
+    # state_code and the census columns stay, so coarse geography is still available.
+    "drop_county_msa_ids": (None, ["county_code", "derived_msa-md"], []),
 }
 
 
