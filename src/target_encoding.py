@@ -39,6 +39,29 @@ class HierarchicalRate:
         return rate.where(child.notna().to_numpy()).to_numpy()   # missing child -> NaN, not an average
 
 
+def encode_fold(fit_part: pd.DataFrame, valid_part: pd.DataFrame, test: pd.DataFrame, target: str,
+                specs: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
+    """Add one "<column>_rate" feature per spec ({column, parent, m}) for one CV fold.
+
+    Which rows each encoding is learned from:
+      valid_part and test : the whole fit part (never the scored fold's labels)
+      fit_part            : out-of-fold inside the fit part (never a row's own label)
+    Returns copies; the inputs are not modified.
+    """
+    fit_part, valid_part, test = fit_part.copy(), valid_part.copy(), test.copy()
+    names = []
+    for spec in specs:
+        col, parent, m = spec["column"], spec["parent"], spec["m"]
+        name = f"{col}_rate"
+        enc = HierarchicalRate(m).fit(fit_part[col], fit_part[parent], fit_part[target])
+        valid_part[name] = enc.transform(valid_part[col], valid_part[parent])
+        test[name] = enc.transform(test[col], test[parent])
+        fit_part[name] = oof_encode(fit_part[col], fit_part[parent], fit_part[target],
+                                    fit_part["fold"].to_numpy(), m)
+        names.append(name)
+    return fit_part, valid_part, test, names
+
+
 def oof_encode(child: pd.Series, parent: pd.Series, y: pd.Series, fold: np.ndarray, m: float) -> np.ndarray:
     """Encode each row from the rows of the OTHER folds only, so its own label is never used."""
     out = np.empty(len(child))

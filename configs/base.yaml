@@ -21,6 +21,10 @@ model: null
 # columns of src/data.py (what the LightGBM baseline used).
 features: []
 
+# Target encodings (src/target_encoding.py). They use labels, so they are computed inside
+# each CV fold, not with the features above. Each entry: {column, parent, m}. Empty = none.
+target_encode: []
+
 # LightGBM: Library defaults are used for anything not listed.
 lgbm_params:
   objective: binary

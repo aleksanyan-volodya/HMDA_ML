@@ -1,0 +1,22 @@
+# Plan item 4.2: county comes back as ONE number, its accept rate shrunk towards its state's rate,
+# instead of 2,898 raw levels. On top of the current best (blocks 0 + 2, raw county / MSA ids removed).
+# Compared against run 20261002T141818Z_f7f2dc68.
+model: lgbm
+features:
+  # block 0 (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2 (adopted)
+  - computed_ltv
+  - property_to_income
+  # 4.3 (adopted)
+  - drop_county_msa_ids
+target_encode:
+  # m = 20: rows a county needs before its own rate weighs as much as its state's.
+  # Chosen in notebook 02 (part 1b) before this run; 20 and 100 are equal on the county alone.
+  - {column: county_code, parent: state_code, m: 20}

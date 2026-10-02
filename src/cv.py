@@ -16,6 +16,7 @@ from data import TARGET, load
 from features import build
 from folds import folds_hash, load_folds
 from runlog import log_run
+from target_encoding import encode_fold
 
 
 class ConstantModel:
@@ -68,7 +69,7 @@ def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
     train, test = load()
     train, test, features = build(train, test, cfg["features"])
-    print(f"{len(features)} features", flush=True)
+    print(f"{len(features)} features + {len(cfg['target_encode'])} target-encoded", flush=True)
     train = train.merge(load_folds(cfg), on="id", how="left", validate="1:1")
 
     oof = np.full(len(train), np.nan)
@@ -76,21 +77,24 @@ def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str
     fold_auc = []
     for k in range(cfg["n_folds"]):
         is_valid = (train["fold"] == k).to_numpy()
-        fit_part, valid_part = train[~is_valid], train[is_valid]
-        model = MODELS[cfg["model"]](cfg).fit(fit_part[features], fit_part[TARGET],
+        # Target encodings use labels, so they are computed here, inside the fold.
+        fit_part, valid_part, test_k, encoded = encode_fold(train[~is_valid], train[is_valid], test,
+                                                            TARGET, cfg["target_encode"])
+        cols = features + encoded
+        model = MODELS[cfg["model"]](cfg).fit(fit_part[cols], fit_part[TARGET],
                                                fit_part["fold"].to_numpy())
-        oof[is_valid] = model.predict(valid_part[features])
+        oof[is_valid] = model.predict(valid_part[cols])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
         extra = f"  trees {model.n_trees_}" if hasattr(model, "n_trees_") else ""
         print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}", flush=True)
         # Test prediction = average of the k fold models, càd exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
-        test_pred += model.predict(test[features]) / cfg["n_folds"]
+        test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
 
     assert not np.isnan(oof).any(), "some train rows never received an OOF prediction"
     oof_df = train[["id", "fold", TARGET]].assign(pred=oof)
     test_df = test[["id"]].assign(pred=test_pred)
-    return oof_df, test_df, fold_auc, features
+    return oof_df, test_df, fold_auc, cols
 
 
 if __name__ == "__main__":
