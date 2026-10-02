@@ -131,6 +131,42 @@ def property_to_income(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _is(df: pd.DataFrame, col: str, *codes: str) -> pd.Series:
+    return df[col].astype("string").isin(list(codes)).fillna(False).astype(bool)
+
+
+def manufactured_conventional(df: pd.DataFrame) -> pd.DataFrame:
+    """[3.1] Manufactured homes are denied almost only as conventional loans: 0.31 on 8,487 rows,
+    against 0.84-0.86 as FHA / VA (notebook 02, 4d)."""
+    df["manufactured_conventional"] = (_is(df, "construction_method", "2") & _is(df, "loan_type", "1")).astype("int64")
+    return df
+
+
+def manufactured_location_unknown(df: pd.DataFrame) -> pd.DataFrame:
+    """[3.2] Manufactured home with an unknown census tract: 1,516 rows accepted 0.016.
+    Neither part explains it alone (0.44 and 0.56). A leakage suspect, see reports/leakage.md."""
+    unknown = df.tract_population.isna() | (df.tract_population == 0)
+    df["manufactured_location_unknown"] = (_is(df, "construction_method", "2") & unknown).astype("int64")
+    return df
+
+
+def dti_above_program_limit(df: pd.DataFrame) -> pd.DataFrame:
+    """[3.3] The DTI a lender tolerates depends on the loan program: at 50-60%, conventional loans
+    are accepted 0.33 against 0.89 (FHA) and 0.92 (VA). Limit = 50% for conventional and USDA,
+    60% for FHA and VA. These limits were read on the training data (notebook 02, 4d)."""
+    high_limit = _is(df, "loan_type", "2", "3")                                   # FHA, VA
+    over_60, over_50 = _is(df, "debt_to_income_ratio", ">60%"), _is(df, "debt_to_income_ratio", "50%-60%", ">60%")
+    df["dti_above_program_limit"] = np.where(high_limit, over_60, over_50).astype("int64")
+    return df
+
+
+def ltv_at_standard_value(df: pd.DataFrame) -> pd.DataFrame:
+    """[3.4] An LTV exactly at a program standard (80, 90, 95, 97, 100) is accepted ~0.05 more than
+    its neighbours within 2 points (notebook 02, 3b). 96.5 is left out: no difference there."""
+    df["ltv_at_standard_value"] = df.loan_to_value_ratio.isin([80, 90, 95, 97, 100]).astype("int64")
+    return df
+
+
 # name -> (transform or None, columns it removes from the feature list, columns it adds)
 TRANSFORMS = {
     "census_zero_to_nan": (census_zero_to_nan, [], []),
@@ -148,6 +184,10 @@ TRANSFORMS = {
     "income_le_0": (income_le_0, [], ["income_le_0"]),
     "computed_ltv": (computed_ltv, [], ["computed_ltv", "ltv_gap"]),
     "property_to_income": (property_to_income, [], ["property_to_income"]),
+    "manufactured_conventional": (manufactured_conventional, [], ["manufactured_conventional"]),
+    "manufactured_location_unknown": (manufactured_location_unknown, [], ["manufactured_location_unknown"]),
+    "dti_above_program_limit": (dti_above_program_limit, [], ["dti_above_program_limit"]),
+    "ltv_at_standard_value": (ltv_at_standard_value, [], ["ltv_at_standard_value"]),
     # [4.3] diagnostic: remove the two high-cardinality geography ids (2,898 and 418 levels).
     # state_code and the census columns stay, so coarse geography is still available.
     "drop_county_msa_ids": (None, ["county_code", "derived_msa-md"], []),

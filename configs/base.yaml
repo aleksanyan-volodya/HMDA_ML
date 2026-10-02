@@ -36,6 +36,19 @@ lgbm_params:
   bagging_fraction: 0.8        # each tree sees a random 80% of rows.
   bagging_freq: 1              # re-draw the row sample at every tree (0 would disable bagging)
   lambda_l2: 1.0               # mild L2 penalty on leaf values; 0 = none, the scale of gradients is ~1
+  cat_smooth: 10               # pseudo-rows added to a category level's statistics before it is used
+                               # in a split: higher = rare levels trusted less. 10 is the library default,
+                               # written here so that tuning can change it
+  # The settings below are at their LightGBM default values, written out so that tuning can
+  # change them (reports/tuning.md says which ones matter).
+  max_depth: -1                # -1 = no limit on tree depth (num_leaves alone bounds the tree)
+  max_bin: 255                 # number of bins a numeric column is cut into before splitting
+  lambda_l1: 0.0               # L1 penalty on leaf values
+  extra_trees: false           # true = split thresholds drawn at random
+  path_smooth: 0.0             # pulls a leaf's value towards its parent's: weight n / (n + path_smooth)
+  min_data_per_group: 100      # rows a category level needs to be considered on its own
+  cat_l2: 10.0                 # L2 penalty specific to category splits
+  max_cat_to_onehot: 4         # categories with at most this many levels are split one level vs the rest
   deterministic: true
   force_row_wise: true         # required with deterministic, fixes the histogram algorithm choice
   verbosity: -1

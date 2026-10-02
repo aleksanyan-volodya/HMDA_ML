@@ -22,6 +22,7 @@ Each line compares a run with the reference before it ("make compare"). The refe
 | 2 | 20261002T135847Z_03f5980a | block 0 | 0.90790 | +0.00344 | 0.00072 | 4.8 | [+0.00231, +0.00412] | adopted (5 of 5 folds up) |
 | 4.3 (drop raw county and MSA ids) | 20261002T141818Z_f7f2dc68 | block 2 | 0.91695 | +0.00904 | 0.00056 | 16.3 | [+0.00827, +0.01074] | adopted (5 of 5 folds up). Trees per fold 60-79 -> 121-192: the raw levels made the model overfit |
 | 4.2 (county rate, shrunk to state, m = 20) | 20261002T143948Z_1114e40c | 4.3 | 0.91723 | +0.00028 | 0.00043 | 0.6 | [-0.00045, +0.00082] | rejected for trees (4 of 5 folds up, under 1 SE). State + census columns already carry it. Code kept for the linear model |
+| 3 | 20261002T144548Z_c9a209af | 4.3 | 0.91712 | +0.00018 | 0.00022 | 0.8 | [-0.00071, +0.00062] | rejected for trees (4 of 5 folds up, under 1 SE). Flags kept in "src/features.py" for the linear model |
 
 ## Block 0: representation (cleaning, no new information)
 

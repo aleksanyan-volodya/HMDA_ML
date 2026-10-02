@@ -1,0 +1,12 @@
+# Tuning step 1 (TODO 7.9): which LightGBM settings matter?
+# One setting is changed at a time; everything else stays at the experiment's values.
+# Each value is a step of roughly 2x to 5x around the current one, to see which direction helps.
+experiment: configs/experiments/lgbm_best_features.yaml   # current best feature set
+reference_run: 20261002T141818Z_f7f2dc68                  # its logged run (CV 0.91695)
+section: lgbm_params
+vary:
+  num_leaves: [15, 31, 127]          # current 63: complexity of each tree
+  min_data_in_leaf: [20, 500]        # current 100: rows a leaf needs
+  lambda_l2: [0.0, 10.0]             # current 1: penalty on leaf values
+  feature_fraction: [0.5, 1.0]       # current 0.8: share of columns each tree may use
+  cat_smooth: [100]                  # current 10: how little a rare category level is trusted

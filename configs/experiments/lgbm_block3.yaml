@@ -1,0 +1,22 @@
+# Block 3 of reports/feature_plan.md (segment and rule flags), on top of the current best
+# (blocks 0 + 2, raw county / MSA ids removed). Compared against run 20261002T141818Z_f7f2dc68.
+model: lgbm
+features:
+  # block 0 (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2 (adopted)
+  - computed_ltv
+  - property_to_income
+  # 4.3 (adopted)
+  - drop_county_msa_ids
+  # block 3
+  - manufactured_conventional       # 3.1
+  - manufactured_location_unknown   # 3.2
+  - dti_above_program_limit         # 3.3
+  - ltv_at_standard_value           # 3.4
