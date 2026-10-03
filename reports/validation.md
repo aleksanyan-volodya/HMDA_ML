@@ -24,3 +24,11 @@ Fold content hash (sha256 of the id-sorted `id,fold` CSV):
 
 ## validation method
 We will use CV to validate our model and give it to kaggle, and we will try to not overfit watching kaggle score.
+
+## Decision rule
+
+A change (a feature block, a parameter) is adopted if and only if its paired mean gain over the 5 folds is positive and at least 2 × the Nadeau–Bengio corrected SE of that gain. Tool: "make compare BASE=<run_id> NEW=<run_id>" ("src/compare.py").
+
+- Paired: both runs are scored on the same frozen folds, so fold-difficulty effects cancel in the difference. The tool refuses two runs with different folds.
+- Corrected SE = std of the per-fold gains × √(1/k + 1/(k−1)), i.e. 1.5 × the naive SE at k = 5. It accounts for the overlap of the training sets. Chosen as the conservative option; for k-fold it is a heuristic (the formula was derived for repeated random splits).
+- Also printed on every comparison, so the rule can be revisited on evidence: the naive SE (std / √k, too small) and a paired stratified bootstrap 95% CI on the pooled out-of-fold predictions (1,000 resamples; it measures test-row noise only, not training variability).

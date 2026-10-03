@@ -1,0 +1,16 @@
+# Tuning step 2: joint search over the LightGBM settings that mattered in the two
+# screening sweeps (reports/tuning.md). Everything not listed stays at the experiment's values.
+experiment: configs/experiments/lgbm_best_features.yaml   # adopted feature set, untuned (CV 0.91695)
+study_name: lgbm_optuna
+n_trials: 100          # ~1 minute each. The search can be stopped and resumed (same command).
+seed: 0                # of the sampler: arbitrary, fixed so the search is reproducible
+section: lgbm_params
+# learning_rate stays at 0.05 during the search (fast trials); the winner is refitted at 0.02 afterwards.
+space:
+  # log scale: for these two, doubling matters about as much anywhere in the range
+  num_leaves:        {type: int, low: 31, high: 127, log: true}    # 15 clearly worse (-4.0 SE)
+  min_data_in_leaf:  {type: int, low: 5, high: 200, log: true}     # 500 clearly worse (-5.6 SE), 20 slightly better
+  feature_fraction:  {type: float, low: 0.3, high: 1.0}            # 0.5 better (+1.8 SE), 1.0 slightly worse
+  bagging_fraction:  {type: float, low: 0.6, high: 1.0}            # 0.5 clearly worse (-3.0 SE), 1.0 slightly better
+  path_smooth:       {type: float, low: 0.0, high: 30.0}           # 10 better (+2.1 SE)
+  max_cat_to_onehot: {type: categorical, choices: [4, 64]}         # 64 better (+4.5 SE)

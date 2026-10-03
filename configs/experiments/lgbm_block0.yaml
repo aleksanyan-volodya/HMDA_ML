@@ -1,0 +1,11 @@
+# Block 0 of reports/feature_plan.md: representation only (cleaning, no new information).
+# Compared against lgbm_baseline with "make compare".
+model: lgbm
+features:
+  - census_zero_to_nan            # 0.1
+  - tract_income_zero_to_nan      # 0.1b
+  - housing_age_negative_to_nan   # 0.2
+  - multifamily_levels            # 0.3
+  - drop_derived_duplicates       # 0.4
+  - dti_order                     # 0.5
+  - age_order                     # 0.6

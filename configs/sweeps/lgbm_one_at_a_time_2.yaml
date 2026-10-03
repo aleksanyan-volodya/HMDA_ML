@@ -1,0 +1,17 @@
+# Tuning step 1, second screening: the LightGBM settings not covered by the first sweep.
+# Same method: one setting changed at a time, everything else at the experiment's values.
+experiment: configs/experiments/lgbm_best_features.yaml   # current best feature set
+reference_run: 20261002T141818Z_f7f2dc68                  # its logged run (CV 0.91695)
+section: lgbm_params
+vary:
+  bagging_fraction: [0.5, 1.0]       # current 0.8: share of rows each tree sees
+  learning_rate: [0.02, 0.1]         # current 0.05: step size (0.02 needs ~2.5x more trees)
+  max_depth: [6, 10]                 # current: no limit. 6 is the smallest depth that can hold 63 leaves
+  max_bin: [63, 511]                 # current 255: coarser / finer cut of numeric columns
+  lambda_l1: [1.0]                   # current 0: same scale as the lambda_l2 = 1 already in use
+  extra_trees: [true]                # current false
+  path_smooth: [10.0]                # current 0: a 10-row leaf then takes half of its parent's value
+  min_data_per_group: [20, 500]      # current 100
+  cat_l2: [1.0, 100.0]               # current 10
+  max_cat_to_onehot: [64]            # current 4: 64 covers every category left (largest: state, 54 levels),
+                                     # i.e. one-hot-style splits instead of native grouping

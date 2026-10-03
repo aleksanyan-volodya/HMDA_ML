@@ -1,0 +1,18 @@
+# Diagnostic 4.3 of reports/feature_plan.md: the current best (blocks 0 + 2) WITHOUT the raw
+# county and MSA ids. Question: do 2,898 raw county levels help LightGBM, or make it overfit
+# (it stops at 60-80 trees)? Compared against the block 2 run 20261002T135847Z_03f5980a.
+model: lgbm
+features:
+  # block 0 (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2 (adopted)
+  - computed_ltv
+  - property_to_income
+  # diagnostic
+  - drop_county_msa_ids
