@@ -64,13 +64,15 @@ class LGBMModel:
 MODELS = {"constant": ConstantModel, "lgbm": LGBMModel}
 
 
-def run_cv(cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
+def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
+    """folds: (id, fold) to use instead of the frozen folds. Only for checks on fresh splits
+    (src/fresh_folds.py); such runs are not comparable with reports/runs.csv and are not logged."""
     if cfg["model"] not in MODELS:
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
     train, test = load()
     train, test, features = build(train, test, cfg["features"])
     print(f"{len(features)} features + {len(cfg['target_encode'])} target-encoded", flush=True)
-    train = train.merge(load_folds(cfg), on="id", how="left", validate="1:1")
+    train = train.merge(load_folds(cfg) if folds is None else folds, on="id", how="left", validate="1:1")
 
     oof = np.full(len(train), np.nan)
     test_pred = np.zeros(len(test))

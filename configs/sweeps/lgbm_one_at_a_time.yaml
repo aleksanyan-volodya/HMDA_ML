@@ -1,4 +1,4 @@
-# Tuning step 1 (TODO 7.9): which LightGBM settings matter?
+# Tuning step 1: which LightGBM settings matter?
 # One setting is changed at a time; everything else stays at the experiment's values.
 # Each value is a step of roughly 2x to 5x around the current one, to see which direction helps.
 experiment: configs/experiments/lgbm_best_features.yaml   # current best feature set

@@ -1,4 +1,4 @@
-"""Compare two logged runs: is the candidate's AUC gain over the baseline real? (TODO 5.3 / 5.4)
+"""Compare two logged runs: is the candidate's AUC gain over the baseline real?
 
 Usage:
     uv run python src/compare.py <baseline_run_id> <candidate_run_id>
