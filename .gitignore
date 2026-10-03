@@ -25,6 +25,9 @@ data/raw
 oof/
 preds/
 
+# Optuna study databases (binary). The readable record is reports/tuning/<study>.csv
+reports/tuning/*.db
+
 # Build and test artifacts
 dist/
 build/

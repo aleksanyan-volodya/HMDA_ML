@@ -55,3 +55,41 @@ Conclusions:
 - Clearly harmful: max_depth = 6, bagging_fraction = 0.5, learning_rate = 0.1.
 - No effect: max_bin, lambda_l1, cat_l2, min_data_per_group = 20.
 - Caveat: 27 variants were tested over the two sweeps. At a 2 SE threshold about one false positive is expected by chance, and path_smooth (2.1 SE) is the weakest of the three. A single-setting result is therefore not adopted on its own: the settings that matter go to the joint search, and its winner is re-checked on fresh fold splits.
+
+## LightGBM, step 2: joint search with Optuna
+
+100 trials, TPE sampler (seed 0), learning rate fixed at 0.05, trial 0 = the untuned settings. Search file: "configs/sweeps/lgbm_optuna.yaml"; every trial in "reports/tuning/lgbm_optuna.csv". Run on 2026-10-02/03.
+
+| | CV AUC | gain vs trial 0 | gain / corrected SE | folds up |
+|---|---|---|---|---|
+| trial 0 (untuned) | 0.91695 | | | |
+| best, trial 98 | 0.91905 | +0.00210 | 3.7 | 5 |
+| median of the 100 trials | 0.91848 | | | |
+
+The best settings form a consistent region: the 10 best trials are within 0.0003 of each other and agree.
+
+| setting | untuned | 10 best trials | trial 98 |
+|---|---|---|---|
+| max_cat_to_onehot | 4 | 64 (all 10) | 64 |
+| num_leaves | 63 | 98 to 127 | 113 |
+| min_data_in_leaf | 100 | 5 to 9 | 5 |
+| path_smooth | 0 | 10 to 18 | 14.6 |
+| feature_fraction | 0.8 | 0.40 to 0.59 | 0.57 |
+| bagging_fraction | 0.8 | 0.94 to 0.99 | 0.95 |
+
+- Small leaves (5 rows) only work together with path_smooth, which pulls a small leaf towards its parent: a joint effect the one-at-a-time screening could not find.
+- num_leaves, min_data_in_leaf and bagging_fraction end near the edge of their range. The flat top suggests little is left outside it; not searched further.
+- Not adopted yet. The winner is selected among 100 trials on the frozen folds, so it must (1) pass the rule as a logged run, (2) be refitted at learning rate 0.02 ("lgbm_optuna_best_lr002.yaml"), (3) stay ahead of the untuned model on fresh fold splits ("make fresh").
+
+Adoption checks (2026-10-03):
+
+| step | comparison | gain | gain / corrected SE | folds up | verdict |
+|---|---|---|---|---|---|
+| 1 | winner (run 20261003T084548Z_406e4210) vs untuned | +0.00210 | 3.7 | 5 | adopted on the frozen folds; reproduces trial 98 exactly |
+| 2 | winner at learning rate 0.02 (run 20261003T084930Z_49275099) vs at 0.05 | +0.00035 | 0.8 | 3 | rejected: once the other settings are tuned, the lower rate adds nothing reliable |
+| 3 | winner vs untuned on 3 fresh splits (seeds 1, 2, 3; 15 paired folds) | +0.00194 | 4.2 | 15 of 15 | confirmed |
+
+Result: the tuned LightGBM is "configs/experiments/lgbm_optuna_best.yaml" (learning rate 0.05), run 20261003T084548Z_406e4210, CV AUC 0.91905.
+
+- +0.00210 over the untuned model on the frozen folds, +0.00194 on fresh splits never used for any choice: selecting the best of 100 trials flattered it by only ~0.0002.
+- Per-fold fresh results: "reports/tuning/fresh_lgbm_optuna_best_vs_lgbm_best_features.csv".

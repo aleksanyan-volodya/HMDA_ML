@@ -1,7 +1,5 @@
 # HMDA dictionary: codes and reporting rules used by this project
 
-Retrieved 2026-09-30. The official pages refuse direct downloads (HTTP 403), so this file keeps the verbatim extracts and their URLs instead of a copy of the pages.
-
 ## Sources
 
 1. FFIEC / CFPB, "HMDA LAR data fields" (public loan-level dataset): https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields
