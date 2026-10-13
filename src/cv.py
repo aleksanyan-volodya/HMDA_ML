@@ -7,6 +7,7 @@ import argparse
 import time
 import warnings
 
+import catboost as cb
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
@@ -127,7 +128,44 @@ class LogRegModel:
         return self.lr_.predict_proba(self.encoder_.transform(X))[:, 1]
 
 
-MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel}
+class CatBoostModel:
+    """CatBoost, same nested scheme as LGBMModel: the tree count is the peak of the mean AUC curve
+    of an inner CV on the fit part (inner folds = the outer folds present).
+    Categories are given natively: CatBoost encodes them with ordered target statistics, computed
+    in a way that never uses a row's own label, which is its main difference from LightGBM."""
+
+    def __init__(self, cfg: dict):
+        self.params = {**cfg["catboost_params"], "random_seed": cfg["model_seeds"][0]}
+        self.max_rounds = cfg["catboost_fit"]["max_rounds"]
+        self.patience = cfg["catboost_fit"]["early_stopping_rounds"]
+
+    @staticmethod
+    def _prepare(X: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
+        # CatBoost needs categories as text with no missing value: missing becomes its own level.
+        cat = [c for c in X.columns if isinstance(X[c].dtype, pd.CategoricalDtype)]
+        X = X.copy()
+        for c in cat:
+            X[c] = X[c].astype("string").fillna("missing").astype(object)
+        return X, cat
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "CatBoostModel":
+        X, cat = self._prepare(X)
+        pool = cb.Pool(X, np.asarray(y), cat_features=cat)
+        inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
+        history = cb.cv(pool, {**self.params, "iterations": self.max_rounds}, folds=inner,
+                        early_stopping_rounds=self.patience, verbose=False, plot=False)
+        mean_auc = history["test-AUC-mean"].to_numpy()
+        if len(mean_auc) >= self.max_rounds:  # early stopping never triggered
+            raise RuntimeError(f"tree search hit max_rounds={self.max_rounds}: raise the cap")
+        self.n_trees_ = int(mean_auc.argmax()) + 1
+        self.model_ = cb.CatBoost({**self.params, "iterations": self.n_trees_}).fit(pool, verbose=False)
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.model_.predict(self._prepare(X)[0], prediction_type="Probability")[:, 1]
+
+
+MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel}
 
 
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
