@@ -5,11 +5,18 @@ Usage:
 """
 import argparse
 import time
+import warnings
 
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.impute import MissingIndicator, SimpleImputer
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, QuantileTransformer, SplineTransformer
 
 from config import load_config
 from data import TARGET, load
@@ -61,7 +68,66 @@ class LGBMModel:
         return self.booster_.predict(X)
 
 
-MODELS = {"constant": ConstantModel, "lgbm": LGBMModel}
+class LogRegModel:
+    """L2 logistic regression. The encoding is fitted on the fit part only:
+      categorical -> one-hot (missing = its own level, unseen levels ignored)
+      flags (2 values) -> as they are
+      other numeric -> missing indicator + median fill -> rank in [0, 1] -> cubic spline with
+                       evenly spaced knots on the rank scale (= knots at the quantiles, robust to ties)
+      every column then lies in [0, 1], so the penalty treats them alike without rescaling.
+    The penalty strength C is chosen by an inner CV on the fit part (inner folds = the outer folds
+    present), like LightGBM's tree count."""
+
+    def __init__(self, cfg: dict):
+        p = cfg["logreg"]
+        self.C_grid, self.n_knots, self.max_iter = p["C_grid"], p["spline_knots"], p["max_iter"]
+
+    def _encoder(self, X: pd.DataFrame) -> ColumnTransformer:
+        cat = [c for c in X.columns if isinstance(X[c].dtype, pd.CategoricalDtype)]
+        num = [c for c in X.columns if c not in cat]
+        flags = [c for c in num if X[c].nunique(dropna=True) <= 2 and not X[c].isna().any()]
+        curves = [c for c in num if c not in flags]
+        as_text = FunctionTransformer(lambda d: d.astype("string").fillna("missing").astype(object))
+        spline = make_pipeline(SimpleImputer(strategy="median"),
+                               QuantileTransformer(n_quantiles=1000, random_state=0),   # 0: fixed subsample
+                               SplineTransformer(n_knots=self.n_knots, degree=3, knots="uniform"))
+        return ColumnTransformer([
+            ("onehot", make_pipeline(as_text, OneHotEncoder(handle_unknown="ignore")), cat),
+            ("flags", "passthrough", flags),
+            ("missing", MissingIndicator(features="missing-only", error_on_new=False), curves),
+            ("spline", spline, curves),
+        ], sparse_threshold=1.0)
+        # No scaling: every column already lies in [0, 1] (one-hot, flags, spline pieces). Scaling to unit
+        # variance would multiply a level present in 0.1% of rows by ~30 and distort the penalty.
+
+    def _fit_lr(self, Z, y, C: float) -> LogisticRegression:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", ConvergenceWarning)   # a non-converged fit must not pass silently
+            return LogisticRegression(C=C, max_iter=self.max_iter).fit(Z, y)
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "LogRegModel":
+        y = np.asarray(y)
+        scores = np.zeros((len(np.unique(fold)), len(self.C_grid)))
+        for i, f in enumerate(np.unique(fold)):
+            inner_fit, inner_val = fold != f, fold == f
+            enc = self._encoder(X[inner_fit]).fit(X[inner_fit])          # encoder never sees inner_val
+            Z_fit, Z_val = enc.transform(X[inner_fit]), enc.transform(X[inner_val])
+            for j, C in enumerate(self.C_grid):
+                p = self._fit_lr(Z_fit, y[inner_fit], C).predict_proba(Z_val)[:, 1]
+                scores[i, j] = roc_auc_score(y[inner_val], p)
+        best = int(scores.mean(axis=0).argmax())
+        if best in (0, len(self.C_grid) - 1):
+            raise RuntimeError(f"best C is at the edge of the grid ({self.C_grid[best]}): widen C_grid")
+        self.C_ = self.C_grid[best]
+        self.encoder_ = self._encoder(X).fit(X)
+        self.lr_ = self._fit_lr(self.encoder_.transform(X), y, self.C_)
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.lr_.predict_proba(self.encoder_.transform(X))[:, 1]
+
+
+MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel}
 
 
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
@@ -87,7 +153,8 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, 
                                                fit_part["fold"].to_numpy())
         oof[is_valid] = model.predict(valid_part[cols])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
-        extra = f"  trees {model.n_trees_}" if hasattr(model, "n_trees_") else ""
+        extra = (f"  trees {model.n_trees_}" if hasattr(model, "n_trees_")
+                 else f"  C {model.C_}" if hasattr(model, "C_") else "")
         print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}", flush=True)
         # Test prediction = average of the k fold models, càd exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).

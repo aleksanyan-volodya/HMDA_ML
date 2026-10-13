@@ -58,3 +58,11 @@ lgbm_fit:
   early_stopping_rounds: 200   # compute saver for the inner search: stop once the inner mean AUC has
                                # not improved for 200 trees
                                # at lr 0.05 that is a long plateau
+
+# Logistic regression (model: logreg, src/cv.py LogRegModel).
+logreg:
+  C_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]   # inverse penalty strength, one value per decade (the
+                                                 # penalty acts multiplicatively). Chosen by inner CV; a best
+                                                 # value at either end stops the run (the grid must be widened)
+  spline_knots: 5              # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
+  max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
