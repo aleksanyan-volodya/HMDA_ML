@@ -167,6 +167,70 @@ def ltv_at_standard_value(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# ---------------------------------------------------------------- linear model only
+# A linear model can't build bands or crossings by itself, so they are given explicitly.
+# Every band includes "missing" as a level, so missing values keep their own effect.
+
+DTI_BAND = {"<20%": "<20", "20%-<30%": "20-30", "30%-<36%": "30-36", "50%-60%": "50-60", ">60%": ">60",
+            **{str(i): "36-49" for i in range(36, 50)}}      # 36-49 merged: flat in notebook 01 (C3)
+DTI_LEVELS = ["<20", "20-30", "30-36", "36-49", "50-60", ">60", "missing"]
+# Underwriting thresholds: 80 = no mortgage insurance needed, then 90, 95, 100 (notebook 02, 4d).
+LTV_EDGES = [0, 80, 90, 95, 100, np.inf]
+LTV_LEVELS = ["<=80", "80-90", "90-95", "95-100", ">100", "missing"]
+# Doubling bands = equal width on the log scale (notebook 02, 4d).
+LOAN_EDGES = [0, 25e3, 50e3, 100e3, 200e3, 400e3, np.inf]
+LOAN_LEVELS = ["<=25k", "25-50k", "50-100k", "100-200k", "200-400k", ">400k"]
+TERMS = ["360", "300", "240", "180", "120", "other", "missing"]
+
+
+def _cat(values: pd.Series, levels: list[str]) -> pd.Series:
+    """Fixed level list, so train and test always get identical categories."""
+    assert set(values.dropna().unique()) <= set(levels), f"unexpected levels {set(values.unique()) - set(levels)}"
+    return pd.Series(pd.Categorical(values, categories=levels), index=values.index)
+
+
+def _band(x: pd.Series, edges: list[float], levels: list[str]) -> pd.Series:
+    b = pd.cut(x, edges, labels=levels[: len(edges) - 1], right=True).astype("string")
+    return b.fillna("missing") if "missing" in levels else b
+
+
+def _cross(a: pd.Series, b: pd.Series, a_levels: list[str], b_levels: list[str]) -> pd.Series:
+    joined = a.astype("string").fillna("missing") + " x " + b.astype("string").fillna("missing")
+    return _cat(joined, [f"{x} x {y}" for x in a_levels for y in b_levels])
+
+
+def linear_bands(df: pd.DataFrame) -> pd.DataFrame:
+    """[0.5, 0.7, LTV bins] Bands a spline can't express: DTI is a set of buckets (with a U-shape),
+    loan term lives in exact values (tree 14.5 vs linear <= 7.2 in notebook 02, 3b), and LTV
+    has a cliff above 100 at underwriting thresholds."""
+    df["dti_band"] = _cat(df.debt_to_income_ratio.astype("string").map(DTI_BAND).fillna("missing"), DTI_LEVELS)
+    term = df.loan_term.map(lambda v: "missing" if pd.isna(v) else f"{v:.0f}" if f"{v:.0f}" in TERMS else "other")
+    df["loan_term_band"] = _cat(term.astype("string"), TERMS)
+    df["ltv_band"] = _cat(_band(df.loan_to_value_ratio, LTV_EDGES, LTV_LEVELS), LTV_LEVELS)
+    return df
+
+
+def linear_crossings(df: pd.DataFrame) -> pd.DataFrame:
+    """[linear crossings] The four strongest pairs of notebook 02 (4c, 4d), all >= 1.3 points of
+    deviance beyond their separate effects. Needs linear_bands first."""
+    lt, cm, ls = (df[c].astype("string") for c in ("loan_type", "construction_method", "lien_status"))
+    loan_band = _band(df.loan_amount, LOAN_EDGES, LOAN_LEVELS)
+    df["x_dti_loan_type"] = _cross(df.dti_band, lt, DTI_LEVELS, ["1", "2", "3", "4"])
+    df["x_dti_ltv"] = _cross(df.dti_band, df.ltv_band, DTI_LEVELS, LTV_LEVELS)
+    df["x_construction_loan_type"] = _cross(cm, lt, ["1", "2"], ["1", "2", "3", "4"])
+    df["x_lien_loan_amount"] = _cross(ls, loan_band, ["1", "2"], LOAN_LEVELS)
+    return df
+
+
+def linear_extra(df: pd.DataFrame) -> pd.DataFrame:
+    """[1.1 flag, 2.4] For the linear model only: the exempt-record flag (a tree reads it from the
+    count) and loan / income (+0.011 AUC for the linear model in notebook 02, 4b; fails for trees)."""
+    df["is_exempt_record"] = (df[CODED].astype("string") == "1111").any(axis=1).astype("int64")
+    income_dollars = (df.income * 1000).where(df.income > 0)
+    df["loan_to_income"] = df.loan_amount / income_dollars
+    return df
+
+
 # name -> (transform or None, columns it removes from the feature list, columns it adds)
 TRANSFORMS = {
     "census_zero_to_nan": (census_zero_to_nan, [], []),
@@ -188,7 +252,13 @@ TRANSFORMS = {
     "manufactured_location_unknown": (manufactured_location_unknown, [], ["manufactured_location_unknown"]),
     "dti_above_program_limit": (dti_above_program_limit, [], ["dti_above_program_limit"]),
     "ltv_at_standard_value": (ltv_at_standard_value, [], ["ltv_at_standard_value"]),
-    # [4.3] diagnostic: remove the two high-cardinality geography ids (2,898 and 418 levels).
+    # linear model only: bands replace the raw DTI text, the numeric term and the numeric LTV
+    "linear_bands": (linear_bands, ["debt_to_income_ratio", "loan_term", "loan_to_value_ratio"],
+                     ["dti_band", "loan_term_band", "ltv_band"]),
+    "linear_crossings": (linear_crossings, [], ["x_dti_loan_type", "x_dti_ltv", "x_construction_loan_type",
+                                                "x_lien_loan_amount"]),
+    "linear_extra": (linear_extra, [], ["is_exempt_record", "loan_to_income"]),
+    #Remove the two high-cardinality geography ids (2,898 and 418 levels).
     # state_code and the census columns stay, so coarse geography is still available.
     "drop_county_msa_ids": (None, ["county_code", "derived_msa-md"], []),
 }
