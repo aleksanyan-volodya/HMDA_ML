@@ -1,0 +1,16 @@
+# CatBoost WITH the raw county and MSA ids (2,898 and 418 levels), otherwise as catboost.yaml.
+# Raw ids made LightGBM overfit (-0.009 AUC). CatBoost encodes categories with ordered target statistics,
+# built for high-cardinality columns: does it get real signal out of them? Compared with catboost.yaml.
+model: catboost
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income

@@ -1,0 +1,17 @@
+# CatBoost (TODO 7.6) on the adopted LightGBM feature set, untuned starting values (base.yaml).
+# Compared with the tuned LightGBM, and its blend value checked on the out-of-fold predictions.
+model: catboost
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income
+  # 4.3, raw county / MSA ids removed (adopted)
+  - drop_county_msa_ids

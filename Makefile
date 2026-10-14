@@ -5,7 +5,7 @@
 RUN := uv run --locked
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check-data folds cv tune optuna fresh compare submit test
+.PHONY: help setup check-data folds cv tune optuna fresh blend compare submit test
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -34,6 +34,10 @@ optuna:  ## Joint search with Optuna (resumable): make optuna STUDY=configs/swee
 fresh:  ## Re-check a candidate on fresh fold splits: make fresh REF=<exp.yaml> CAND=<exp.yaml>
 	@test -n "$(REF)" -a -n "$(CAND)" || { echo "usage: make fresh REF=<experiment.yaml> CAND=<experiment.yaml>"; exit 1; }
 	$(RUN) python src/fresh_folds.py $(REF) $(CAND)
+
+blend:  ## Blend logged runs into a new logged run: make blend BLEND=configs/blends/<name>.yaml
+	@test -n "$(BLEND)" || { echo "usage: make blend BLEND=configs/blends/<name>.yaml"; exit 1; }
+	$(RUN) python src/blend.py $(BLEND)
 
 # NEW defaults to the last run logged in reports/runs.csv (first column of the last line).
 NEW ?= $(shell tail -n 1 reports/runs.csv | cut -d, -f1)

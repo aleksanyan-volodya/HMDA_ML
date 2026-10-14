@@ -66,3 +66,16 @@ logreg:
                                                  # value at either end stops the run (the grid must be widened)
   spline_knots: 5              # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
   max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
+
+# CatBoost (model: catboost, src/cv.py CatBoostModel). Starting values of TODO 7.6, not tuned.
+catboost_params:
+  loss_function: Logloss
+  eval_metric: AUC             # the competition metric, used to pick the tree count
+  learning_rate: 0.05          # same step size as the LightGBM, so tree counts are comparable
+  depth: 6                     # CatBoost grows symmetric trees: depth 6 = 64 leaves, close to LightGBM's 63
+  l2_leaf_reg: 3.0             # library default
+  allow_writing_files: false   # no catboost_info/ folder in the repo
+  logging_level: Silent        # no per-iteration output (the CV prints its own summary)
+catboost_fit:
+  max_rounds: 5000             # upper cap; hitting it stops the run
+  early_stopping_rounds: 200   # same patience as LightGBM

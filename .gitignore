@@ -28,6 +28,9 @@ preds/
 # Optuna study databases (binary). The readable record is reports/tuning/<study>.csv
 reports/tuning/*.db
 
+# CatBoost's cv() writes training logs here even with allow_writing_files: false
+catboost_info/
+
 # Build and test artifacts
 dist/
 build/
