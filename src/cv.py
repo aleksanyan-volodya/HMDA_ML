@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.impute import MissingIndicator, SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -192,8 +193,50 @@ class XGBModel:
         return self.booster_.predict(xgb.DMatrix(X, enable_categorical=True))
 
 
+class ExtraTreesModel:
+    """ExtraTrees: an average of fully random trees (random features AND random split thresholds),
+    so its errors differ from boosting's. Nothing is searched: more trees only reduces the
+    averaging noise, and the other settings are fixed in base.yaml with their reasons.
+    Categories are one-hot encoded (every category kept has at most 54 levels; the fixed category
+    lists of src/data.py give train and test the same columns). NaN is handled by scikit-learn."""
+
+    def __init__(self, cfg: dict):
+        self.params = {**cfg["extratrees_params"], "random_state": cfg["model_seeds"][0], "n_jobs": -1}
+        self.rank_numeric = cfg["extratrees_fit"]["rank_numeric"]
+
+    @staticmethod
+    def _encode(X: pd.DataFrame) -> pd.DataFrame:
+        cat = [c for c in X.columns if isinstance(X[c].dtype, pd.CategoricalDtype)]
+        return pd.get_dummies(X, columns=cat, dummy_na=True, dtype=np.float32).astype(np.float32)
+
+    def _ranks(self, X: pd.DataFrame) -> pd.DataFrame:
+        # Numeric columns -> rank in [0, 1] (fitted on the fit part; NaN stays NaN). ExtraTrees draws
+        # split thresholds uniformly between a column's min and max: on a skewed column (loan amount
+        # up to 375M, median 285k) almost every threshold lands in the empty tail. On ranks they
+        # land where the rows are.
+        if not self.rank_numeric:
+            return X
+        X = X.copy()
+        X[self.numeric_] = self.quantiles_.transform(X[self.numeric_])
+        return X
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "ExtraTreesModel":
+        if self.rank_numeric:
+            self.numeric_ = [c for c in X.columns if not isinstance(X[c].dtype, pd.CategoricalDtype)]
+            self.quantiles_ = QuantileTransformer(n_quantiles=1000, random_state=0).fit(X[self.numeric_])
+            X = self._ranks(X)
+        Z = self._encode(X)
+        self.columns_ = Z.columns
+        self.model_ = ExtraTreesClassifier(**self.params).fit(Z, np.asarray(y))
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        Z = self._encode(self._ranks(X)).reindex(columns=self.columns_, fill_value=0)
+        return self.model_.predict_proba(Z)[:, 1]
+
+
 MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel,
-          "xgb": XGBModel}
+          "xgb": XGBModel, "extratrees": ExtraTreesModel}
 
 
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:

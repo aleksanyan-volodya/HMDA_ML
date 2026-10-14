@@ -1,0 +1,12 @@
+# Final blend selection: every candidate model, as logged. Equal weights, log-odds.
+base: 20261003T084548Z_406e4210                      # LightGBM, tuned (seed 0)
+candidates:
+  catboost_county: 20261014T085450Z_d96c8be4         # CatBoost + raw county / MSA, untuned
+  xgboost: 20261014T125236Z_f0fe3121                 # XGBoost, untuned
+  extratrees_rank: 20261014T135428Z_542eac1f         # ExtraTrees on ranked numerics
+  logreg: 20261013T154151Z_83e8fb23                  # logistic regression
+  lgbm_seed1: 20261014T121106Z_b0f15259              # LightGBM, same settings, other seeds:
+  lgbm_seed2: 20261014T121310Z_2680831b              # adding them = averaging seeds inside the blend
+  lgbm_seed3: 20261014T121444Z_3f885697
+  lgbm_seed4: 20261014T121801Z_073a828b
+method: logit

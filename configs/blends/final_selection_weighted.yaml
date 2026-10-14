@@ -1,0 +1,11 @@
+# Weighted blend from configs/blends/final_selection.yaml: NNLS weights on log-odds, fitted on all folds.
+# Nested estimate (weights fitted without the scored fold): 0.91918, gain +0.00012 over the base.
+runs:
+- 20261014T085450Z_d96c8be4
+- 20261014T121106Z_b0f15259
+- 20261014T121444Z_3f885697
+weights:
+- 0.079385
+- 0.250772
+- 0.669844
+method: logit
