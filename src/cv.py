@@ -11,6 +11,7 @@ import catboost as cb
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 from sklearn.compose import ColumnTransformer
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.impute import MissingIndicator, SimpleImputer
@@ -165,7 +166,34 @@ class CatBoostModel:
         return self.model_.predict(self._prepare(X)[0], prediction_type="Probability")[:, 1]
 
 
-MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel}
+class XGBModel:
+    """XGBoost, same nested scheme as LGBMModel: the tree count is the peak of the mean AUC curve
+    of an inner CV on the fit part (inner folds = the outer folds present).
+    Categories are given natively (enable_categorical); NaN is handled by the library."""
+
+    def __init__(self, cfg: dict):
+        self.params = {**cfg["xgb_params"], "seed": cfg["model_seeds"][0]}
+        self.max_rounds = cfg["xgb_fit"]["max_rounds"]
+        self.patience = cfg["xgb_fit"]["early_stopping_rounds"]
+
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "XGBModel":
+        data = xgb.DMatrix(X, np.asarray(y), enable_categorical=True)
+        inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
+        history = xgb.cv(self.params, data, num_boost_round=self.max_rounds, folds=inner,
+                         early_stopping_rounds=self.patience, verbose_eval=False)
+        mean_auc = history["test-auc-mean"].to_numpy()
+        if len(mean_auc) >= self.max_rounds:  # early stopping never triggered
+            raise RuntimeError(f"tree search hit max_rounds={self.max_rounds}: raise the cap")
+        self.n_trees_ = int(mean_auc.argmax()) + 1
+        self.booster_ = xgb.train(self.params, data, num_boost_round=self.n_trees_)
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.booster_.predict(xgb.DMatrix(X, enable_categorical=True))
+
+
+MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel,
+          "xgb": XGBModel}
 
 
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:

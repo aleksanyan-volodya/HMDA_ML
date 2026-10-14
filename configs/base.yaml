@@ -79,3 +79,20 @@ catboost_params:
 catboost_fit:
   max_rounds: 5000             # upper cap; hitting it stops the run
   early_stopping_rounds: 200   # same patience as LightGBM
+
+# XGBoost (model: xgb, src/cv.py XGBModel). Starting values of TODO 7.7, not tuned.
+xgb_params:
+  objective: "binary:logistic"
+  eval_metric: auc             # the competition metric, used to pick the tree count
+  tree_method: hist            # histogram splits, like LightGBM
+  eta: 0.05                    # learning rate, same as the LightGBM and CatBoost
+  max_depth: 6                 # depth-wise trees, up to 64 leaves (LightGBM: 63 by default)
+  subsample: 0.8               # share of rows per tree
+  colsample_bytree: 0.8        # share of columns per tree
+  min_child_weight: 10         # minimum hessian sum in a leaf: ~ at least 80 rows at p = 0.85
+  lambda: 1.0                  # L2 penalty on leaf values (library default)
+  max_cat_to_onehot: 64        # carried over from the LightGBM screening (+4.5 SE there): categories
+                               # split one level at a time instead of grouped
+xgb_fit:
+  max_rounds: 5000             # upper cap; hitting it stops the run
+  early_stopping_rounds: 200   # same patience as LightGBM and CatBoost
