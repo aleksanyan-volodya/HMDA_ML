@@ -222,6 +222,20 @@ def linear_crossings(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def tract_key(df: pd.DataFrame) -> pd.DataFrame:
+    """Census tract id rebuilt from the county + the 6 tract fields (no tract id in the data): 50,587
+    distinct keys in train, 76% of train rows share theirs with another row, 76% of test rows have
+    a tract seen in train. Not a feature itself (50k levels): only its target encoding
+    (target_encode, parent county) reaches the model. Unknown location (no county, or tract
+    population 0 / NaN) -> missing key, so those rows keep their own signal instead of one shared key."""
+    unknown = df.county_code.isna() | df.tract_population.isna() | (df.tract_population == 0)
+    key = df.county_code.astype("string")
+    for c in TRACT:
+        key = key + "|" + df[c].astype("string").fillna("na")
+    df["tract_key"] = key.mask(unknown.to_numpy())
+    return df
+
+
 def linear_extra(df: pd.DataFrame) -> pd.DataFrame:
     """[1.1 flag, 2.4] For the linear model only: the exempt-record flag (a tree reads it from the
     count) and loan / income (+0.011 AUC for the linear model in notebook 02, 4b; fails for trees)."""
@@ -261,6 +275,18 @@ TRANSFORMS = {
     #Remove the two high-cardinality geography ids (2,898 and 418 levels).
     # state_code and the census columns stay, so coarse geography is still available.
     "drop_county_msa_ids": (None, ["county_code", "derived_msa-md"], []),
+    # adds the tract_key column for target_encode only, not to the feature list (50k levels)
+    "tract_key": (tract_key, [], []),
+    # confirmed leaks, each value is reported because of the decision (reports/leakage.md)
+    "drop_process_artefacts": (None, ["preapproval", "initially_payable_to_institution"], []),
+    # strict list for the 12.9 sensitivity check only (reports/leakage.md); must come LAST in a config
+    "drop_partial_leaks": (None, ["aus-1", "loan_to_value_ratio", "property_value", "debt_to_income_ratio",
+                                  "dti_order", "computed_ltv", "ltv_gap", "property_to_income",
+                                  "tract_population", "tract_minority_population_percent",
+                                  "tract_to_msa_income_percentage", "tract_owner_occupied_units",
+                                  "tract_one_to_four_family_homes", "tract_median_age_of_housing_units",
+                                  "ffiec_msa_md_median_family_income", "state_code", "county_code",
+                                  "derived_msa-md", "location_unknown", "manufactured_location_unknown"], []),
 }
 
 
