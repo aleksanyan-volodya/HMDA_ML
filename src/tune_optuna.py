@@ -68,7 +68,10 @@ if __name__ == "__main__":
         return float(np.mean(fold_auc))
 
     finished = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
-    study.optimize(objective, n_trials=max(0, sweep["n_trials"] - len(finished)))
+    # Optional wall-clock cap (hours): the search stops after the trial running at that time,
+    # so a night run ends by morning and still writes the best settings below.
+    timeout = sweep["timeout_hours"] * 3600 if "timeout_hours" in sweep else None
+    study.optimize(objective, n_trials=max(0, sweep["n_trials"] - len(finished)), timeout=timeout)
 
     trials = study.trials_dataframe(attrs=("number", "value", "params", "user_attrs", "state"))
     trials.to_csv(OUT / f"{sweep['study_name']}.csv", index=False)       # readable record of every trial

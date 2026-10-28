@@ -39,3 +39,4 @@ build/
 htmlcov/
 
 TODO_Volodya.md
+reports/tuning/*.log
