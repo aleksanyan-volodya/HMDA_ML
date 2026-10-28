@@ -1,0 +1,2680 @@
+column,variable,coef,fold
+onehot__loan_type_1,loan_type,0.0,0
+onehot__loan_type_2,loan_type,0.0,0
+onehot__loan_type_3,loan_type,0.11577389110085735,0
+onehot__loan_type_4,loan_type,0.0,0
+onehot__lien_status_1,lien_status,0.5733988258875061,0
+onehot__lien_status_2,lien_status,0.0,0
+onehot__preapproval_1,preapproval,2.95081111597569,0
+onehot__preapproval_2,preapproval,-1.5192847353779055,0
+onehot__reverse_mortgage_1,reverse_mortgage,2.129116284513883,0
+onehot__reverse_mortgage_1111,reverse_mortgage,0.0,0
+onehot__reverse_mortgage_2,reverse_mortgage,-1.6123523981123287,0
+onehot__open-end_line_of_credit_1,open-end_line_of_credit,-0.18651412131817105,0
+onehot__open-end_line_of_credit_1111,open-end_line_of_credit,0.0,0
+onehot__open-end_line_of_credit_2,open-end_line_of_credit,0.0,0
+onehot__business_or_commercial_purpose_1,business_or_commercial_purpose,-0.09312958895175326,0
+onehot__business_or_commercial_purpose_1111,business_or_commercial_purpose,0.0,0
+onehot__business_or_commercial_purpose_2,business_or_commercial_purpose,0.16537962906950704,0
+onehot__negative_amortization_1,negative_amortization,0.0,0
+onehot__negative_amortization_1111,negative_amortization,0.0,0
+onehot__negative_amortization_2,negative_amortization,-0.03116883129931368,0
+onehot__interest_only_payment_1,interest_only_payment,-0.2774390064363166,0
+onehot__interest_only_payment_1111,interest_only_payment,0.0,0
+onehot__interest_only_payment_2,interest_only_payment,0.0,0
+onehot__balloon_payment_1,balloon_payment,0.0,0
+onehot__balloon_payment_1111,balloon_payment,0.0,0
+onehot__balloon_payment_2,balloon_payment,-0.36541254850788046,0
+onehot__other_nonamortizing_features_1,other_nonamortizing_features,0.0,0
+onehot__other_nonamortizing_features_1111,other_nonamortizing_features,0.0,0
+onehot__other_nonamortizing_features_2,other_nonamortizing_features,-0.6135739459278545,0
+onehot__construction_method_1,construction_method,0.0,0
+onehot__construction_method_2,construction_method,0.0,0
+onehot__occupancy_type_1,occupancy_type,0.0,0
+onehot__occupancy_type_2,occupancy_type,-0.015056251512651154,0
+onehot__occupancy_type_3,occupancy_type,0.36586795782228815,0
+onehot__manufactured_home_secured_property_type_1,manufactured_home_secured_property_type,0.03670031629363522,0
+onehot__manufactured_home_secured_property_type_1111,manufactured_home_secured_property_type,0.011299760691813876,0
+onehot__manufactured_home_secured_property_type_2,manufactured_home_secured_property_type,-0.06092005830037888,0
+onehot__manufactured_home_secured_property_type_3,manufactured_home_secured_property_type,0.0,0
+onehot__manufactured_home_land_property_interest_1,manufactured_home_land_property_interest,-0.05390689853858756,0
+onehot__manufactured_home_land_property_interest_1111,manufactured_home_land_property_interest,0.0,0
+onehot__manufactured_home_land_property_interest_2,manufactured_home_land_property_interest,0.0,0
+onehot__manufactured_home_land_property_interest_3,manufactured_home_land_property_interest,0.4448342148151155,0
+onehot__manufactured_home_land_property_interest_4,manufactured_home_land_property_interest,0.3970695639674696,0
+onehot__manufactured_home_land_property_interest_5,manufactured_home_land_property_interest,0.0,0
+onehot__applicant_credit_score_type_1,applicant_credit_score_type,0.015779705065136054,0
+onehot__applicant_credit_score_type_11,applicant_credit_score_type,0.15415295538885254,0
+onehot__applicant_credit_score_type_1111,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_12,applicant_credit_score_type,0.02080551552325254,0
+onehot__applicant_credit_score_type_13,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_14,applicant_credit_score_type,-0.07014257471437232,0
+onehot__applicant_credit_score_type_15,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_2,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_3,applicant_credit_score_type,0.00984910129092456,0
+onehot__applicant_credit_score_type_4,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_5,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_6,applicant_credit_score_type,0.0,0
+onehot__applicant_credit_score_type_7,applicant_credit_score_type,-0.11334217070399134,0
+onehot__applicant_credit_score_type_8,applicant_credit_score_type,-0.8358686266671239,0
+onehot__applicant_credit_score_type_9,applicant_credit_score_type,-0.21972302471360033,0
+onehot__co-applicant_credit_score_type_1,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_10,co-applicant_credit_score_type,-0.1884397891890578,0
+onehot__co-applicant_credit_score_type_11,co-applicant_credit_score_type,-0.06533366456093688,0
+onehot__co-applicant_credit_score_type_1111,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_12,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_13,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_14,co-applicant_credit_score_type,0.04632683726123498,0
+onehot__co-applicant_credit_score_type_15,co-applicant_credit_score_type,-0.281282380301106,0
+onehot__co-applicant_credit_score_type_2,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_3,co-applicant_credit_score_type,0.017091032618169924,0
+onehot__co-applicant_credit_score_type_4,co-applicant_credit_score_type,0.43790411481805086,0
+onehot__co-applicant_credit_score_type_5,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_6,co-applicant_credit_score_type,0.0,0
+onehot__co-applicant_credit_score_type_7,co-applicant_credit_score_type,0.08937628575674651,0
+onehot__co-applicant_credit_score_type_8,co-applicant_credit_score_type,-0.1463757841525504,0
+onehot__co-applicant_credit_score_type_9,co-applicant_credit_score_type,-0.0570629545701138,0
+onehot__applicant_ethnicity-1_1,applicant_ethnicity-1,-0.05201683026973283,0
+onehot__applicant_ethnicity-1_11,applicant_ethnicity-1,0.0,0
+onehot__applicant_ethnicity-1_12,applicant_ethnicity-1,0.0,0
+onehot__applicant_ethnicity-1_13,applicant_ethnicity-1,0.09699431749155148,0
+onehot__applicant_ethnicity-1_14,applicant_ethnicity-1,-0.08082056316584865,0
+onehot__applicant_ethnicity-1_2,applicant_ethnicity-1,0.1946771696817488,0
+onehot__applicant_ethnicity-1_3,applicant_ethnicity-1,0.0,0
+onehot__applicant_ethnicity-1_4,applicant_ethnicity-1,0.0,0
+onehot__applicant_ethnicity-1_missing,applicant_ethnicity-1,0.0,0
+onehot__co-applicant_ethnicity-1_1,co-applicant_ethnicity-1,0.125978462704846,0
+onehot__co-applicant_ethnicity-1_11,co-applicant_ethnicity-1,-0.03951822414304446,0
+onehot__co-applicant_ethnicity-1_12,co-applicant_ethnicity-1,-0.056413860450309085,0
+onehot__co-applicant_ethnicity-1_13,co-applicant_ethnicity-1,0.0,0
+onehot__co-applicant_ethnicity-1_14,co-applicant_ethnicity-1,-0.038134455903665515,0
+onehot__co-applicant_ethnicity-1_2,co-applicant_ethnicity-1,0.12774379830539737,0
+onehot__co-applicant_ethnicity-1_3,co-applicant_ethnicity-1,0.0,0
+onehot__co-applicant_ethnicity-1_4,co-applicant_ethnicity-1,0.1875556732068392,0
+onehot__co-applicant_ethnicity-1_5,co-applicant_ethnicity-1,0.0,0
+onehot__co-applicant_ethnicity-1_missing,co-applicant_ethnicity-1,0.0,0
+onehot__applicant_ethnicity_observed_1,applicant_ethnicity_observed,0.0,0
+onehot__applicant_ethnicity_observed_2,applicant_ethnicity_observed,0.0,0
+onehot__applicant_ethnicity_observed_3,applicant_ethnicity_observed,0.0,0
+onehot__co-applicant_ethnicity_observed_1,co-applicant_ethnicity_observed,0.0,0
+onehot__co-applicant_ethnicity_observed_2,co-applicant_ethnicity_observed,-0.3773242592993078,0
+onehot__co-applicant_ethnicity_observed_3,co-applicant_ethnicity_observed,0.0,0
+onehot__co-applicant_ethnicity_observed_4,co-applicant_ethnicity_observed,0.0,0
+onehot__applicant_race-1_1,applicant_race-1,0.0,0
+onehot__applicant_race-1_2,applicant_race-1,0.22249699403276638,0
+onehot__applicant_race-1_21,applicant_race-1,-0.003237915062194877,0
+onehot__applicant_race-1_22,applicant_race-1,0.0,0
+onehot__applicant_race-1_23,applicant_race-1,0.3916195615792501,0
+onehot__applicant_race-1_24,applicant_race-1,0.0,0
+onehot__applicant_race-1_25,applicant_race-1,0.0,0
+onehot__applicant_race-1_26,applicant_race-1,0.0,0
+onehot__applicant_race-1_27,applicant_race-1,-0.17596264609755846,0
+onehot__applicant_race-1_3,applicant_race-1,-0.17063969907249166,0
+onehot__applicant_race-1_4,applicant_race-1,0.0,0
+onehot__applicant_race-1_41,applicant_race-1,0.0,0
+onehot__applicant_race-1_42,applicant_race-1,0.0,0
+onehot__applicant_race-1_43,applicant_race-1,0.0,0
+onehot__applicant_race-1_44,applicant_race-1,0.0,0
+onehot__applicant_race-1_5,applicant_race-1,0.2528199107905948,0
+onehot__applicant_race-1_6,applicant_race-1,0.0,0
+onehot__applicant_race-1_7,applicant_race-1,0.12894479854123658,0
+onehot__applicant_race-1_missing,applicant_race-1,0.0,0
+onehot__co-applicant_race-1_1,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_2,co-applicant_race-1,-0.016679188675972095,0
+onehot__co-applicant_race-1_21,co-applicant_race-1,-0.212184575906807,0
+onehot__co-applicant_race-1_22,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_23,co-applicant_race-1,0.142534934519038,0
+onehot__co-applicant_race-1_24,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_25,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_26,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_27,co-applicant_race-1,-0.15194979371461614,0
+onehot__co-applicant_race-1_3,co-applicant_race-1,0.0018714681848143277,0
+onehot__co-applicant_race-1_4,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_41,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_42,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_43,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_44,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_5,co-applicant_race-1,0.1770925516619482,0
+onehot__co-applicant_race-1_6,co-applicant_race-1,0.2603113448368846,0
+onehot__co-applicant_race-1_7,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_8,co-applicant_race-1,0.0,0
+onehot__co-applicant_race-1_missing,co-applicant_race-1,0.0,0
+onehot__applicant_race_observed_1,applicant_race_observed,0.0,0
+onehot__applicant_race_observed_2,applicant_race_observed,0.0,0
+onehot__applicant_race_observed_3,applicant_race_observed,0.0,0
+onehot__co-applicant_race_observed_1,co-applicant_race_observed,0.0,0
+onehot__co-applicant_race_observed_2,co-applicant_race_observed,0.0,0
+onehot__co-applicant_race_observed_3,co-applicant_race_observed,0.0,0
+onehot__co-applicant_race_observed_4,co-applicant_race_observed,0.0,0
+onehot__applicant_sex_1,applicant_sex,0.0,0
+onehot__applicant_sex_2,applicant_sex,0.012634255989623592,0
+onehot__applicant_sex_3,applicant_sex,-0.04215328617100059,0
+onehot__applicant_sex_4,applicant_sex,0.0,0
+onehot__applicant_sex_6,applicant_sex,0.0,0
+onehot__co-applicant_sex_1,co-applicant_sex,-0.10015837141942958,0
+onehot__co-applicant_sex_2,co-applicant_sex,0.0,0
+onehot__co-applicant_sex_3,co-applicant_sex,0.2767649743685692,0
+onehot__co-applicant_sex_4,co-applicant_sex,0.0,0
+onehot__co-applicant_sex_5,co-applicant_sex,0.0,0
+onehot__co-applicant_sex_6,co-applicant_sex,0.0,0
+onehot__applicant_sex_observed_1,applicant_sex_observed,0.22742043271293408,0
+onehot__applicant_sex_observed_2,applicant_sex_observed,0.0,0
+onehot__applicant_sex_observed_3,applicant_sex_observed,-0.14686760115198966,0
+onehot__co-applicant_sex_observed_1,co-applicant_sex_observed,0.0,0
+onehot__co-applicant_sex_observed_2,co-applicant_sex_observed,0.0,0
+onehot__co-applicant_sex_observed_3,co-applicant_sex_observed,-0.152735726949532,0
+onehot__co-applicant_sex_observed_4,co-applicant_sex_observed,0.0,0
+onehot__submission_of_application_1,submission_of_application,0.0,0
+onehot__submission_of_application_1111,submission_of_application,0.0,0
+onehot__submission_of_application_2,submission_of_application,-0.21669742965053984,0
+onehot__initially_payable_to_institution_1,initially_payable_to_institution,1.41392529437559,0
+onehot__initially_payable_to_institution_1111,initially_payable_to_institution,0.0,0
+onehot__initially_payable_to_institution_2,initially_payable_to_institution,1.3571957284672713,0
+onehot__initially_payable_to_institution_3,initially_payable_to_institution,-6.329545828036616,0
+onehot__aus-1_1,aus-1,0.0,0
+onehot__aus-1_1111,aus-1,0.554110695361753,0
+onehot__aus-1_2,aus-1,0.0777694809757984,0
+onehot__aus-1_3,aus-1,0.10240006176466261,0
+onehot__aus-1_4,aus-1,0.0,0
+onehot__aus-1_5,aus-1,-0.11858997158297796,0
+onehot__aus-1_6,aus-1,-0.7989577036979078,0
+onehot__aus-1_7,aus-1,-1.0556611073287194,0
+onehot__state_code_AK,state_code,0.0,0
+onehot__state_code_AL,state_code,0.0,0
+onehot__state_code_AR,state_code,0.06422030394613966,0
+onehot__state_code_AZ,state_code,0.0,0
+onehot__state_code_CA,state_code,-0.06647916479742523,0
+onehot__state_code_CO,state_code,0.1479184016723454,0
+onehot__state_code_CT,state_code,-0.32773625835834536,0
+onehot__state_code_DC,state_code,-0.2327509802869313,0
+onehot__state_code_DE,state_code,-0.19344657657866018,0
+onehot__state_code_FL,state_code,-0.3330842689450061,0
+onehot__state_code_GA,state_code,-0.1890725432373904,0
+onehot__state_code_GU,state_code,0.0,0
+onehot__state_code_HI,state_code,0.0,0
+onehot__state_code_IA,state_code,0.18472010133080646,0
+onehot__state_code_ID,state_code,0.219263945381708,0
+onehot__state_code_IL,state_code,-0.09554407566949447,0
+onehot__state_code_IN,state_code,-0.007037872649538757,0
+onehot__state_code_KS,state_code,0.10451872530697653,0
+onehot__state_code_KY,state_code,0.0,0
+onehot__state_code_LA,state_code,-0.021462352173072293,0
+onehot__state_code_MA,state_code,-0.07905096420125671,0
+onehot__state_code_MD,state_code,0.0,0
+onehot__state_code_ME,state_code,0.0,0
+onehot__state_code_MI,state_code,0.24832824269960288,0
+onehot__state_code_MN,state_code,0.293741499285206,0
+onehot__state_code_MO,state_code,0.027276170521617734,0
+onehot__state_code_MS,state_code,0.15573255768991867,0
+onehot__state_code_MT,state_code,0.0,0
+onehot__state_code_NC,state_code,0.007007139551164248,0
+onehot__state_code_ND,state_code,0.23897290885192957,0
+onehot__state_code_NE,state_code,0.17908512202865712,0
+onehot__state_code_NH,state_code,0.0,0
+onehot__state_code_NJ,state_code,-0.11373811904088597,0
+onehot__state_code_NM,state_code,0.0,0
+onehot__state_code_NV,state_code,-0.09397164581747026,0
+onehot__state_code_NY,state_code,-0.3067489619903512,0
+onehot__state_code_OH,state_code,0.06124502945650417,0
+onehot__state_code_OK,state_code,0.25889461335543584,0
+onehot__state_code_OR,state_code,0.008812040943400908,0
+onehot__state_code_PA,state_code,0.09075212956406946,0
+onehot__state_code_PR,state_code,0.0,0
+onehot__state_code_RI,state_code,0.0,0
+onehot__state_code_SC,state_code,-0.060169675351799456,0
+onehot__state_code_SD,state_code,0.0,0
+onehot__state_code_TN,state_code,-0.1908274878273908,0
+onehot__state_code_TX,state_code,-0.034856687603102995,0
+onehot__state_code_UT,state_code,0.022776029321478132,0
+onehot__state_code_VA,state_code,0.10723496028881811,0
+onehot__state_code_VI,state_code,0.0,0
+onehot__state_code_VT,state_code,-0.679155973673938,0
+onehot__state_code_WA,state_code,0.0,0
+onehot__state_code_WI,state_code,0.08957078143150948,0
+onehot__state_code_WV,state_code,-0.1854008338329832,0
+onehot__state_code_WY,state_code,0.051056594729563226,0
+onehot__state_code_missing,state_code,-1.6458469918182752,0
+onehot__conforming_loan_limit_C,conforming_loan_limit,0.0,0
+onehot__conforming_loan_limit_NC,conforming_loan_limit,-0.06101443586181042,0
+onehot__conforming_loan_limit_U,conforming_loan_limit,0.0,0
+onehot__conforming_loan_limit_not applicable,conforming_loan_limit,0.42440909752919986,0
+onehot__derived_loan_product_type_Conventional:First Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_Conventional:Subordinate Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_FHA:First Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_FHA:Subordinate Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_FSA/RHS:First Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_FSA/RHS:Subordinate Lien,derived_loan_product_type,0.0,0
+onehot__derived_loan_product_type_VA:First Lien,derived_loan_product_type,0.11577389110085735,0
+onehot__derived_dwelling_category_Multifamily:Manufactured,derived_dwelling_category,1.065708868242028,0
+onehot__derived_dwelling_category_Multifamily:Site-Built,derived_dwelling_category,0.0,0
+onehot__derived_dwelling_category_Single Family (1-4 Units):Manufactured,derived_dwelling_category,-0.755812352092222,0
+onehot__derived_dwelling_category_Single Family (1-4 Units):Site-Built,derived_dwelling_category,0.0,0
+onehot__derived_ethnicity_Ethnicity Not Available,derived_ethnicity,0.15039150774722754,0
+onehot__derived_ethnicity_Free Form Text Only,derived_ethnicity,0.0,0
+onehot__derived_ethnicity_Hispanic or Latino,derived_ethnicity,0.0,0
+onehot__derived_ethnicity_Joint,derived_ethnicity,-0.1219179066069024,0
+onehot__derived_ethnicity_Not Hispanic or Latino,derived_ethnicity,0.0,0
+onehot__derived_race_2 or more minority races,derived_race,-0.388867906208328,0
+onehot__derived_race_American Indian or Alaska Native,derived_race,0.06108298937474683,0
+onehot__derived_race_Asian,derived_race,-0.11365668690340552,0
+onehot__derived_race_Black or African American,derived_race,-0.13607983899253193,0
+onehot__derived_race_Free Form Text Only,derived_race,0.0,0
+onehot__derived_race_Joint,derived_race,0.04700839455345484,0
+onehot__derived_race_Native Hawaiian or Other Pacific Islander,derived_race,0.0,0
+onehot__derived_race_Race Not Available,derived_race,0.0010879546003442287,0
+onehot__derived_race_White,derived_race,0.0,0
+onehot__derived_sex_Female,derived_sex,0.10227677821952569,0
+onehot__derived_sex_Joint,derived_sex,0.22594942657752753,0
+onehot__derived_sex_Male,derived_sex,0.0,0
+onehot__derived_sex_Sex Not Available,derived_sex,0.0,0
+onehot__applicant_age_25-34,applicant_age,0.0606323002015917,0
+onehot__applicant_age_35-44,applicant_age,-0.07615863912372825,0
+onehot__applicant_age_45-54,applicant_age,-0.14006483544458165,0
+onehot__applicant_age_55-64,applicant_age,0.0,0
+onehot__applicant_age_65-74,applicant_age,0.0,0
+onehot__applicant_age_<25,applicant_age,0.0,0
+onehot__applicant_age_>74,applicant_age,0.017652995691862735,0
+onehot__applicant_age_missing,applicant_age,0.795481731873604,0
+onehot__co-applicant_age_25-34,co-applicant_age,0.01776521112405609,0
+onehot__co-applicant_age_35-44,co-applicant_age,0.0,0
+onehot__co-applicant_age_45-54,co-applicant_age,-0.0747416119575653,0
+onehot__co-applicant_age_55-64,co-applicant_age,-0.07726807931288415,0
+onehot__co-applicant_age_65-74,co-applicant_age,0.12702135773216366,0
+onehot__co-applicant_age_<25,co-applicant_age,0.1408624953149212,0
+onehot__co-applicant_age_>74,co-applicant_age,-0.04947938242464376,0
+onehot__co-applicant_age_missing,co-applicant_age,0.0,0
+onehot__dti_band_20-30,dti_band,0.6709129004181674,0
+onehot__dti_band_30-36,dti_band,0.4736223151609378,0
+onehot__dti_band_36-49,dti_band,0.5293977042761356,0
+onehot__dti_band_50-60,dti_band,0.0,0
+onehot__dti_band_<20,dti_band,-0.15896140028071457,0
+onehot__dti_band_>60,dti_band,-1.169835948854292,0
+onehot__dti_band_missing,dti_band,-0.0749509232951724,0
+onehot__loan_term_band_120,loan_term_band,0.0,0
+onehot__loan_term_band_180,loan_term_band,0.2077456513772382,0
+onehot__loan_term_band_240,loan_term_band,-0.41088902251003867,0
+onehot__loan_term_band_300,loan_term_band,-0.0911512778734215,0
+onehot__loan_term_band_360,loan_term_band,0.14658870295104703,0
+onehot__loan_term_band_missing,loan_term_band,-1.2095202428189384,0
+onehot__loan_term_band_other,loan_term_band,0.3216683984094427,0
+onehot__ltv_band_80-90,ltv_band,0.003245787546310685,0
+onehot__ltv_band_90-95,ltv_band,-0.11263940018403336,0
+onehot__ltv_band_95-100,ltv_band,0.0,0
+onehot__ltv_band_<=80,ltv_band,0.027307011278871533,0
+onehot__ltv_band_>100,ltv_band,0.0,0
+onehot__ltv_band_missing,ltv_band,-0.39529342337006773,0
+onehot__x_dti_loan_type_20-30 x 1,x_dti_loan_type,-0.1718063113429349,0
+onehot__x_dti_loan_type_20-30 x 2,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_20-30 x 3,x_dti_loan_type,0.016023268819552794,0
+onehot__x_dti_loan_type_20-30 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_30-36 x 1,x_dti_loan_type,0.126906390204156,0
+onehot__x_dti_loan_type_30-36 x 2,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_30-36 x 3,x_dti_loan_type,-0.08024786027869202,0
+onehot__x_dti_loan_type_30-36 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_36-49 x 1,x_dti_loan_type,0.005269534119445747,0
+onehot__x_dti_loan_type_36-49 x 2,x_dti_loan_type,0.0319840793477176,0
+onehot__x_dti_loan_type_36-49 x 3,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_36-49 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_50-60 x 1,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_50-60 x 2,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_50-60 x 3,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_50-60 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_<20 x 1,x_dti_loan_type,0.04134069641729918,0
+onehot__x_dti_loan_type_<20 x 2,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_<20 x 3,x_dti_loan_type,-0.05490238235578925,0
+onehot__x_dti_loan_type_<20 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_>60 x 1,x_dti_loan_type,-0.3897096527490322,0
+onehot__x_dti_loan_type_>60 x 2,x_dti_loan_type,-1.830101290785744,0
+onehot__x_dti_loan_type_>60 x 3,x_dti_loan_type,1.7902832749709776,0
+onehot__x_dti_loan_type_>60 x 4,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_missing x 1,x_dti_loan_type,-0.020234492012467336,0
+onehot__x_dti_loan_type_missing x 2,x_dti_loan_type,0.0,0
+onehot__x_dti_loan_type_missing x 3,x_dti_loan_type,0.07018745631670742,0
+onehot__x_dti_loan_type_missing x 4,x_dti_loan_type,-0.7832324217001513,0
+onehot__x_dti_ltv_20-30 x 80-90,x_dti_ltv,0.07960664034280578,0
+onehot__x_dti_ltv_20-30 x 90-95,x_dti_ltv,0.09984203265917824,0
+onehot__x_dti_ltv_20-30 x 95-100,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_20-30 x <=80,x_dti_ltv,0.04380171689752676,0
+onehot__x_dti_ltv_20-30 x >100,x_dti_ltv,-0.025005011792218295,0
+onehot__x_dti_ltv_20-30 x missing,x_dti_ltv,-0.030456252794703997,0
+onehot__x_dti_ltv_30-36 x 80-90,x_dti_ltv,0.19732740706238683,0
+onehot__x_dti_ltv_30-36 x 90-95,x_dti_ltv,0.3098813114994909,0
+onehot__x_dti_ltv_30-36 x 95-100,x_dti_ltv,0.3937562227912016,0
+onehot__x_dti_ltv_30-36 x <=80,x_dti_ltv,-0.04516415588520169,0
+onehot__x_dti_ltv_30-36 x >100,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_30-36 x missing,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_36-49 x 80-90,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_36-49 x 90-95,x_dti_ltv,0.4370451891926171,0
+onehot__x_dti_ltv_36-49 x 95-100,x_dti_ltv,0.2527038502615389,0
+onehot__x_dti_ltv_36-49 x <=80,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_36-49 x >100,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_36-49 x missing,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_50-60 x 80-90,x_dti_ltv,-0.1292342232054236,0
+onehot__x_dti_ltv_50-60 x 90-95,x_dti_ltv,-0.14752923414784874,0
+onehot__x_dti_ltv_50-60 x 95-100,x_dti_ltv,0.4230026102649473,0
+onehot__x_dti_ltv_50-60 x <=80,x_dti_ltv,-0.332401946687805,0
+onehot__x_dti_ltv_50-60 x >100,x_dti_ltv,0.1715885207461569,0
+onehot__x_dti_ltv_50-60 x missing,x_dti_ltv,1.1713653922605896,0
+onehot__x_dti_ltv_<20 x 80-90,x_dti_ltv,0.16796520969621517,0
+onehot__x_dti_ltv_<20 x 90-95,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_<20 x 95-100,x_dti_ltv,-0.2405974134839765,0
+onehot__x_dti_ltv_<20 x <=80,x_dti_ltv,0.06141698393829522,0
+onehot__x_dti_ltv_<20 x >100,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_<20 x missing,x_dti_ltv,-0.5372955197165563,0
+onehot__x_dti_ltv_>60 x 80-90,x_dti_ltv,-0.38608560143443227,0
+onehot__x_dti_ltv_>60 x 90-95,x_dti_ltv,-0.6518579525150784,0
+onehot__x_dti_ltv_>60 x 95-100,x_dti_ltv,-0.00951003911970785,0
+onehot__x_dti_ltv_>60 x <=80,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_>60 x >100,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_>60 x missing,x_dti_ltv,0.0668482822459622,0
+onehot__x_dti_ltv_missing x 80-90,x_dti_ltv,0.0,0
+onehot__x_dti_ltv_missing x 90-95,x_dti_ltv,-1.3161566224847638,0
+onehot__x_dti_ltv_missing x 95-100,x_dti_ltv,-0.3077331372478336,0
+onehot__x_dti_ltv_missing x <=80,x_dti_ltv,0.24212430397904008,0
+onehot__x_dti_ltv_missing x >100,x_dti_ltv,0.05170092620873543,0
+onehot__x_dti_ltv_missing x missing,x_dti_ltv,-0.7829226993783323,0
+onehot__x_construction_loan_type_1 x 1,x_construction_loan_type,0.015079248209416245,0
+onehot__x_construction_loan_type_1 x 2,x_construction_loan_type,-0.023489012123580896,0
+onehot__x_construction_loan_type_1 x 3,x_construction_loan_type,0.0,0
+onehot__x_construction_loan_type_1 x 4,x_construction_loan_type,0.0,0
+onehot__x_construction_loan_type_2 x 1,x_construction_loan_type,-0.1854947890196962,0
+onehot__x_construction_loan_type_2 x 2,x_construction_loan_type,0.426599143937758,0
+onehot__x_construction_loan_type_2 x 3,x_construction_loan_type,0.0,0
+onehot__x_construction_loan_type_2 x 4,x_construction_loan_type,0.0,0
+onehot__x_lien_loan_amount_1 x 100-200k,x_lien_loan_amount,0.030592049041744354,0
+onehot__x_lien_loan_amount_1 x 200-400k,x_lien_loan_amount,-0.02336978581642907,0
+onehot__x_lien_loan_amount_1 x 25-50k,x_lien_loan_amount,0.0,0
+onehot__x_lien_loan_amount_1 x 50-100k,x_lien_loan_amount,0.011537899244548636,0
+onehot__x_lien_loan_amount_1 x <=25k,x_lien_loan_amount,-0.09754999966689189,0
+onehot__x_lien_loan_amount_1 x >400k,x_lien_loan_amount,0.03824988275132621,0
+onehot__x_lien_loan_amount_2 x 100-200k,x_lien_loan_amount,-0.27445478673053353,0
+onehot__x_lien_loan_amount_2 x 200-400k,x_lien_loan_amount,-0.07319443462155385,0
+onehot__x_lien_loan_amount_2 x 25-50k,x_lien_loan_amount,0.0,0
+onehot__x_lien_loan_amount_2 x 50-100k,x_lien_loan_amount,0.0032535314739048846,0
+onehot__x_lien_loan_amount_2 x <=25k,x_lien_loan_amount,1.2091625147202105,0
+onehot__x_lien_loan_amount_2 x >400k,x_lien_loan_amount,-0.05018468341941239,0
+flags__entity_applicant,entity_applicant,0.0,0
+flags__location_unknown,location_unknown,-0.1658532986349062,0
+flags__has_coapplicant,has_coapplicant,0.0,0
+flags__income_le_0,income_le_0,-0.29171713070814126,0
+flags__manufactured_conventional,manufactured_conventional,-0.1854947890196962,0
+flags__manufactured_location_unknown,manufactured_location_unknown,-1.811927954143315,0
+flags__dti_above_program_limit,dti_above_program_limit,-2.199286931970044,0
+flags__ltv_at_standard_value,ltv_at_standard_value,0.2064983168303402,0
+flags__is_exempt_record,is_exempt_record,1.8677986350560878,0
+missing__missingindicator_property_value,property_value,-0.8067320944078754,0
+missing__missingindicator_income,income,0.34026761226217006,0
+missing__missingindicator_tract_population,tract_population,-0.1658532986349062,0
+missing__missingindicator_tract_minority_population_percent,tract_minority_population_percent,-0.1658532986349062,0
+missing__missingindicator_ffiec_msa_md_median_family_income,ffiec_msa_md_median_family_income,0.0,0
+missing__missingindicator_tract_to_msa_income_percentage,tract_to_msa_income_percentage,-0.3368248027883771,0
+missing__missingindicator_tract_owner_occupied_units,tract_owner_occupied_units,-0.1658532986349062,0
+missing__missingindicator_tract_one_to_four_family_homes,tract_one_to_four_family_homes,-0.1658532986349062,0
+missing__missingindicator_tract_median_age_of_housing_units,tract_median_age_of_housing_units,0.0,0
+missing__missingindicator_computed_ltv,computed_ltv,-0.8067320944078754,0
+missing__missingindicator_ltv_gap,ltv_gap,0.4100715899043412,0
+missing__missingindicator_property_to_income,property_to_income,-0.32757130979423865,0
+missing__missingindicator_loan_to_income,loan_to_income,0.0,0
+missing__missingindicator_county_code_rate,county_code_rate,0.44598663869182054,0
+spline__loan_amount_sp_0,loan_amount,0.0,0
+spline__loan_amount_sp_1,loan_amount,-0.08877173862616393,0
+spline__loan_amount_sp_2,loan_amount,0.09111246619079667,0
+spline__loan_amount_sp_3,loan_amount,0.0,0
+spline__loan_amount_sp_4,loan_amount,0.0,0
+spline__loan_amount_sp_5,loan_amount,0.0,0
+spline__loan_amount_sp_6,loan_amount,0.0,0
+spline__property_value_sp_0,property_value,-0.4489641766769278,0
+spline__property_value_sp_1,property_value,-0.4300180343271907,0
+spline__property_value_sp_2,property_value,0.07540315537566054,0
+spline__property_value_sp_3,property_value,0.08816534091999134,0
+spline__property_value_sp_4,property_value,0.18468567962946536,0
+spline__property_value_sp_5,property_value,0.0,0
+spline__property_value_sp_6,property_value,0.0,0
+spline__income_sp_0,income,-0.7939844709778088,0
+spline__income_sp_1,income,-0.659874551480684,0
+spline__income_sp_2,income,0.07019956658632771,0
+spline__income_sp_3,income,0.0,0
+spline__income_sp_4,income,0.0,0
+spline__income_sp_5,income,0.3883118559355793,0
+spline__income_sp_6,income,0.27841836484169113,0
+spline__total_units_sp_0,total_units,0.0,0
+spline__total_units_sp_1,total_units,0.3082389312838331,0
+spline__total_units_sp_2,total_units,0.0,0
+spline__total_units_sp_3,total_units,0.0,0
+spline__total_units_sp_4,total_units,0.0,0
+spline__total_units_sp_5,total_units,0.0,0
+spline__total_units_sp_6,total_units,0.0,0
+spline__tract_population_sp_0,tract_population,0.0,0
+spline__tract_population_sp_1,tract_population,0.030840340088163307,0
+spline__tract_population_sp_2,tract_population,0.0,0
+spline__tract_population_sp_3,tract_population,-0.09123200349854513,0
+spline__tract_population_sp_4,tract_population,0.03944982020472703,0
+spline__tract_population_sp_5,tract_population,0.0,0
+spline__tract_population_sp_6,tract_population,0.0,0
+spline__tract_minority_population_percent_sp_0,tract_minority_population_percent,0.0,0
+spline__tract_minority_population_percent_sp_1,tract_minority_population_percent,-0.076721773084267,0
+spline__tract_minority_population_percent_sp_2,tract_minority_population_percent,0.015243181917155117,0
+spline__tract_minority_population_percent_sp_3,tract_minority_population_percent,0.0,0
+spline__tract_minority_population_percent_sp_4,tract_minority_population_percent,0.05279266945901308,0
+spline__tract_minority_population_percent_sp_5,tract_minority_population_percent,-0.2166129289116897,0
+spline__tract_minority_population_percent_sp_6,tract_minority_population_percent,0.0,0
+spline__ffiec_msa_md_median_family_income_sp_0,ffiec_msa_md_median_family_income,0.0,0
+spline__ffiec_msa_md_median_family_income_sp_1,ffiec_msa_md_median_family_income,0.03500567138417287,0
+spline__ffiec_msa_md_median_family_income_sp_2,ffiec_msa_md_median_family_income,0.04155911355726204,0
+spline__ffiec_msa_md_median_family_income_sp_3,ffiec_msa_md_median_family_income,-0.05367419814145227,0
+spline__ffiec_msa_md_median_family_income_sp_4,ffiec_msa_md_median_family_income,0.0,0
+spline__ffiec_msa_md_median_family_income_sp_5,ffiec_msa_md_median_family_income,0.0,0
+spline__ffiec_msa_md_median_family_income_sp_6,ffiec_msa_md_median_family_income,0.0,0
+spline__tract_to_msa_income_percentage_sp_0,tract_to_msa_income_percentage,0.0,0
+spline__tract_to_msa_income_percentage_sp_1,tract_to_msa_income_percentage,0.0,0
+spline__tract_to_msa_income_percentage_sp_2,tract_to_msa_income_percentage,0.0,0
+spline__tract_to_msa_income_percentage_sp_3,tract_to_msa_income_percentage,0.04351786506656962,0
+spline__tract_to_msa_income_percentage_sp_4,tract_to_msa_income_percentage,0.15201213696934962,0
+spline__tract_to_msa_income_percentage_sp_5,tract_to_msa_income_percentage,0.0,0
+spline__tract_to_msa_income_percentage_sp_6,tract_to_msa_income_percentage,0.0,0
+spline__tract_owner_occupied_units_sp_0,tract_owner_occupied_units,0.0,0
+spline__tract_owner_occupied_units_sp_1,tract_owner_occupied_units,0.0,0
+spline__tract_owner_occupied_units_sp_2,tract_owner_occupied_units,0.0,0
+spline__tract_owner_occupied_units_sp_3,tract_owner_occupied_units,-0.08004771721043812,0
+spline__tract_owner_occupied_units_sp_4,tract_owner_occupied_units,0.07546523969283755,0
+spline__tract_owner_occupied_units_sp_5,tract_owner_occupied_units,0.05251247084984258,0
+spline__tract_owner_occupied_units_sp_6,tract_owner_occupied_units,0.0,0
+spline__tract_one_to_four_family_homes_sp_0,tract_one_to_four_family_homes,-0.9248543256542473,0
+spline__tract_one_to_four_family_homes_sp_1,tract_one_to_four_family_homes,-0.27146674341226723,0
+spline__tract_one_to_four_family_homes_sp_2,tract_one_to_four_family_homes,0.12656454440757972,0
+spline__tract_one_to_four_family_homes_sp_3,tract_one_to_four_family_homes,0.0,0
+spline__tract_one_to_four_family_homes_sp_4,tract_one_to_four_family_homes,2.902488390363215e-09,0
+spline__tract_one_to_four_family_homes_sp_5,tract_one_to_four_family_homes,0.1497505064276609,0
+spline__tract_one_to_four_family_homes_sp_6,tract_one_to_four_family_homes,0.0,0
+spline__tract_median_age_of_housing_units_sp_0,tract_median_age_of_housing_units,0.0,0
+spline__tract_median_age_of_housing_units_sp_1,tract_median_age_of_housing_units,-0.19983836029304036,0
+spline__tract_median_age_of_housing_units_sp_2,tract_median_age_of_housing_units,0.11289662828243274,0
+spline__tract_median_age_of_housing_units_sp_3,tract_median_age_of_housing_units,-0.1527572790819841,0
+spline__tract_median_age_of_housing_units_sp_4,tract_median_age_of_housing_units,0.0,0
+spline__tract_median_age_of_housing_units_sp_5,tract_median_age_of_housing_units,0.024660489749247488,0
+spline__tract_median_age_of_housing_units_sp_6,tract_median_age_of_housing_units,0.0,0
+spline__exempt_code_count_sp_0,exempt_code_count,0.0,0
+spline__exempt_code_count_sp_1,exempt_code_count,0.0,0
+spline__exempt_code_count_sp_2,exempt_code_count,0.0,0
+spline__exempt_code_count_sp_3,exempt_code_count,0.0,0
+spline__exempt_code_count_sp_4,exempt_code_count,0.0,0
+spline__exempt_code_count_sp_5,exempt_code_count,0.22857376754269992,0
+spline__exempt_code_count_sp_6,exempt_code_count,0.0,0
+spline__computed_ltv_sp_0,computed_ltv,0.0,0
+spline__computed_ltv_sp_1,computed_ltv,0.6598028568639952,0
+spline__computed_ltv_sp_2,computed_ltv,0.6215161309772711,0
+spline__computed_ltv_sp_3,computed_ltv,0.0,0
+spline__computed_ltv_sp_4,computed_ltv,0.25488643655006105,0
+spline__computed_ltv_sp_5,computed_ltv,-0.37655629086561915,0
+spline__computed_ltv_sp_6,computed_ltv,-3.1490541269848054,0
+spline__ltv_gap_sp_0,ltv_gap,0.0,0
+spline__ltv_gap_sp_1,ltv_gap,0.06406851472190817,0
+spline__ltv_gap_sp_2,ltv_gap,0.0,0
+spline__ltv_gap_sp_3,ltv_gap,0.06634320318841115,0
+spline__ltv_gap_sp_4,ltv_gap,0.02560140638445109,0
+spline__ltv_gap_sp_5,ltv_gap,-0.19027206375620503,0
+spline__ltv_gap_sp_6,ltv_gap,0.0,0
+spline__property_to_income_sp_0,property_to_income,0.0,0
+spline__property_to_income_sp_1,property_to_income,-1.143969508172568,0
+spline__property_to_income_sp_2,property_to_income,0.20573055222128594,0
+spline__property_to_income_sp_3,property_to_income,0.0,0
+spline__property_to_income_sp_4,property_to_income,0.4867212881437897,0
+spline__property_to_income_sp_5,property_to_income,0.3802838822972013,0
+spline__property_to_income_sp_6,property_to_income,0.0,0
+spline__loan_to_income_sp_0,loan_to_income,0.0,0
+spline__loan_to_income_sp_1,loan_to_income,0.6879999211987717,0
+spline__loan_to_income_sp_2,loan_to_income,0.2778735443968315,0
+spline__loan_to_income_sp_3,loan_to_income,0.0,0
+spline__loan_to_income_sp_4,loan_to_income,0.07126283811383351,0
+spline__loan_to_income_sp_5,loan_to_income,-0.47230102370965027,0
+spline__loan_to_income_sp_6,loan_to_income,-0.34091223117426933,0
+spline__county_code_rate_sp_0,county_code_rate,0.0,0
+spline__county_code_rate_sp_1,county_code_rate,-0.05073327328400092,0
+spline__county_code_rate_sp_2,county_code_rate,0.10543679535245319,0
+spline__county_code_rate_sp_3,county_code_rate,0.0,0
+spline__county_code_rate_sp_4,county_code_rate,0.23388068934529943,0
+spline__county_code_rate_sp_5,county_code_rate,-0.0012558675215961891,0
+spline__county_code_rate_sp_6,county_code_rate,0.0,0
+onehot__loan_type_1,loan_type,0.0,1
+onehot__loan_type_2,loan_type,0.0,1
+onehot__loan_type_3,loan_type,0.09420360165162768,1
+onehot__loan_type_4,loan_type,0.0,1
+onehot__lien_status_1,lien_status,0.5667351428017338,1
+onehot__lien_status_2,lien_status,0.0,1
+onehot__preapproval_1,preapproval,2.9366891843100555,1
+onehot__preapproval_2,preapproval,-1.5983269274761465,1
+onehot__reverse_mortgage_1,reverse_mortgage,1.8756704492982763,1
+onehot__reverse_mortgage_1111,reverse_mortgage,0.0,1
+onehot__reverse_mortgage_2,reverse_mortgage,-1.4453593008974706,1
+onehot__open-end_line_of_credit_1,open-end_line_of_credit,-0.28749054425504167,1
+onehot__open-end_line_of_credit_1111,open-end_line_of_credit,0.0,1
+onehot__open-end_line_of_credit_2,open-end_line_of_credit,0.12462294740669763,1
+onehot__business_or_commercial_purpose_1,business_or_commercial_purpose,-0.2845350863341411,1
+onehot__business_or_commercial_purpose_1111,business_or_commercial_purpose,0.0,1
+onehot__business_or_commercial_purpose_2,business_or_commercial_purpose,0.0,1
+onehot__negative_amortization_1,negative_amortization,0.0,1
+onehot__negative_amortization_1111,negative_amortization,0.0,1
+onehot__negative_amortization_2,negative_amortization,0.0,1
+onehot__interest_only_payment_1,interest_only_payment,-0.28687729670954454,1
+onehot__interest_only_payment_1111,interest_only_payment,0.0,1
+onehot__interest_only_payment_2,interest_only_payment,0.0,1
+onehot__balloon_payment_1,balloon_payment,0.0,1
+onehot__balloon_payment_1111,balloon_payment,0.0,1
+onehot__balloon_payment_2,balloon_payment,-0.35894673716157816,1
+onehot__other_nonamortizing_features_1,other_nonamortizing_features,0.0951934898519767,1
+onehot__other_nonamortizing_features_1111,other_nonamortizing_features,0.0,1
+onehot__other_nonamortizing_features_2,other_nonamortizing_features,-0.6523626648634968,1
+onehot__construction_method_1,construction_method,0.0,1
+onehot__construction_method_2,construction_method,0.0,1
+onehot__occupancy_type_1,occupancy_type,0.0,1
+onehot__occupancy_type_2,occupancy_type,-0.015660209977987383,1
+onehot__occupancy_type_3,occupancy_type,0.3563940671579913,1
+onehot__manufactured_home_secured_property_type_1,manufactured_home_secured_property_type,0.0,1
+onehot__manufactured_home_secured_property_type_1111,manufactured_home_secured_property_type,0.09280228912317225,1
+onehot__manufactured_home_secured_property_type_2,manufactured_home_secured_property_type,-0.018386418699557556,1
+onehot__manufactured_home_secured_property_type_3,manufactured_home_secured_property_type,0.0,1
+onehot__manufactured_home_land_property_interest_1,manufactured_home_land_property_interest,0.0,1
+onehot__manufactured_home_land_property_interest_1111,manufactured_home_land_property_interest,0.0,1
+onehot__manufactured_home_land_property_interest_2,manufactured_home_land_property_interest,-0.11511221907498174,1
+onehot__manufactured_home_land_property_interest_3,manufactured_home_land_property_interest,0.4812144138702424,1
+onehot__manufactured_home_land_property_interest_4,manufactured_home_land_property_interest,0.40104256113185593,1
+onehot__manufactured_home_land_property_interest_5,manufactured_home_land_property_interest,0.0,1
+onehot__applicant_credit_score_type_1,applicant_credit_score_type,0.021204103914235616,1
+onehot__applicant_credit_score_type_11,applicant_credit_score_type,0.025704579670014296,1
+onehot__applicant_credit_score_type_1111,applicant_credit_score_type,0.08054162503444356,1
+onehot__applicant_credit_score_type_12,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_13,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_14,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_15,applicant_credit_score_type,-0.08086125510687221,1
+onehot__applicant_credit_score_type_2,applicant_credit_score_type,0.015224777804164712,1
+onehot__applicant_credit_score_type_3,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_4,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_5,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_6,applicant_credit_score_type,0.0,1
+onehot__applicant_credit_score_type_7,applicant_credit_score_type,-0.041526642911406834,1
+onehot__applicant_credit_score_type_8,applicant_credit_score_type,-0.8595046645536106,1
+onehot__applicant_credit_score_type_9,applicant_credit_score_type,-0.19148171738982783,1
+onehot__co-applicant_credit_score_type_1,co-applicant_credit_score_type,-0.031260084866769816,1
+onehot__co-applicant_credit_score_type_10,co-applicant_credit_score_type,-0.25943301613550035,1
+onehot__co-applicant_credit_score_type_11,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_1111,co-applicant_credit_score_type,0.08054162503444356,1
+onehot__co-applicant_credit_score_type_12,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_13,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_14,co-applicant_credit_score_type,0.14954946662933286,1
+onehot__co-applicant_credit_score_type_15,co-applicant_credit_score_type,-0.16286008680973274,1
+onehot__co-applicant_credit_score_type_2,co-applicant_credit_score_type,0.09713332882481202,1
+onehot__co-applicant_credit_score_type_3,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_4,co-applicant_credit_score_type,0.1373871199168547,1
+onehot__co-applicant_credit_score_type_5,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_6,co-applicant_credit_score_type,0.0,1
+onehot__co-applicant_credit_score_type_7,co-applicant_credit_score_type,0.23809766681748407,1
+onehot__co-applicant_credit_score_type_8,co-applicant_credit_score_type,-0.12203637467952425,1
+onehot__co-applicant_credit_score_type_9,co-applicant_credit_score_type,-0.0447874369039238,1
+onehot__applicant_ethnicity-1_1,applicant_ethnicity-1,-0.21788320359195099,1
+onehot__applicant_ethnicity-1_11,applicant_ethnicity-1,-0.26517679940782396,1
+onehot__applicant_ethnicity-1_12,applicant_ethnicity-1,0.015362642693935228,1
+onehot__applicant_ethnicity-1_13,applicant_ethnicity-1,0.02401444370583438,1
+onehot__applicant_ethnicity-1_14,applicant_ethnicity-1,0.0,1
+onehot__applicant_ethnicity-1_2,applicant_ethnicity-1,0.0030388971577716703,1
+onehot__applicant_ethnicity-1_3,applicant_ethnicity-1,0.0,1
+onehot__applicant_ethnicity-1_4,applicant_ethnicity-1,0.0,1
+onehot__applicant_ethnicity-1_missing,applicant_ethnicity-1,-0.2617047320923977,1
+onehot__co-applicant_ethnicity-1_1,co-applicant_ethnicity-1,0.03673803241768985,1
+onehot__co-applicant_ethnicity-1_11,co-applicant_ethnicity-1,-0.3395883195854853,1
+onehot__co-applicant_ethnicity-1_12,co-applicant_ethnicity-1,0.0,1
+onehot__co-applicant_ethnicity-1_13,co-applicant_ethnicity-1,0.0,1
+onehot__co-applicant_ethnicity-1_14,co-applicant_ethnicity-1,-0.3853496391328203,1
+onehot__co-applicant_ethnicity-1_2,co-applicant_ethnicity-1,0.0,1
+onehot__co-applicant_ethnicity-1_3,co-applicant_ethnicity-1,-0.07550499447958375,1
+onehot__co-applicant_ethnicity-1_4,co-applicant_ethnicity-1,0.22426717772601107,1
+onehot__co-applicant_ethnicity-1_5,co-applicant_ethnicity-1,0.0,1
+onehot__co-applicant_ethnicity-1_missing,co-applicant_ethnicity-1,0.0,1
+onehot__applicant_ethnicity_observed_1,applicant_ethnicity_observed,0.0,1
+onehot__applicant_ethnicity_observed_2,applicant_ethnicity_observed,0.0,1
+onehot__applicant_ethnicity_observed_3,applicant_ethnicity_observed,0.267484105831452,1
+onehot__co-applicant_ethnicity_observed_1,co-applicant_ethnicity_observed,0.0,1
+onehot__co-applicant_ethnicity_observed_2,co-applicant_ethnicity_observed,0.0,1
+onehot__co-applicant_ethnicity_observed_3,co-applicant_ethnicity_observed,0.0,1
+onehot__co-applicant_ethnicity_observed_4,co-applicant_ethnicity_observed,0.0,1
+onehot__applicant_race-1_1,applicant_race-1,0.0,1
+onehot__applicant_race-1_2,applicant_race-1,0.2837200370083787,1
+onehot__applicant_race-1_21,applicant_race-1,-0.014243850329570895,1
+onehot__applicant_race-1_22,applicant_race-1,0.0,1
+onehot__applicant_race-1_23,applicant_race-1,0.04479137339330319,1
+onehot__applicant_race-1_24,applicant_race-1,0.0,1
+onehot__applicant_race-1_25,applicant_race-1,0.0,1
+onehot__applicant_race-1_26,applicant_race-1,0.0,1
+onehot__applicant_race-1_27,applicant_race-1,-0.3739337951961773,1
+onehot__applicant_race-1_3,applicant_race-1,-0.28207806889722054,1
+onehot__applicant_race-1_4,applicant_race-1,0.0,1
+onehot__applicant_race-1_41,applicant_race-1,0.0,1
+onehot__applicant_race-1_42,applicant_race-1,0.0,1
+onehot__applicant_race-1_43,applicant_race-1,0.0,1
+onehot__applicant_race-1_44,applicant_race-1,0.0,1
+onehot__applicant_race-1_5,applicant_race-1,0.22485447898626088,1
+onehot__applicant_race-1_6,applicant_race-1,0.0,1
+onehot__applicant_race-1_7,applicant_race-1,0.0,1
+onehot__applicant_race-1_missing,applicant_race-1,0.0,1
+onehot__co-applicant_race-1_1,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_2,co-applicant_race-1,-0.14754502548057602,1
+onehot__co-applicant_race-1_21,co-applicant_race-1,-0.058147798266021455,1
+onehot__co-applicant_race-1_22,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_23,co-applicant_race-1,0.09161654513427955,1
+onehot__co-applicant_race-1_24,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_25,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_26,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_27,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_3,co-applicant_race-1,-0.13086238057020375,1
+onehot__co-applicant_race-1_4,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_41,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_42,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_43,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_44,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_5,co-applicant_race-1,0.1349927014503182,1
+onehot__co-applicant_race-1_6,co-applicant_race-1,0.20084474402625282,1
+onehot__co-applicant_race-1_7,co-applicant_race-1,0.0,1
+onehot__co-applicant_race-1_8,co-applicant_race-1,0.08019316501875794,1
+onehot__co-applicant_race-1_missing,co-applicant_race-1,0.0,1
+onehot__applicant_race_observed_1,applicant_race_observed,0.0,1
+onehot__applicant_race_observed_2,applicant_race_observed,0.0,1
+onehot__applicant_race_observed_3,applicant_race_observed,0.0,1
+onehot__co-applicant_race_observed_1,co-applicant_race_observed,0.0,1
+onehot__co-applicant_race_observed_2,co-applicant_race_observed,-0.09652128292255105,1
+onehot__co-applicant_race_observed_3,co-applicant_race_observed,0.0,1
+onehot__co-applicant_race_observed_4,co-applicant_race_observed,0.08019316501875794,1
+onehot__applicant_sex_1,applicant_sex,0.0,1
+onehot__applicant_sex_2,applicant_sex,0.05712189031863448,1
+onehot__applicant_sex_3,applicant_sex,0.0,1
+onehot__applicant_sex_4,applicant_sex,0.0,1
+onehot__applicant_sex_6,applicant_sex,0.0,1
+onehot__co-applicant_sex_1,co-applicant_sex,-0.15536787726386547,1
+onehot__co-applicant_sex_2,co-applicant_sex,0.0,1
+onehot__co-applicant_sex_3,co-applicant_sex,0.24337315044603092,1
+onehot__co-applicant_sex_4,co-applicant_sex,0.0,1
+onehot__co-applicant_sex_5,co-applicant_sex,0.0,1
+onehot__co-applicant_sex_6,co-applicant_sex,0.0,1
+onehot__applicant_sex_observed_1,applicant_sex_observed,0.25123793309522785,1
+onehot__applicant_sex_observed_2,applicant_sex_observed,0.0,1
+onehot__applicant_sex_observed_3,applicant_sex_observed,-0.35099980390901075,1
+onehot__co-applicant_sex_observed_1,co-applicant_sex_observed,0.014315391199349674,1
+onehot__co-applicant_sex_observed_2,co-applicant_sex_observed,0.0,1
+onehot__co-applicant_sex_observed_3,co-applicant_sex_observed,-0.0206379472700225,1
+onehot__co-applicant_sex_observed_4,co-applicant_sex_observed,0.0,1
+onehot__submission_of_application_1,submission_of_application,0.0,1
+onehot__submission_of_application_1111,submission_of_application,0.0,1
+onehot__submission_of_application_2,submission_of_application,-0.22817143799575565,1
+onehot__initially_payable_to_institution_1,initially_payable_to_institution,1.4359313713739636,1
+onehot__initially_payable_to_institution_1111,initially_payable_to_institution,0.0,1
+onehot__initially_payable_to_institution_2,initially_payable_to_institution,1.4455783601798105,1
+onehot__initially_payable_to_institution_3,initially_payable_to_institution,-6.255520899058047,1
+onehot__aus-1_1,aus-1,0.0,1
+onehot__aus-1_1111,aus-1,0.0,1
+onehot__aus-1_2,aus-1,0.023041059871477042,1
+onehot__aus-1_3,aus-1,0.1359294941993173,1
+onehot__aus-1_4,aus-1,0.0,1
+onehot__aus-1_5,aus-1,0.0,1
+onehot__aus-1_6,aus-1,-0.7618421228027913,1
+onehot__aus-1_7,aus-1,-1.1353728416730207,1
+onehot__state_code_AK,state_code,0.0,1
+onehot__state_code_AL,state_code,0.011139853658281601,1
+onehot__state_code_AR,state_code,0.0,1
+onehot__state_code_AZ,state_code,-0.041543174274544445,1
+onehot__state_code_CA,state_code,-0.04666217566924465,1
+onehot__state_code_CO,state_code,0.14041643912311036,1
+onehot__state_code_CT,state_code,-0.4654964629014409,1
+onehot__state_code_DC,state_code,0.0,1
+onehot__state_code_DE,state_code,-0.12305777648312509,1
+onehot__state_code_FL,state_code,-0.4917541213031119,1
+onehot__state_code_GA,state_code,-0.1752650900614579,1
+onehot__state_code_GU,state_code,0.0,1
+onehot__state_code_HI,state_code,0.03348662179280022,1
+onehot__state_code_IA,state_code,0.15094673247700555,1
+onehot__state_code_ID,state_code,0.0,1
+onehot__state_code_IL,state_code,-0.046440340349249196,1
+onehot__state_code_IN,state_code,0.002405629293916382,1
+onehot__state_code_KS,state_code,0.07389264972223723,1
+onehot__state_code_KY,state_code,0.003901787076492021,1
+onehot__state_code_LA,state_code,-0.21922739074326153,1
+onehot__state_code_MA,state_code,-0.11764415269655545,1
+onehot__state_code_MD,state_code,-0.00840668598677399,1
+onehot__state_code_ME,state_code,0.0,1
+onehot__state_code_MI,state_code,0.189995496484347,1
+onehot__state_code_MN,state_code,0.24183338699130374,1
+onehot__state_code_MO,state_code,0.1057543673949599,1
+onehot__state_code_MS,state_code,0.1316746702056131,1
+onehot__state_code_MT,state_code,-0.05740238283818917,1
+onehot__state_code_NC,state_code,0.037924414058021376,1
+onehot__state_code_ND,state_code,0.3023817357291731,1
+onehot__state_code_NE,state_code,0.3778170098797536,1
+onehot__state_code_NH,state_code,0.0,1
+onehot__state_code_NJ,state_code,-0.1357046491337099,1
+onehot__state_code_NM,state_code,-0.12906048504072962,1
+onehot__state_code_NV,state_code,-0.22258135938477178,1
+onehot__state_code_NY,state_code,-0.3192060780698673,1
+onehot__state_code_OH,state_code,0.02772513860711308,1
+onehot__state_code_OK,state_code,0.1982505147165498,1
+onehot__state_code_OR,state_code,0.0,1
+onehot__state_code_PA,state_code,0.1113071594675899,1
+onehot__state_code_PR,state_code,0.0,1
+onehot__state_code_RI,state_code,0.0,1
+onehot__state_code_SC,state_code,-0.26616275032507064,1
+onehot__state_code_SD,state_code,0.0,1
+onehot__state_code_TN,state_code,-0.2461112567522183,1
+onehot__state_code_TX,state_code,-0.10950523833466316,1
+onehot__state_code_UT,state_code,0.039852555053721456,1
+onehot__state_code_VA,state_code,0.005316222040637926,1
+onehot__state_code_VI,state_code,0.0,1
+onehot__state_code_VT,state_code,-0.5299244080414104,1
+onehot__state_code_WA,state_code,-0.058528648291994445,1
+onehot__state_code_WI,state_code,0.19306276781254486,1
+onehot__state_code_WV,state_code,-0.09055729020627376,1
+onehot__state_code_WY,state_code,0.0,1
+onehot__state_code_missing,state_code,-1.5885689928133324,1
+onehot__conforming_loan_limit_C,conforming_loan_limit,0.0,1
+onehot__conforming_loan_limit_NC,conforming_loan_limit,-0.01749308127755471,1
+onehot__conforming_loan_limit_U,conforming_loan_limit,0.0,1
+onehot__conforming_loan_limit_not applicable,conforming_loan_limit,0.38176653421243933,1
+onehot__derived_loan_product_type_Conventional:First Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_Conventional:Subordinate Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_FHA:First Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_FHA:Subordinate Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_FSA/RHS:First Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_FSA/RHS:Subordinate Lien,derived_loan_product_type,0.0,1
+onehot__derived_loan_product_type_VA:First Lien,derived_loan_product_type,0.09420360165162768,1
+onehot__derived_dwelling_category_Multifamily:Manufactured,derived_dwelling_category,0.0,1
+onehot__derived_dwelling_category_Multifamily:Site-Built,derived_dwelling_category,0.0,1
+onehot__derived_dwelling_category_Single Family (1-4 Units):Manufactured,derived_dwelling_category,-0.8511099994088075,1
+onehot__derived_dwelling_category_Single Family (1-4 Units):Site-Built,derived_dwelling_category,0.0,1
+onehot__derived_ethnicity_Ethnicity Not Available,derived_ethnicity,0.030705510363042077,1
+onehot__derived_ethnicity_Free Form Text Only,derived_ethnicity,-0.2617047320923977,1
+onehot__derived_ethnicity_Hispanic or Latino,derived_ethnicity,0.01955878133428858,1
+onehot__derived_ethnicity_Joint,derived_ethnicity,-0.10673215037829632,1
+onehot__derived_ethnicity_Not Hispanic or Latino,derived_ethnicity,0.0,1
+onehot__derived_race_2 or more minority races,derived_race,-0.047271604450891846,1
+onehot__derived_race_American Indian or Alaska Native,derived_race,0.09325880153626606,1
+onehot__derived_race_Asian,derived_race,-0.12359689117666064,1
+onehot__derived_race_Black or African American,derived_race,0.0,1
+onehot__derived_race_Free Form Text Only,derived_race,0.0,1
+onehot__derived_race_Joint,derived_race,0.0011560631681024102,1
+onehot__derived_race_Native Hawaiian or Other Pacific Islander,derived_race,-0.03580314114111251,1
+onehot__derived_race_Race Not Available,derived_race,0.0,1
+onehot__derived_race_White,derived_race,0.028640114415436034,1
+onehot__derived_sex_Female,derived_sex,0.01989826709779841,1
+onehot__derived_sex_Joint,derived_sex,0.161091196744458,1
+onehot__derived_sex_Male,derived_sex,0.0,1
+onehot__derived_sex_Sex Not Available,derived_sex,-0.15187516905514278,1
+onehot__applicant_age_25-34,applicant_age,0.00816109625162562,1
+onehot__applicant_age_35-44,applicant_age,-0.14140440988707642,1
+onehot__applicant_age_45-54,applicant_age,-0.22628173889684328,1
+onehot__applicant_age_55-64,applicant_age,-0.08515836466843962,1
+onehot__applicant_age_65-74,applicant_age,0.027450543083352444,1
+onehot__applicant_age_<25,applicant_age,0.0,1
+onehot__applicant_age_>74,applicant_age,0.019321587464018266,1
+onehot__applicant_age_missing,applicant_age,0.7761304569728352,1
+onehot__co-applicant_age_25-34,co-applicant_age,0.013318665605181645,1
+onehot__co-applicant_age_35-44,co-applicant_age,0.015675076387923096,1
+onehot__co-applicant_age_45-54,co-applicant_age,-0.02933070975191147,1
+onehot__co-applicant_age_55-64,co-applicant_age,-0.039998939242692474,1
+onehot__co-applicant_age_65-74,co-applicant_age,0.09510453355860894,1
+onehot__co-applicant_age_<25,co-applicant_age,0.0,1
+onehot__co-applicant_age_>74,co-applicant_age,-0.15881268413912142,1
+onehot__co-applicant_age_missing,co-applicant_age,0.0,1
+onehot__dti_band_20-30,dti_band,0.587955517179902,1
+onehot__dti_band_30-36,dti_band,0.5108362201006273,1
+onehot__dti_band_36-49,dti_band,0.494039166631142,1
+onehot__dti_band_50-60,dti_band,0.0,1
+onehot__dti_band_<20,dti_band,-0.37501350779971815,1
+onehot__dti_band_>60,dti_band,-1.2003543979144056,1
+onehot__dti_band_missing,dti_band,-0.3209553203559261,1
+onehot__loan_term_band_120,loan_term_band,0.04886645991942885,1
+onehot__loan_term_band_180,loan_term_band,0.113746747114418,1
+onehot__loan_term_band_240,loan_term_band,-0.5110235700353988,1
+onehot__loan_term_band_300,loan_term_band,-0.13757891547682272,1
+onehot__loan_term_band_360,loan_term_band,0.03927788272478403,1
+onehot__loan_term_band_missing,loan_term_band,-1.3684451554053583,1
+onehot__loan_term_band_other,loan_term_band,0.20045334652297453,1
+onehot__ltv_band_80-90,ltv_band,0.11481724548788816,1
+onehot__ltv_band_90-95,ltv_band,0.0,1
+onehot__ltv_band_95-100,ltv_band,0.07301434044896213,1
+onehot__ltv_band_<=80,ltv_band,0.1631416312435749,1
+onehot__ltv_band_>100,ltv_band,0.0,1
+onehot__ltv_band_missing,ltv_band,-0.4052802643657173,1
+onehot__x_dti_loan_type_20-30 x 1,x_dti_loan_type,-0.20224272721759268,1
+onehot__x_dti_loan_type_20-30 x 2,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_20-30 x 3,x_dti_loan_type,0.026327707437964115,1
+onehot__x_dti_loan_type_20-30 x 4,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_30-36 x 1,x_dti_loan_type,0.07432621898932355,1
+onehot__x_dti_loan_type_30-36 x 2,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_30-36 x 3,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_30-36 x 4,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_36-49 x 1,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_36-49 x 2,x_dti_loan_type,0.0834924706118937,1
+onehot__x_dti_loan_type_36-49 x 3,x_dti_loan_type,-0.003908939521226296,1
+onehot__x_dti_loan_type_36-49 x 4,x_dti_loan_type,0.020605392275087106,1
+onehot__x_dti_loan_type_50-60 x 1,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_50-60 x 2,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_50-60 x 3,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_50-60 x 4,x_dti_loan_type,-0.11331331995448204,1
+onehot__x_dti_loan_type_<20 x 1,x_dti_loan_type,0.09425371800593162,1
+onehot__x_dti_loan_type_<20 x 2,x_dti_loan_type,-0.19162949784707572,1
+onehot__x_dti_loan_type_<20 x 3,x_dti_loan_type,-0.09675397274915237,1
+onehot__x_dti_loan_type_<20 x 4,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_>60 x 1,x_dti_loan_type,-0.22544229187271028,1
+onehot__x_dti_loan_type_>60 x 2,x_dti_loan_type,-1.7818350794902442,1
+onehot__x_dti_loan_type_>60 x 3,x_dti_loan_type,2.0213640984992067,1
+onehot__x_dti_loan_type_>60 x 4,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_missing x 1,x_dti_loan_type,-0.03872687556184423,1
+onehot__x_dti_loan_type_missing x 2,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_missing x 3,x_dti_loan_type,0.0,1
+onehot__x_dti_loan_type_missing x 4,x_dti_loan_type,-0.8592512613712884,1
+onehot__x_dti_ltv_20-30 x 80-90,x_dti_ltv,0.039423415756413095,1
+onehot__x_dti_ltv_20-30 x 90-95,x_dti_ltv,0.030857525306637264,1
+onehot__x_dti_ltv_20-30 x 95-100,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_20-30 x <=80,x_dti_ltv,0.10456683718490489,1
+onehot__x_dti_ltv_20-30 x >100,x_dti_ltv,-0.15486507600538538,1
+onehot__x_dti_ltv_20-30 x missing,x_dti_ltv,-0.013889713521345477,1
+onehot__x_dti_ltv_30-36 x 80-90,x_dti_ltv,0.09209950673344663,1
+onehot__x_dti_ltv_30-36 x 90-95,x_dti_ltv,0.18635641016608093,1
+onehot__x_dti_ltv_30-36 x 95-100,x_dti_ltv,0.26970106234992175,1
+onehot__x_dti_ltv_30-36 x <=80,x_dti_ltv,-0.11026388500859825,1
+onehot__x_dti_ltv_30-36 x >100,x_dti_ltv,-0.0815705291993469,1
+onehot__x_dti_ltv_30-36 x missing,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_36-49 x 80-90,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_36-49 x 90-95,x_dti_ltv,0.25356324484310633,1
+onehot__x_dti_ltv_36-49 x 95-100,x_dti_ltv,0.17910958605036362,1
+onehot__x_dti_ltv_36-49 x <=80,x_dti_ltv,-0.07674416013834819,1
+onehot__x_dti_ltv_36-49 x >100,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_36-49 x missing,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_50-60 x 80-90,x_dti_ltv,-0.22246321941471242,1
+onehot__x_dti_ltv_50-60 x 90-95,x_dti_ltv,-0.1228266889000111,1
+onehot__x_dti_ltv_50-60 x 95-100,x_dti_ltv,0.41972884583056463,1
+onehot__x_dti_ltv_50-60 x <=80,x_dti_ltv,-0.1615065727333476,1
+onehot__x_dti_ltv_50-60 x >100,x_dti_ltv,0.38501148329041757,1
+onehot__x_dti_ltv_50-60 x missing,x_dti_ltv,1.3442715025643623,1
+onehot__x_dti_ltv_<20 x 80-90,x_dti_ltv,0.07320527557067216,1
+onehot__x_dti_ltv_<20 x 90-95,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_<20 x 95-100,x_dti_ltv,-0.01414843523480897,1
+onehot__x_dti_ltv_<20 x <=80,x_dti_ltv,0.20777897221954078,1
+onehot__x_dti_ltv_<20 x >100,x_dti_ltv,-0.02377916751702468,1
+onehot__x_dti_ltv_<20 x missing,x_dti_ltv,-0.24183937708259026,1
+onehot__x_dti_ltv_>60 x 80-90,x_dti_ltv,-0.3373077996316883,1
+onehot__x_dti_ltv_>60 x 90-95,x_dti_ltv,-0.8036452071315863,1
+onehot__x_dti_ltv_>60 x 95-100,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_>60 x <=80,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_>60 x >100,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_>60 x missing,x_dti_ltv,0.1633405793980349,1
+onehot__x_dti_ltv_missing x 80-90,x_dti_ltv,0.0,1
+onehot__x_dti_ltv_missing x 90-95,x_dti_ltv,-1.1089461967183056,1
+onehot__x_dti_ltv_missing x 95-100,x_dti_ltv,-0.20694878044483977,1
+onehot__x_dti_ltv_missing x <=80,x_dti_ltv,0.4040316106002619,1
+onehot__x_dti_ltv_missing x >100,x_dti_ltv,0.39951756300072594,1
+onehot__x_dti_ltv_missing x missing,x_dti_ltv,-0.3341881905131556,1
+onehot__x_construction_loan_type_1 x 1,x_construction_loan_type,0.0,1
+onehot__x_construction_loan_type_1 x 2,x_construction_loan_type,-0.148805565278945,1
+onehot__x_construction_loan_type_1 x 3,x_construction_loan_type,0.0182385044661788,1
+onehot__x_construction_loan_type_1 x 4,x_construction_loan_type,0.0,1
+onehot__x_construction_loan_type_2 x 1,x_construction_loan_type,-0.1870555919005315,1
+onehot__x_construction_loan_type_2 x 2,x_construction_loan_type,0.3521812109820802,1
+onehot__x_construction_loan_type_2 x 3,x_construction_loan_type,0.0,1
+onehot__x_construction_loan_type_2 x 4,x_construction_loan_type,0.0,1
+onehot__x_lien_loan_amount_1 x 100-200k,x_lien_loan_amount,0.04340931253763432,1
+onehot__x_lien_loan_amount_1 x 200-400k,x_lien_loan_amount,0.0,1
+onehot__x_lien_loan_amount_1 x 25-50k,x_lien_loan_amount,0.0,1
+onehot__x_lien_loan_amount_1 x 50-100k,x_lien_loan_amount,0.045431037171189285,1
+onehot__x_lien_loan_amount_1 x <=25k,x_lien_loan_amount,-0.16175503966934945,1
+onehot__x_lien_loan_amount_1 x >400k,x_lien_loan_amount,0.0,1
+onehot__x_lien_loan_amount_2 x 100-200k,x_lien_loan_amount,-0.2701708807573778,1
+onehot__x_lien_loan_amount_2 x 200-400k,x_lien_loan_amount,-0.16146142402132407,1
+onehot__x_lien_loan_amount_2 x 25-50k,x_lien_loan_amount,0.0,1
+onehot__x_lien_loan_amount_2 x 50-100k,x_lien_loan_amount,0.0,1
+onehot__x_lien_loan_amount_2 x <=25k,x_lien_loan_amount,1.054461353160219,1
+onehot__x_lien_loan_amount_2 x >400k,x_lien_loan_amount,0.0,1
+flags__entity_applicant,entity_applicant,0.0,1
+flags__location_unknown,location_unknown,-0.18293405264554216,1
+flags__has_coapplicant,has_coapplicant,0.0,1
+flags__income_le_0,income_le_0,-0.17253350209598278,1
+flags__manufactured_conventional,manufactured_conventional,-0.1870555919005315,1
+flags__manufactured_location_unknown,manufactured_location_unknown,-1.7629214553654877,1
+flags__dti_above_program_limit,dti_above_program_limit,-2.365011600256,1
+flags__ltv_at_standard_value,ltv_at_standard_value,0.19072214940087123,1
+flags__is_exempt_record,is_exempt_record,2.156760080529403,1
+missing__missingindicator_property_value,property_value,-0.7944645540388657,1
+missing__missingindicator_income,income,0.387026334923461,1
+missing__missingindicator_tract_population,tract_population,-0.18293405264554216,1
+missing__missingindicator_tract_minority_population_percent,tract_minority_population_percent,-0.18293405264554216,1
+missing__missingindicator_ffiec_msa_md_median_family_income,ffiec_msa_md_median_family_income,0.026404186264636656,1
+missing__missingindicator_tract_to_msa_income_percentage,tract_to_msa_income_percentage,-0.3069042641822401,1
+missing__missingindicator_tract_owner_occupied_units,tract_owner_occupied_units,-0.18293405264554216,1
+missing__missingindicator_tract_one_to_four_family_homes,tract_one_to_four_family_homes,-0.18293405264554216,1
+missing__missingindicator_tract_median_age_of_housing_units,tract_median_age_of_housing_units,0.0,1
+missing__missingindicator_computed_ltv,computed_ltv,-0.7944645540388657,1
+missing__missingindicator_ltv_gap,ltv_gap,0.4270892643768158,1
+missing__missingindicator_property_to_income,property_to_income,-0.3446923822448579,1
+missing__missingindicator_loan_to_income,loan_to_income,0.0,1
+missing__missingindicator_county_code_rate,county_code_rate,0.6739053887909349,1
+spline__loan_amount_sp_0,loan_amount,0.0,1
+spline__loan_amount_sp_1,loan_amount,-0.22221545562564277,1
+spline__loan_amount_sp_2,loan_amount,0.04503114025888616,1
+spline__loan_amount_sp_3,loan_amount,0.0,1
+spline__loan_amount_sp_4,loan_amount,0.0,1
+spline__loan_amount_sp_5,loan_amount,0.0,1
+spline__loan_amount_sp_6,loan_amount,0.0,1
+spline__property_value_sp_0,property_value,-0.585424944011063,1
+spline__property_value_sp_1,property_value,-0.4985992596730606,1
+spline__property_value_sp_2,property_value,0.0,1
+spline__property_value_sp_3,property_value,0.0,1
+spline__property_value_sp_4,property_value,0.1461767961380726,1
+spline__property_value_sp_5,property_value,0.02352704061090253,1
+spline__property_value_sp_6,property_value,0.0,1
+spline__income_sp_0,income,-0.8162773972890053,1
+spline__income_sp_1,income,-0.6129497010379648,1
+spline__income_sp_2,income,0.05135514811730945,1
+spline__income_sp_3,income,0.0,1
+spline__income_sp_4,income,0.0,1
+spline__income_sp_5,income,0.41514610649657535,1
+spline__income_sp_6,income,0.0,1
+spline__total_units_sp_0,total_units,0.0,1
+spline__total_units_sp_1,total_units,0.46681341373618845,1
+spline__total_units_sp_2,total_units,0.0,1
+spline__total_units_sp_3,total_units,0.0,1
+spline__total_units_sp_4,total_units,0.0,1
+spline__total_units_sp_5,total_units,0.0,1
+spline__total_units_sp_6,total_units,0.0,1
+spline__tract_population_sp_0,tract_population,0.0,1
+spline__tract_population_sp_1,tract_population,0.06589825734372252,1
+spline__tract_population_sp_2,tract_population,0.0,1
+spline__tract_population_sp_3,tract_population,-0.1581585888648559,1
+spline__tract_population_sp_4,tract_population,0.0,1
+spline__tract_population_sp_5,tract_population,0.0,1
+spline__tract_population_sp_6,tract_population,0.0,1
+spline__tract_minority_population_percent_sp_0,tract_minority_population_percent,0.0,1
+spline__tract_minority_population_percent_sp_1,tract_minority_population_percent,-0.08008783629103104,1
+spline__tract_minority_population_percent_sp_2,tract_minority_population_percent,0.12482383514932732,1
+spline__tract_minority_population_percent_sp_3,tract_minority_population_percent,0.0,1
+spline__tract_minority_population_percent_sp_4,tract_minority_population_percent,0.1618082729666883,1
+spline__tract_minority_population_percent_sp_5,tract_minority_population_percent,-0.28933586751763735,1
+spline__tract_minority_population_percent_sp_6,tract_minority_population_percent,0.0,1
+spline__ffiec_msa_md_median_family_income_sp_0,ffiec_msa_md_median_family_income,0.0,1
+spline__ffiec_msa_md_median_family_income_sp_1,ffiec_msa_md_median_family_income,0.08971003507108077,1
+spline__ffiec_msa_md_median_family_income_sp_2,ffiec_msa_md_median_family_income,0.18797199293808164,1
+spline__ffiec_msa_md_median_family_income_sp_3,ffiec_msa_md_median_family_income,-0.007220231550099743,1
+spline__ffiec_msa_md_median_family_income_sp_4,ffiec_msa_md_median_family_income,0.0,1
+spline__ffiec_msa_md_median_family_income_sp_5,ffiec_msa_md_median_family_income,0.0,1
+spline__ffiec_msa_md_median_family_income_sp_6,ffiec_msa_md_median_family_income,0.0,1
+spline__tract_to_msa_income_percentage_sp_0,tract_to_msa_income_percentage,0.0,1
+spline__tract_to_msa_income_percentage_sp_1,tract_to_msa_income_percentage,0.12235215150186858,1
+spline__tract_to_msa_income_percentage_sp_2,tract_to_msa_income_percentage,-0.0447149463846268,1
+spline__tract_to_msa_income_percentage_sp_3,tract_to_msa_income_percentage,0.0,1
+spline__tract_to_msa_income_percentage_sp_4,tract_to_msa_income_percentage,0.07095978329370488,1
+spline__tract_to_msa_income_percentage_sp_5,tract_to_msa_income_percentage,-0.09359218851064247,1
+spline__tract_to_msa_income_percentage_sp_6,tract_to_msa_income_percentage,0.0,1
+spline__tract_owner_occupied_units_sp_0,tract_owner_occupied_units,0.0,1
+spline__tract_owner_occupied_units_sp_1,tract_owner_occupied_units,0.0,1
+spline__tract_owner_occupied_units_sp_2,tract_owner_occupied_units,0.0,1
+spline__tract_owner_occupied_units_sp_3,tract_owner_occupied_units,-0.05927558914370236,1
+spline__tract_owner_occupied_units_sp_4,tract_owner_occupied_units,0.0,1
+spline__tract_owner_occupied_units_sp_5,tract_owner_occupied_units,0.10919406147051534,1
+spline__tract_owner_occupied_units_sp_6,tract_owner_occupied_units,0.0,1
+spline__tract_one_to_four_family_homes_sp_0,tract_one_to_four_family_homes,-1.1344688792560218,1
+spline__tract_one_to_four_family_homes_sp_1,tract_one_to_four_family_homes,-0.3131224718628796,1
+spline__tract_one_to_four_family_homes_sp_2,tract_one_to_four_family_homes,0.13128373153611939,1
+spline__tract_one_to_four_family_homes_sp_3,tract_one_to_four_family_homes,0.0,1
+spline__tract_one_to_four_family_homes_sp_4,tract_one_to_four_family_homes,0.12178555792568906,1
+spline__tract_one_to_four_family_homes_sp_5,tract_one_to_four_family_homes,0.05873850654757163,1
+spline__tract_one_to_four_family_homes_sp_6,tract_one_to_four_family_homes,0.0,1
+spline__tract_median_age_of_housing_units_sp_0,tract_median_age_of_housing_units,0.0,1
+spline__tract_median_age_of_housing_units_sp_1,tract_median_age_of_housing_units,-0.06399763874250475,1
+spline__tract_median_age_of_housing_units_sp_2,tract_median_age_of_housing_units,0.07923804125204374,1
+spline__tract_median_age_of_housing_units_sp_3,tract_median_age_of_housing_units,-0.013244121954434607,1
+spline__tract_median_age_of_housing_units_sp_4,tract_median_age_of_housing_units,0.0,1
+spline__tract_median_age_of_housing_units_sp_5,tract_median_age_of_housing_units,0.08173102283914456,1
+spline__tract_median_age_of_housing_units_sp_6,tract_median_age_of_housing_units,0.0,1
+spline__exempt_code_count_sp_0,exempt_code_count,0.0,1
+spline__exempt_code_count_sp_1,exempt_code_count,0.0,1
+spline__exempt_code_count_sp_2,exempt_code_count,0.0,1
+spline__exempt_code_count_sp_3,exempt_code_count,0.0,1
+spline__exempt_code_count_sp_4,exempt_code_count,0.0,1
+spline__exempt_code_count_sp_5,exempt_code_count,0.39061250278777326,1
+spline__exempt_code_count_sp_6,exempt_code_count,0.0,1
+spline__computed_ltv_sp_0,computed_ltv,0.0,1
+spline__computed_ltv_sp_1,computed_ltv,0.702425438623259,1
+spline__computed_ltv_sp_2,computed_ltv,0.3507432953340539,1
+spline__computed_ltv_sp_3,computed_ltv,0.0,1
+spline__computed_ltv_sp_4,computed_ltv,0.2714915398621232,1
+spline__computed_ltv_sp_5,computed_ltv,-0.4895891403231979,1
+spline__computed_ltv_sp_6,computed_ltv,-3.2542564850312923,1
+spline__ltv_gap_sp_0,ltv_gap,0.0,1
+spline__ltv_gap_sp_1,ltv_gap,0.07769969572648394,1
+spline__ltv_gap_sp_2,ltv_gap,-0.04205855007299713,1
+spline__ltv_gap_sp_3,ltv_gap,0.0,1
+spline__ltv_gap_sp_4,ltv_gap,0.06305930265677501,1
+spline__ltv_gap_sp_5,ltv_gap,-0.19918765684412143,1
+spline__ltv_gap_sp_6,ltv_gap,0.0,1
+spline__property_to_income_sp_0,property_to_income,-0.38806690864514515,1
+spline__property_to_income_sp_1,property_to_income,-0.9487166709144081,1
+spline__property_to_income_sp_2,property_to_income,0.2767957977844293,1
+spline__property_to_income_sp_3,property_to_income,0.0,1
+spline__property_to_income_sp_4,property_to_income,0.6439637096492031,1
+spline__property_to_income_sp_5,property_to_income,0.43190708008976036,1
+spline__property_to_income_sp_6,property_to_income,0.0,1
+spline__loan_to_income_sp_0,loan_to_income,0.0,1
+spline__loan_to_income_sp_1,loan_to_income,0.6638993927042764,1
+spline__loan_to_income_sp_2,loan_to_income,0.14919171532429293,1
+spline__loan_to_income_sp_3,loan_to_income,0.0,1
+spline__loan_to_income_sp_4,loan_to_income,0.02024415110758076,1
+spline__loan_to_income_sp_5,loan_to_income,-0.6272461836313277,1
+spline__loan_to_income_sp_6,loan_to_income,-0.48369561988343,1
+spline__county_code_rate_sp_0,county_code_rate,0.0,1
+spline__county_code_rate_sp_1,county_code_rate,-0.02630850724473782,1
+spline__county_code_rate_sp_2,county_code_rate,0.2534685248743044,1
+spline__county_code_rate_sp_3,county_code_rate,-0.030701661425237697,1
+spline__county_code_rate_sp_4,county_code_rate,0.271817913052009,1
+spline__county_code_rate_sp_5,county_code_rate,0.0016224434542812915,1
+spline__county_code_rate_sp_6,county_code_rate,0.0,1
+onehot__loan_type_1,loan_type,0.0,2
+onehot__loan_type_2,loan_type,0.0,2
+onehot__loan_type_3,loan_type,0.07935730969567013,2
+onehot__loan_type_4,loan_type,0.0,2
+onehot__lien_status_1,lien_status,0.6532299750917865,2
+onehot__lien_status_2,lien_status,0.0,2
+onehot__preapproval_1,preapproval,2.969841718305818,2
+onehot__preapproval_2,preapproval,-1.5227825282461374,2
+onehot__reverse_mortgage_1,reverse_mortgage,2.021527447490734,2
+onehot__reverse_mortgage_1111,reverse_mortgage,0.0,2
+onehot__reverse_mortgage_2,reverse_mortgage,-1.7600750392854767,2
+onehot__open-end_line_of_credit_1,open-end_line_of_credit,-0.13185966225754533,2
+onehot__open-end_line_of_credit_1111,open-end_line_of_credit,0.0,2
+onehot__open-end_line_of_credit_2,open-end_line_of_credit,0.0,2
+onehot__business_or_commercial_purpose_1,business_or_commercial_purpose,-0.33166838918107655,2
+onehot__business_or_commercial_purpose_1111,business_or_commercial_purpose,0.03735615528434132,2
+onehot__business_or_commercial_purpose_2,business_or_commercial_purpose,0.0,2
+onehot__negative_amortization_1,negative_amortization,0.0,2
+onehot__negative_amortization_1111,negative_amortization,0.0,2
+onehot__negative_amortization_2,negative_amortization,-0.06219778622941394,2
+onehot__interest_only_payment_1,interest_only_payment,-0.2924000812103468,2
+onehot__interest_only_payment_1111,interest_only_payment,0.0,2
+onehot__interest_only_payment_2,interest_only_payment,0.0,2
+onehot__balloon_payment_1,balloon_payment,0.0,2
+onehot__balloon_payment_1111,balloon_payment,0.0,2
+onehot__balloon_payment_2,balloon_payment,-0.2993804327521477,2
+onehot__other_nonamortizing_features_1,other_nonamortizing_features,0.0,2
+onehot__other_nonamortizing_features_1111,other_nonamortizing_features,0.0,2
+onehot__other_nonamortizing_features_2,other_nonamortizing_features,-0.45845312998914317,2
+onehot__construction_method_1,construction_method,0.0,2
+onehot__construction_method_2,construction_method,0.0,2
+onehot__occupancy_type_1,occupancy_type,0.0,2
+onehot__occupancy_type_2,occupancy_type,-0.00796664332271092,2
+onehot__occupancy_type_3,occupancy_type,0.37348209846631286,2
+onehot__manufactured_home_secured_property_type_1,manufactured_home_secured_property_type,0.0,2
+onehot__manufactured_home_secured_property_type_1111,manufactured_home_secured_property_type,0.008042191473295483,2
+onehot__manufactured_home_secured_property_type_2,manufactured_home_secured_property_type,0.0,2
+onehot__manufactured_home_secured_property_type_3,manufactured_home_secured_property_type,0.0,2
+onehot__manufactured_home_land_property_interest_1,manufactured_home_land_property_interest,-0.14233982368616432,2
+onehot__manufactured_home_land_property_interest_1111,manufactured_home_land_property_interest,0.0,2
+onehot__manufactured_home_land_property_interest_2,manufactured_home_land_property_interest,-0.16543760835093788,2
+onehot__manufactured_home_land_property_interest_3,manufactured_home_land_property_interest,0.3453751574947723,2
+onehot__manufactured_home_land_property_interest_4,manufactured_home_land_property_interest,0.27634465236705513,2
+onehot__manufactured_home_land_property_interest_5,manufactured_home_land_property_interest,0.0,2
+onehot__applicant_credit_score_type_1,applicant_credit_score_type,0.062928160898068,2
+onehot__applicant_credit_score_type_11,applicant_credit_score_type,0.10560918681183439,2
+onehot__applicant_credit_score_type_1111,applicant_credit_score_type,0.32442458961353127,2
+onehot__applicant_credit_score_type_12,applicant_credit_score_type,-0.006061976303745052,2
+onehot__applicant_credit_score_type_13,applicant_credit_score_type,0.0,2
+onehot__applicant_credit_score_type_14,applicant_credit_score_type,0.0,2
+onehot__applicant_credit_score_type_15,applicant_credit_score_type,-0.21295057113802635,2
+onehot__applicant_credit_score_type_2,applicant_credit_score_type,0.007492587832169576,2
+onehot__applicant_credit_score_type_3,applicant_credit_score_type,0.05341373880663879,2
+onehot__applicant_credit_score_type_4,applicant_credit_score_type,0.031629443427613,2
+onehot__applicant_credit_score_type_5,applicant_credit_score_type,0.0,2
+onehot__applicant_credit_score_type_6,applicant_credit_score_type,0.0,2
+onehot__applicant_credit_score_type_7,applicant_credit_score_type,-0.054696130046149864,2
+onehot__applicant_credit_score_type_8,applicant_credit_score_type,-0.812854132673538,2
+onehot__applicant_credit_score_type_9,applicant_credit_score_type,-0.14237398350678554,2
+onehot__co-applicant_credit_score_type_1,co-applicant_credit_score_type,0.0,2
+onehot__co-applicant_credit_score_type_10,co-applicant_credit_score_type,-0.20727249618741567,2
+onehot__co-applicant_credit_score_type_11,co-applicant_credit_score_type,0.0,2
+onehot__co-applicant_credit_score_type_1111,co-applicant_credit_score_type,0.32442458961353127,2
+onehot__co-applicant_credit_score_type_12,co-applicant_credit_score_type,0.013425536667335479,2
+onehot__co-applicant_credit_score_type_14,co-applicant_credit_score_type,0.0,2
+onehot__co-applicant_credit_score_type_15,co-applicant_credit_score_type,-0.004161903856616934,2
+onehot__co-applicant_credit_score_type_2,co-applicant_credit_score_type,0.06534180641604406,2
+onehot__co-applicant_credit_score_type_3,co-applicant_credit_score_type,-0.006808741543391853,2
+onehot__co-applicant_credit_score_type_4,co-applicant_credit_score_type,0.4167542364842694,2
+onehot__co-applicant_credit_score_type_5,co-applicant_credit_score_type,0.0,2
+onehot__co-applicant_credit_score_type_6,co-applicant_credit_score_type,0.0,2
+onehot__co-applicant_credit_score_type_7,co-applicant_credit_score_type,0.20668847334382826,2
+onehot__co-applicant_credit_score_type_8,co-applicant_credit_score_type,-0.03938784868425361,2
+onehot__co-applicant_credit_score_type_9,co-applicant_credit_score_type,-0.04115034328457123,2
+onehot__applicant_ethnicity-1_1,applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity-1_11,applicant_ethnicity-1,-0.11696187934100531,2
+onehot__applicant_ethnicity-1_12,applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity-1_13,applicant_ethnicity-1,0.016584871891327,2
+onehot__applicant_ethnicity-1_14,applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity-1_2,applicant_ethnicity-1,0.18104610097007182,2
+onehot__applicant_ethnicity-1_3,applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity-1_4,applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity-1_missing,applicant_ethnicity-1,-0.13180890815939325,2
+onehot__co-applicant_ethnicity-1_1,co-applicant_ethnicity-1,0.007889277034416494,2
+onehot__co-applicant_ethnicity-1_11,co-applicant_ethnicity-1,0.0,2
+onehot__co-applicant_ethnicity-1_12,co-applicant_ethnicity-1,-0.28193431587912265,2
+onehot__co-applicant_ethnicity-1_13,co-applicant_ethnicity-1,0.0,2
+onehot__co-applicant_ethnicity-1_14,co-applicant_ethnicity-1,-0.44074555675771626,2
+onehot__co-applicant_ethnicity-1_2,co-applicant_ethnicity-1,0.04477094842853328,2
+onehot__co-applicant_ethnicity-1_3,co-applicant_ethnicity-1,0.0,2
+onehot__co-applicant_ethnicity-1_4,co-applicant_ethnicity-1,0.06613540209867831,2
+onehot__co-applicant_ethnicity-1_5,co-applicant_ethnicity-1,0.010791086459759463,2
+onehot__co-applicant_ethnicity-1_missing,co-applicant_ethnicity-1,0.0,2
+onehot__applicant_ethnicity_observed_1,applicant_ethnicity_observed,0.0,2
+onehot__applicant_ethnicity_observed_2,applicant_ethnicity_observed,0.0,2
+onehot__applicant_ethnicity_observed_3,applicant_ethnicity_observed,0.3674516809115755,2
+onehot__co-applicant_ethnicity_observed_1,co-applicant_ethnicity_observed,0.0,2
+onehot__co-applicant_ethnicity_observed_2,co-applicant_ethnicity_observed,-0.26571211410519646,2
+onehot__co-applicant_ethnicity_observed_3,co-applicant_ethnicity_observed,0.0,2
+onehot__co-applicant_ethnicity_observed_4,co-applicant_ethnicity_observed,0.010791086459759463,2
+onehot__applicant_race-1_1,applicant_race-1,0.0,2
+onehot__applicant_race-1_2,applicant_race-1,0.2049531912795812,2
+onehot__applicant_race-1_21,applicant_race-1,0.0,2
+onehot__applicant_race-1_22,applicant_race-1,0.0,2
+onehot__applicant_race-1_23,applicant_race-1,0.0,2
+onehot__applicant_race-1_24,applicant_race-1,0.0,2
+onehot__applicant_race-1_25,applicant_race-1,0.0,2
+onehot__applicant_race-1_26,applicant_race-1,0.0,2
+onehot__applicant_race-1_27,applicant_race-1,-0.2954478066907897,2
+onehot__applicant_race-1_3,applicant_race-1,-0.3202802648976117,2
+onehot__applicant_race-1_4,applicant_race-1,-0.27741917955616,2
+onehot__applicant_race-1_41,applicant_race-1,0.0,2
+onehot__applicant_race-1_42,applicant_race-1,0.0,2
+onehot__applicant_race-1_43,applicant_race-1,0.0,2
+onehot__applicant_race-1_44,applicant_race-1,0.0,2
+onehot__applicant_race-1_5,applicant_race-1,0.27302672327537647,2
+onehot__applicant_race-1_6,applicant_race-1,0.0,2
+onehot__applicant_race-1_7,applicant_race-1,0.048629729726144315,2
+onehot__applicant_race-1_missing,applicant_race-1,0.0,2
+onehot__co-applicant_race-1_1,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_2,co-applicant_race-1,-0.1061442774333772,2
+onehot__co-applicant_race-1_21,co-applicant_race-1,-0.13671959831080163,2
+onehot__co-applicant_race-1_22,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_23,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_24,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_25,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_26,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_27,co-applicant_race-1,-0.2007429127915783,2
+onehot__co-applicant_race-1_3,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_4,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_41,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_42,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_43,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_44,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_5,co-applicant_race-1,0.16777200389301022,2
+onehot__co-applicant_race-1_6,co-applicant_race-1,0.23400624102989953,2
+onehot__co-applicant_race-1_7,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_8,co-applicant_race-1,0.0,2
+onehot__co-applicant_race-1_missing,co-applicant_race-1,0.0,2
+onehot__applicant_race_observed_1,applicant_race_observed,0.0,2
+onehot__applicant_race_observed_2,applicant_race_observed,0.0,2
+onehot__applicant_race_observed_3,applicant_race_observed,0.0,2
+onehot__co-applicant_race_observed_1,co-applicant_race_observed,0.0,2
+onehot__co-applicant_race_observed_2,co-applicant_race_observed,0.0,2
+onehot__co-applicant_race_observed_3,co-applicant_race_observed,0.08055129824255015,2
+onehot__co-applicant_race_observed_4,co-applicant_race_observed,0.0,2
+onehot__applicant_sex_1,applicant_sex,0.0,2
+onehot__applicant_sex_2,applicant_sex,0.06372980886888081,2
+onehot__applicant_sex_3,applicant_sex,-0.06816689887535993,2
+onehot__applicant_sex_4,applicant_sex,0.0,2
+onehot__applicant_sex_6,applicant_sex,0.0,2
+onehot__co-applicant_sex_1,co-applicant_sex,-0.13239445659499322,2
+onehot__co-applicant_sex_2,co-applicant_sex,0.0,2
+onehot__co-applicant_sex_3,co-applicant_sex,0.17732061625149273,2
+onehot__co-applicant_sex_4,co-applicant_sex,0.024136675135497544,2
+onehot__co-applicant_sex_5,co-applicant_sex,0.0,2
+onehot__co-applicant_sex_6,co-applicant_sex,0.0,2
+onehot__applicant_sex_observed_1,applicant_sex_observed,0.0795286816012637,2
+onehot__applicant_sex_observed_2,applicant_sex_observed,0.0,2
+onehot__applicant_sex_observed_3,applicant_sex_observed,-0.5786507509560957,2
+onehot__co-applicant_sex_observed_1,co-applicant_sex_observed,0.0,2
+onehot__co-applicant_sex_observed_2,co-applicant_sex_observed,0.07656929968165573,2
+onehot__co-applicant_sex_observed_3,co-applicant_sex_observed,0.0,2
+onehot__co-applicant_sex_observed_4,co-applicant_sex_observed,0.0,2
+onehot__submission_of_application_1,submission_of_application,0.0,2
+onehot__submission_of_application_1111,submission_of_application,0.0,2
+onehot__submission_of_application_2,submission_of_application,-0.23149210386574967,2
+onehot__initially_payable_to_institution_1,initially_payable_to_institution,1.388870501042493,2
+onehot__initially_payable_to_institution_1111,initially_payable_to_institution,0.0,2
+onehot__initially_payable_to_institution_2,initially_payable_to_institution,1.3987926072203356,2
+onehot__initially_payable_to_institution_3,initially_payable_to_institution,-6.308613043725383,2
+onehot__aus-1_1,aus-1,0.0,2
+onehot__aus-1_1111,aus-1,0.0,2
+onehot__aus-1_2,aus-1,0.0560685109194894,2
+onehot__aus-1_3,aus-1,0.07186727314736414,2
+onehot__aus-1_4,aus-1,0.0,2
+onehot__aus-1_5,aus-1,0.0,2
+onehot__aus-1_6,aus-1,-0.7728247941782654,2
+onehot__aus-1_7,aus-1,-1.156707488211714,2
+onehot__state_code_AK,state_code,0.0,2
+onehot__state_code_AL,state_code,0.03758314701518235,2
+onehot__state_code_AR,state_code,0.01689296865986734,2
+onehot__state_code_AZ,state_code,-0.011460527422031002,2
+onehot__state_code_CA,state_code,0.0146768291601359,2
+onehot__state_code_CO,state_code,0.13279966522946818,2
+onehot__state_code_CT,state_code,-0.5078881428037434,2
+onehot__state_code_DC,state_code,-0.3390211733971696,2
+onehot__state_code_DE,state_code,0.0,2
+onehot__state_code_FL,state_code,-0.3793644162357664,2
+onehot__state_code_GA,state_code,-0.04257906508397645,2
+onehot__state_code_GU,state_code,0.0,2
+onehot__state_code_HI,state_code,0.3783606359885177,2
+onehot__state_code_IA,state_code,0.1667925114003698,2
+onehot__state_code_ID,state_code,0.0,2
+onehot__state_code_IL,state_code,-0.14076435641066115,2
+onehot__state_code_IN,state_code,0.0,2
+onehot__state_code_KS,state_code,-0.05152883083300105,2
+onehot__state_code_KY,state_code,0.0,2
+onehot__state_code_LA,state_code,-0.056069234539261416,2
+onehot__state_code_MA,state_code,-0.10829642263781106,2
+onehot__state_code_MD,state_code,0.0,2
+onehot__state_code_ME,state_code,0.0,2
+onehot__state_code_MI,state_code,0.21410764857450618,2
+onehot__state_code_MN,state_code,0.1009553869787254,2
+onehot__state_code_MO,state_code,0.0,2
+onehot__state_code_MS,state_code,0.22391420476411547,2
+onehot__state_code_MT,state_code,0.0,2
+onehot__state_code_NC,state_code,0.09406995060294837,2
+onehot__state_code_ND,state_code,0.23294990334018026,2
+onehot__state_code_NE,state_code,0.04991114574501216,2
+onehot__state_code_NH,state_code,0.0,2
+onehot__state_code_NJ,state_code,-0.11309575567512503,2
+onehot__state_code_NM,state_code,-0.06778944438568792,2
+onehot__state_code_NV,state_code,0.0,2
+onehot__state_code_NY,state_code,-0.31188825047412255,2
+onehot__state_code_OH,state_code,0.05030594927064942,2
+onehot__state_code_OK,state_code,0.21510215423255483,2
+onehot__state_code_OR,state_code,0.0,2
+onehot__state_code_PA,state_code,0.06645074541360955,2
+onehot__state_code_PR,state_code,0.0,2
+onehot__state_code_RI,state_code,0.0,2
+onehot__state_code_SC,state_code,-0.1311778010579907,2
+onehot__state_code_SD,state_code,-0.0020587242638427546,2
+onehot__state_code_TN,state_code,-0.16729066867998915,2
+onehot__state_code_TX,state_code,-0.0315775458373269,2
+onehot__state_code_UT,state_code,0.035056180407440955,2
+onehot__state_code_VA,state_code,0.08049258052382077,2
+onehot__state_code_VI,state_code,0.0,2
+onehot__state_code_VT,state_code,-0.2828455954944162,2
+onehot__state_code_WA,state_code,-0.0026538684999858437,2
+onehot__state_code_WI,state_code,0.1565280122710311,2
+onehot__state_code_WV,state_code,-0.08736056986743215,2
+onehot__state_code_WY,state_code,0.06869917110617864,2
+onehot__state_code_missing,state_code,-1.504269553593313,2
+onehot__conforming_loan_limit_C,conforming_loan_limit,0.0,2
+onehot__conforming_loan_limit_NC,conforming_loan_limit,-0.06794191487779673,2
+onehot__conforming_loan_limit_U,conforming_loan_limit,0.0,2
+onehot__conforming_loan_limit_not applicable,conforming_loan_limit,0.1514637824759006,2
+onehot__derived_loan_product_type_Conventional:First Lien,derived_loan_product_type,0.0,2
+onehot__derived_loan_product_type_Conventional:Subordinate Lien,derived_loan_product_type,0.0,2
+onehot__derived_loan_product_type_FHA:First Lien,derived_loan_product_type,0.0,2
+onehot__derived_loan_product_type_FHA:Subordinate Lien,derived_loan_product_type,0.0,2
+onehot__derived_loan_product_type_FSA/RHS:First Lien,derived_loan_product_type,-0.07364241658016851,2
+onehot__derived_loan_product_type_FSA/RHS:Subordinate Lien,derived_loan_product_type,0.0,2
+onehot__derived_loan_product_type_VA:First Lien,derived_loan_product_type,0.07935730969567013,2
+onehot__derived_dwelling_category_Multifamily:Manufactured,derived_dwelling_category,1.2834161635162595,2
+onehot__derived_dwelling_category_Multifamily:Site-Built,derived_dwelling_category,0.0,2
+onehot__derived_dwelling_category_Single Family (1-4 Units):Manufactured,derived_dwelling_category,-0.6653916876108004,2
+onehot__derived_dwelling_category_Single Family (1-4 Units):Site-Built,derived_dwelling_category,0.0,2
+onehot__derived_ethnicity_Ethnicity Not Available,derived_ethnicity,0.12529412701594064,2
+onehot__derived_ethnicity_Free Form Text Only,derived_ethnicity,-0.13180890815939325,2
+onehot__derived_ethnicity_Hispanic or Latino,derived_ethnicity,0.0,2
+onehot__derived_ethnicity_Joint,derived_ethnicity,-0.08914980516119109,2
+onehot__derived_ethnicity_Not Hispanic or Latino,derived_ethnicity,0.014399910503037147,2
+onehot__derived_race_2 or more minority races,derived_race,-0.4258008171926278,2
+onehot__derived_race_American Indian or Alaska Native,derived_race,0.09823473296589333,2
+onehot__derived_race_Asian,derived_race,-0.04234497147159631,2
+onehot__derived_race_Black or African American,derived_race,0.0,2
+onehot__derived_race_Free Form Text Only,derived_race,0.0,2
+onehot__derived_race_Joint,derived_race,0.11451963479584844,2
+onehot__derived_race_Native Hawaiian or Other Pacific Islander,derived_race,0.0,2
+onehot__derived_race_Race Not Available,derived_race,0.038361382588005255,2
+onehot__derived_race_White,derived_race,0.0,2
+onehot__derived_sex_Female,derived_sex,0.03564307713533001,2
+onehot__derived_sex_Joint,derived_sex,0.08507456481891726,2
+onehot__derived_sex_Male,derived_sex,0.0,2
+onehot__derived_sex_Sex Not Available,derived_sex,0.0,2
+onehot__applicant_age_25-34,applicant_age,0.03755878303214541,2
+onehot__applicant_age_35-44,applicant_age,-0.06710263459450107,2
+onehot__applicant_age_45-54,applicant_age,-0.13264915272499564,2
+onehot__applicant_age_55-64,applicant_age,-0.01959347975544388,2
+onehot__applicant_age_65-74,applicant_age,0.03801724341493061,2
+onehot__applicant_age_<25,applicant_age,0.0,2
+onehot__applicant_age_>74,applicant_age,0.09765764668950713,2
+onehot__applicant_age_missing,applicant_age,0.8074837029526176,2
+onehot__co-applicant_age_25-34,co-applicant_age,0.0,2
+onehot__co-applicant_age_35-44,co-applicant_age,0.041734578087218914,2
+onehot__co-applicant_age_45-54,co-applicant_age,-0.07452338990639265,2
+onehot__co-applicant_age_55-64,co-applicant_age,-0.03003086732504338,2
+onehot__co-applicant_age_65-74,co-applicant_age,0.10368129949661775,2
+onehot__co-applicant_age_<25,co-applicant_age,0.02183093609246256,2
+onehot__co-applicant_age_>74,co-applicant_age,-0.13274034188208603,2
+onehot__co-applicant_age_missing,co-applicant_age,0.0,2
+onehot__dti_band_20-30,dti_band,0.6439652362553028,2
+onehot__dti_band_30-36,dti_band,0.5462013423926049,2
+onehot__dti_band_36-49,dti_band,0.6399319710487241,2
+onehot__dti_band_50-60,dti_band,0.0,2
+onehot__dti_band_<20,dti_band,-0.3122150063810464,2
+onehot__dti_band_>60,dti_band,-1.2119963508207319,2
+onehot__dti_band_missing,dti_band,-0.1480880788903562,2
+onehot__loan_term_band_120,loan_term_band,0.016475494104351226,2
+onehot__loan_term_band_180,loan_term_band,0.21928033611942602,2
+onehot__loan_term_band_240,loan_term_band,-0.4891674977783764,2
+onehot__loan_term_band_300,loan_term_band,-0.17977309910349087,2
+onehot__loan_term_band_360,loan_term_band,0.06926660449425225,2
+onehot__loan_term_band_missing,loan_term_band,-1.3661578655584132,2
+onehot__loan_term_band_other,loan_term_band,0.25303280764926633,2
+onehot__ltv_band_80-90,ltv_band,0.06760360723603952,2
+onehot__ltv_band_90-95,ltv_band,-0.07605280540280558,2
+onehot__ltv_band_95-100,ltv_band,0.07412348276405913,2
+onehot__ltv_band_<=80,ltv_band,0.11807862276160888,2
+onehot__ltv_band_>100,ltv_band,0.0,2
+onehot__ltv_band_missing,ltv_band,-0.2623925002363295,2
+onehot__x_dti_loan_type_20-30 x 1,x_dti_loan_type,-0.1292472175216339,2
+onehot__x_dti_loan_type_20-30 x 2,x_dti_loan_type,0.06644313274481668,2
+onehot__x_dti_loan_type_20-30 x 3,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_20-30 x 4,x_dti_loan_type,0.3345023416907167,2
+onehot__x_dti_loan_type_30-36 x 1,x_dti_loan_type,0.03980035055811478,2
+onehot__x_dti_loan_type_30-36 x 2,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_30-36 x 3,x_dti_loan_type,-0.044647343785256914,2
+onehot__x_dti_loan_type_30-36 x 4,x_dti_loan_type,0.13402439889240692,2
+onehot__x_dti_loan_type_36-49 x 1,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_36-49 x 2,x_dti_loan_type,0.09229522386903523,2
+onehot__x_dti_loan_type_36-49 x 3,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_36-49 x 4,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_50-60 x 1,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_50-60 x 2,x_dti_loan_type,0.12086022680667063,2
+onehot__x_dti_loan_type_50-60 x 3,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_50-60 x 4,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_<20 x 1,x_dti_loan_type,0.06744382321866871,2
+onehot__x_dti_loan_type_<20 x 2,x_dti_loan_type,-0.019448028808679144,2
+onehot__x_dti_loan_type_<20 x 3,x_dti_loan_type,-0.012596089410318229,2
+onehot__x_dti_loan_type_<20 x 4,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_>60 x 1,x_dti_loan_type,-0.25875193094559495,2
+onehot__x_dti_loan_type_>60 x 2,x_dti_loan_type,-1.8419060785324504,2
+onehot__x_dti_loan_type_>60 x 3,x_dti_loan_type,1.9511556376750447,2
+onehot__x_dti_loan_type_>60 x 4,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_missing x 1,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_missing x 2,x_dti_loan_type,0.0,2
+onehot__x_dti_loan_type_missing x 3,x_dti_loan_type,0.37326901780708827,2
+onehot__x_dti_loan_type_missing x 4,x_dti_loan_type,-0.8233338927208447,2
+onehot__x_dti_ltv_20-30 x 80-90,x_dti_ltv,0.014336338559488144,2
+onehot__x_dti_ltv_20-30 x 90-95,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_20-30 x 95-100,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_20-30 x <=80,x_dti_ltv,0.013953883902935445,2
+onehot__x_dti_ltv_20-30 x >100,x_dti_ltv,-0.18625473746980942,2
+onehot__x_dti_ltv_20-30 x missing,x_dti_ltv,-0.0027777000239742377,2
+onehot__x_dti_ltv_30-36 x 80-90,x_dti_ltv,0.19688577969902937,2
+onehot__x_dti_ltv_30-36 x 90-95,x_dti_ltv,0.22295734702894798,2
+onehot__x_dti_ltv_30-36 x 95-100,x_dti_ltv,0.2988506755210745,2
+onehot__x_dti_ltv_30-36 x <=80,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_30-36 x >100,x_dti_ltv,-0.031888971832928804,2
+onehot__x_dti_ltv_30-36 x missing,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_36-49 x 80-90,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_36-49 x 90-95,x_dti_ltv,0.22582137691310813,2
+onehot__x_dti_ltv_36-49 x 95-100,x_dti_ltv,0.09360123458267335,2
+onehot__x_dti_ltv_36-49 x <=80,x_dti_ltv,-0.11601984754362663,2
+onehot__x_dti_ltv_36-49 x >100,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_36-49 x missing,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_50-60 x 80-90,x_dti_ltv,-0.11939906457552327,2
+onehot__x_dti_ltv_50-60 x 90-95,x_dti_ltv,-0.09055623011436308,2
+onehot__x_dti_ltv_50-60 x 95-100,x_dti_ltv,0.3617073563412528,2
+onehot__x_dti_ltv_50-60 x <=80,x_dti_ltv,-0.2573663398640198,2
+onehot__x_dti_ltv_50-60 x >100,x_dti_ltv,0.12481768453248654,2
+onehot__x_dti_ltv_50-60 x missing,x_dti_ltv,1.2764980388232439,2
+onehot__x_dti_ltv_<20 x 80-90,x_dti_ltv,0.232860850547882,2
+onehot__x_dti_ltv_<20 x 90-95,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_<20 x 95-100,x_dti_ltv,-0.2022082929394432,2
+onehot__x_dti_ltv_<20 x <=80,x_dti_ltv,0.23697226537701596,2
+onehot__x_dti_ltv_<20 x >100,x_dti_ltv,-0.04076530669749429,2
+onehot__x_dti_ltv_<20 x missing,x_dti_ltv,-0.3082748609558388,2
+onehot__x_dti_ltv_>60 x 80-90,x_dti_ltv,-0.33062840957093925,2
+onehot__x_dti_ltv_>60 x 90-95,x_dti_ltv,-0.5163936421677764,2
+onehot__x_dti_ltv_>60 x 95-100,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_>60 x <=80,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_>60 x >100,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_>60 x missing,x_dti_ltv,0.1366553592494917,2
+onehot__x_dti_ltv_missing x 80-90,x_dti_ltv,0.0,2
+onehot__x_dti_ltv_missing x 90-95,x_dti_ltv,-1.2320302735441004,2
+onehot__x_dti_ltv_missing x 95-100,x_dti_ltv,-0.4441152154106135,2
+onehot__x_dti_ltv_missing x <=80,x_dti_ltv,0.38798236356304033,2
+onehot__x_dti_ltv_missing x >100,x_dti_ltv,0.0965128822747518,2
+onehot__x_dti_ltv_missing x missing,x_dti_ltv,-0.636940345281275,2
+onehot__x_construction_loan_type_1 x 1,x_construction_loan_type,0.044802365356232825,2
+onehot__x_construction_loan_type_1 x 2,x_construction_loan_type,-0.11123511821692796,2
+onehot__x_construction_loan_type_1 x 3,x_construction_loan_type,0.04575772833751767,2
+onehot__x_construction_loan_type_1 x 4,x_construction_loan_type,0.0,2
+onehot__x_construction_loan_type_2 x 1,x_construction_loan_type,-0.20127079723882055,2
+onehot__x_construction_loan_type_2 x 2,x_construction_loan_type,0.42702741217246537,2
+onehot__x_construction_loan_type_2 x 3,x_construction_loan_type,0.0,2
+onehot__x_construction_loan_type_2 x 4,x_construction_loan_type,0.0,2
+onehot__x_lien_loan_amount_1 x 100-200k,x_lien_loan_amount,0.093423457936362,2
+onehot__x_lien_loan_amount_1 x 200-400k,x_lien_loan_amount,-0.04194883269490455,2
+onehot__x_lien_loan_amount_1 x 25-50k,x_lien_loan_amount,0.0,2
+onehot__x_lien_loan_amount_1 x 50-100k,x_lien_loan_amount,0.06148005184123322,2
+onehot__x_lien_loan_amount_1 x <=25k,x_lien_loan_amount,-0.01795657177175776,2
+onehot__x_lien_loan_amount_1 x >400k,x_lien_loan_amount,0.0,2
+onehot__x_lien_loan_amount_2 x 100-200k,x_lien_loan_amount,-0.27771546111310413,2
+onehot__x_lien_loan_amount_2 x 200-400k,x_lien_loan_amount,-0.16432759866664964,2
+onehot__x_lien_loan_amount_2 x 25-50k,x_lien_loan_amount,0.0,2
+onehot__x_lien_loan_amount_2 x 50-100k,x_lien_loan_amount,0.0,2
+onehot__x_lien_loan_amount_2 x <=25k,x_lien_loan_amount,1.3664477128797476,2
+onehot__x_lien_loan_amount_2 x >400k,x_lien_loan_amount,0.0,2
+flags__entity_applicant,entity_applicant,0.0,2
+flags__location_unknown,location_unknown,-0.23066795340206567,2
+flags__has_coapplicant,has_coapplicant,0.0,2
+flags__income_le_0,income_le_0,-0.26576015492104127,2
+flags__manufactured_conventional,manufactured_conventional,-0.20127079723882055,2
+flags__manufactured_location_unknown,manufactured_location_unknown,-1.826668515361924,2
+flags__dti_above_program_limit,dti_above_program_limit,-2.2549282744191745,2
+flags__ltv_at_standard_value,ltv_at_standard_value,0.18769391039432903,2
+flags__is_exempt_record,is_exempt_record,1.6334600051777215,2
+missing__missingindicator_property_value,property_value,-0.7348531129372446,2
+missing__missingindicator_income,income,0.3421293362203104,2
+missing__missingindicator_tract_population,tract_population,-0.23066795340206567,2
+missing__missingindicator_tract_minority_population_percent,tract_minority_population_percent,-0.23066795340206567,2
+missing__missingindicator_ffiec_msa_md_median_family_income,ffiec_msa_md_median_family_income,0.0,2
+missing__missingindicator_tract_to_msa_income_percentage,tract_to_msa_income_percentage,-0.1853460768734825,2
+missing__missingindicator_tract_owner_occupied_units,tract_owner_occupied_units,-0.23066795340206567,2
+missing__missingindicator_tract_one_to_four_family_homes,tract_one_to_four_family_homes,-0.23066795340206567,2
+missing__missingindicator_tract_median_age_of_housing_units,tract_median_age_of_housing_units,0.0,2
+missing__missingindicator_computed_ltv,computed_ltv,-0.7348531129372446,2
+missing__missingindicator_ltv_gap,ltv_gap,0.19830225322353376,2
+missing__missingindicator_property_to_income,property_to_income,-0.35026533569659135,2
+missing__missingindicator_loan_to_income,loan_to_income,0.0,2
+missing__missingindicator_county_code_rate,county_code_rate,0.6557222926683228,2
+spline__loan_amount_sp_0,loan_amount,0.0,2
+spline__loan_amount_sp_1,loan_amount,-0.22092581552136584,2
+spline__loan_amount_sp_2,loan_amount,0.028232239844303574,2
+spline__loan_amount_sp_3,loan_amount,0.0,2
+spline__loan_amount_sp_4,loan_amount,0.0,2
+spline__loan_amount_sp_5,loan_amount,0.0,2
+spline__loan_amount_sp_6,loan_amount,0.0,2
+spline__property_value_sp_0,property_value,0.0,2
+spline__property_value_sp_1,property_value,-0.6600096962473456,2
+spline__property_value_sp_2,property_value,0.0,2
+spline__property_value_sp_3,property_value,0.0,2
+spline__property_value_sp_4,property_value,0.035122460205479586,2
+spline__property_value_sp_5,property_value,0.0,2
+spline__property_value_sp_6,property_value,0.0,2
+spline__income_sp_0,income,-1.1343458258369978,2
+spline__income_sp_1,income,-0.5961500581345922,2
+spline__income_sp_2,income,0.016917229123869656,2
+spline__income_sp_3,income,0.0,2
+spline__income_sp_4,income,0.0,2
+spline__income_sp_5,income,0.31562762556509705,2
+spline__income_sp_6,income,0.07080921530834093,2
+spline__total_units_sp_0,total_units,0.0,2
+spline__total_units_sp_1,total_units,0.2916990430187093,2
+spline__total_units_sp_2,total_units,0.0,2
+spline__total_units_sp_3,total_units,0.0,2
+spline__total_units_sp_4,total_units,0.0,2
+spline__total_units_sp_5,total_units,0.0,2
+spline__total_units_sp_6,total_units,0.0,2
+spline__tract_population_sp_0,tract_population,0.0,2
+spline__tract_population_sp_1,tract_population,0.0,2
+spline__tract_population_sp_2,tract_population,0.0,2
+spline__tract_population_sp_3,tract_population,-0.21821743673793748,2
+spline__tract_population_sp_4,tract_population,0.026426401360024984,2
+spline__tract_population_sp_5,tract_population,0.0,2
+spline__tract_population_sp_6,tract_population,0.0,2
+spline__tract_minority_population_percent_sp_0,tract_minority_population_percent,0.0,2
+spline__tract_minority_population_percent_sp_1,tract_minority_population_percent,-0.043946048883158,2
+spline__tract_minority_population_percent_sp_2,tract_minority_population_percent,0.09886828903135503,2
+spline__tract_minority_population_percent_sp_3,tract_minority_population_percent,0.10649618588493812,2
+spline__tract_minority_population_percent_sp_4,tract_minority_population_percent,0.0,2
+spline__tract_minority_population_percent_sp_5,tract_minority_population_percent,-0.18736635932103754,2
+spline__tract_minority_population_percent_sp_6,tract_minority_population_percent,0.0,2
+spline__ffiec_msa_md_median_family_income_sp_0,ffiec_msa_md_median_family_income,0.0,2
+spline__ffiec_msa_md_median_family_income_sp_1,ffiec_msa_md_median_family_income,0.08260384868248125,2
+spline__ffiec_msa_md_median_family_income_sp_2,ffiec_msa_md_median_family_income,0.033869077102600995,2
+spline__ffiec_msa_md_median_family_income_sp_3,ffiec_msa_md_median_family_income,-0.06257914768976391,2
+spline__ffiec_msa_md_median_family_income_sp_4,ffiec_msa_md_median_family_income,-0.10148289697902821,2
+spline__ffiec_msa_md_median_family_income_sp_5,ffiec_msa_md_median_family_income,0.0,2
+spline__ffiec_msa_md_median_family_income_sp_6,ffiec_msa_md_median_family_income,0.0,2
+spline__tract_to_msa_income_percentage_sp_0,tract_to_msa_income_percentage,0.0,2
+spline__tract_to_msa_income_percentage_sp_1,tract_to_msa_income_percentage,0.10022481969690851,2
+spline__tract_to_msa_income_percentage_sp_2,tract_to_msa_income_percentage,0.03478789904769316,2
+spline__tract_to_msa_income_percentage_sp_3,tract_to_msa_income_percentage,0.0,2
+spline__tract_to_msa_income_percentage_sp_4,tract_to_msa_income_percentage,0.20192859768633883,2
+spline__tract_to_msa_income_percentage_sp_5,tract_to_msa_income_percentage,-0.09529309966320049,2
+spline__tract_to_msa_income_percentage_sp_6,tract_to_msa_income_percentage,0.0,2
+spline__tract_owner_occupied_units_sp_0,tract_owner_occupied_units,0.0,2
+spline__tract_owner_occupied_units_sp_1,tract_owner_occupied_units,0.0,2
+spline__tract_owner_occupied_units_sp_2,tract_owner_occupied_units,0.029697547621177694,2
+spline__tract_owner_occupied_units_sp_3,tract_owner_occupied_units,-0.039721441516513425,2
+spline__tract_owner_occupied_units_sp_4,tract_owner_occupied_units,0.14463878819048803,2
+spline__tract_owner_occupied_units_sp_5,tract_owner_occupied_units,0.10568130743705473,2
+spline__tract_owner_occupied_units_sp_6,tract_owner_occupied_units,0.0,2
+spline__tract_one_to_four_family_homes_sp_0,tract_one_to_four_family_homes,-0.9599144338689704,2
+spline__tract_one_to_four_family_homes_sp_1,tract_one_to_four_family_homes,-0.25141333602626637,2
+spline__tract_one_to_four_family_homes_sp_2,tract_one_to_four_family_homes,0.2290243983074919,2
+spline__tract_one_to_four_family_homes_sp_3,tract_one_to_four_family_homes,0.0,2
+spline__tract_one_to_four_family_homes_sp_4,tract_one_to_four_family_homes,0.11952309170629215,2
+spline__tract_one_to_four_family_homes_sp_5,tract_one_to_four_family_homes,0.010391815310388611,2
+spline__tract_one_to_four_family_homes_sp_6,tract_one_to_four_family_homes,0.0,2
+spline__tract_median_age_of_housing_units_sp_0,tract_median_age_of_housing_units,0.0,2
+spline__tract_median_age_of_housing_units_sp_1,tract_median_age_of_housing_units,-0.05076097990171521,2
+spline__tract_median_age_of_housing_units_sp_2,tract_median_age_of_housing_units,0.06360819820047049,2
+spline__tract_median_age_of_housing_units_sp_3,tract_median_age_of_housing_units,0.0,2
+spline__tract_median_age_of_housing_units_sp_4,tract_median_age_of_housing_units,-0.040816417276838206,2
+spline__tract_median_age_of_housing_units_sp_5,tract_median_age_of_housing_units,0.15040205542542578,2
+spline__tract_median_age_of_housing_units_sp_6,tract_median_age_of_housing_units,0.0,2
+spline__exempt_code_count_sp_0,exempt_code_count,0.0,2
+spline__exempt_code_count_sp_1,exempt_code_count,0.0,2
+spline__exempt_code_count_sp_2,exempt_code_count,0.0,2
+spline__exempt_code_count_sp_3,exempt_code_count,0.0,2
+spline__exempt_code_count_sp_4,exempt_code_count,0.0,2
+spline__exempt_code_count_sp_5,exempt_code_count,0.07451717091207619,2
+spline__exempt_code_count_sp_6,exempt_code_count,0.0,2
+spline__computed_ltv_sp_0,computed_ltv,0.0,2
+spline__computed_ltv_sp_1,computed_ltv,0.5704827962697866,2
+spline__computed_ltv_sp_2,computed_ltv,0.6070469092839944,2
+spline__computed_ltv_sp_3,computed_ltv,0.0,2
+spline__computed_ltv_sp_4,computed_ltv,0.39778139595906986,2
+spline__computed_ltv_sp_5,computed_ltv,-0.4516574645840882,2
+spline__computed_ltv_sp_6,computed_ltv,-2.9816435261215943,2
+spline__ltv_gap_sp_0,ltv_gap,0.0,2
+spline__ltv_gap_sp_1,ltv_gap,0.2896488378885397,2
+spline__ltv_gap_sp_2,ltv_gap,-0.16278322886481456,2
+spline__ltv_gap_sp_3,ltv_gap,0.18978867863757798,2
+spline__ltv_gap_sp_4,ltv_gap,0.0,2
+spline__ltv_gap_sp_5,ltv_gap,-0.11454131589264437,2
+spline__ltv_gap_sp_6,ltv_gap,0.0,2
+spline__property_to_income_sp_0,property_to_income,0.0,2
+spline__property_to_income_sp_1,property_to_income,-1.0357190363139681,2
+spline__property_to_income_sp_2,property_to_income,0.2341663354350122,2
+spline__property_to_income_sp_3,property_to_income,-0.025731812732618563,2
+spline__property_to_income_sp_4,property_to_income,0.5192413299955021,2
+spline__property_to_income_sp_5,property_to_income,0.34026300464042636,2
+spline__property_to_income_sp_6,property_to_income,0.0,2
+spline__loan_to_income_sp_0,loan_to_income,0.0,2
+spline__loan_to_income_sp_1,loan_to_income,0.6900053855406996,2
+spline__loan_to_income_sp_2,loan_to_income,0.20777567223118493,2
+spline__loan_to_income_sp_3,loan_to_income,0.0,2
+spline__loan_to_income_sp_4,loan_to_income,0.08248287199853045,2
+spline__loan_to_income_sp_5,loan_to_income,-0.5491482885102733,2
+spline__loan_to_income_sp_6,loan_to_income,-0.697642759582607,2
+spline__county_code_rate_sp_0,county_code_rate,0.0,2
+spline__county_code_rate_sp_1,county_code_rate,-0.10313935683728132,2
+spline__county_code_rate_sp_2,county_code_rate,0.0,2
+spline__county_code_rate_sp_3,county_code_rate,-0.0018309216235232785,2
+spline__county_code_rate_sp_4,county_code_rate,0.11091274945951403,2
+spline__county_code_rate_sp_5,county_code_rate,0.008848732730719547,2
+spline__county_code_rate_sp_6,county_code_rate,0.0,2
+onehot__loan_type_1,loan_type,-0.02567515789093908,3
+onehot__loan_type_2,loan_type,0.0,3
+onehot__loan_type_3,loan_type,0.06791822466961746,3
+onehot__loan_type_4,loan_type,0.0,3
+onehot__lien_status_1,lien_status,0.427878693220179,3
+onehot__lien_status_2,lien_status,0.0,3
+onehot__preapproval_1,preapproval,2.831782453651898,3
+onehot__preapproval_2,preapproval,-1.6926176167504758,3
+onehot__reverse_mortgage_1,reverse_mortgage,2.2759039784982176,3
+onehot__reverse_mortgage_1111,reverse_mortgage,0.0,3
+onehot__reverse_mortgage_2,reverse_mortgage,-1.4343690693595488,3
+onehot__open-end_line_of_credit_1,open-end_line_of_credit,-0.30383632413172107,3
+onehot__open-end_line_of_credit_1111,open-end_line_of_credit,0.0,3
+onehot__open-end_line_of_credit_2,open-end_line_of_credit,0.06645640920801955,3
+onehot__business_or_commercial_purpose_1,business_or_commercial_purpose,-0.3446972488650329,3
+onehot__business_or_commercial_purpose_1111,business_or_commercial_purpose,0.0,3
+onehot__business_or_commercial_purpose_2,business_or_commercial_purpose,0.0,3
+onehot__negative_amortization_1,negative_amortization,0.0,3
+onehot__negative_amortization_1111,negative_amortization,0.0,3
+onehot__negative_amortization_2,negative_amortization,-0.091606671701788,3
+onehot__interest_only_payment_1,interest_only_payment,-0.22531814304449818,3
+onehot__interest_only_payment_1111,interest_only_payment,0.0,3
+onehot__interest_only_payment_2,interest_only_payment,0.0,3
+onehot__balloon_payment_1,balloon_payment,0.016129788191460475,3
+onehot__balloon_payment_1111,balloon_payment,0.0,3
+onehot__balloon_payment_2,balloon_payment,-0.3596572641012977,3
+onehot__other_nonamortizing_features_1,other_nonamortizing_features,0.0,3
+onehot__other_nonamortizing_features_1111,other_nonamortizing_features,0.0,3
+onehot__other_nonamortizing_features_2,other_nonamortizing_features,-0.32800172887140533,3
+onehot__construction_method_1,construction_method,0.0,3
+onehot__construction_method_2,construction_method,0.0,3
+onehot__occupancy_type_1,occupancy_type,0.0,3
+onehot__occupancy_type_2,occupancy_type,-0.040587127841527154,3
+onehot__occupancy_type_3,occupancy_type,0.41862644936342364,3
+onehot__manufactured_home_secured_property_type_1,manufactured_home_secured_property_type,0.0,3
+onehot__manufactured_home_secured_property_type_1111,manufactured_home_secured_property_type,0.0,3
+onehot__manufactured_home_secured_property_type_2,manufactured_home_secured_property_type,-0.06874894487422478,3
+onehot__manufactured_home_secured_property_type_3,manufactured_home_secured_property_type,0.0,3
+onehot__manufactured_home_land_property_interest_1,manufactured_home_land_property_interest,-0.17705398477380702,3
+onehot__manufactured_home_land_property_interest_1111,manufactured_home_land_property_interest,0.0,3
+onehot__manufactured_home_land_property_interest_2,manufactured_home_land_property_interest,-0.13577867348097097,3
+onehot__manufactured_home_land_property_interest_3,manufactured_home_land_property_interest,0.414113343063465,3
+onehot__manufactured_home_land_property_interest_4,manufactured_home_land_property_interest,0.3756833765443671,3
+onehot__manufactured_home_land_property_interest_5,manufactured_home_land_property_interest,0.0,3
+onehot__applicant_credit_score_type_1,applicant_credit_score_type,0.041560824007249655,3
+onehot__applicant_credit_score_type_11,applicant_credit_score_type,0.033495064809675144,3
+onehot__applicant_credit_score_type_1111,applicant_credit_score_type,0.13797116214938704,3
+onehot__applicant_credit_score_type_12,applicant_credit_score_type,-0.13242484459749762,3
+onehot__applicant_credit_score_type_13,applicant_credit_score_type,0.0,3
+onehot__applicant_credit_score_type_14,applicant_credit_score_type,-0.23408120154082154,3
+onehot__applicant_credit_score_type_15,applicant_credit_score_type,0.0,3
+onehot__applicant_credit_score_type_2,applicant_credit_score_type,0.0,3
+onehot__applicant_credit_score_type_3,applicant_credit_score_type,0.006644052570420762,3
+onehot__applicant_credit_score_type_4,applicant_credit_score_type,0.12814473280134525,3
+onehot__applicant_credit_score_type_5,applicant_credit_score_type,0.0,3
+onehot__applicant_credit_score_type_6,applicant_credit_score_type,0.0,3
+onehot__applicant_credit_score_type_7,applicant_credit_score_type,-0.09619291487386918,3
+onehot__applicant_credit_score_type_8,applicant_credit_score_type,-0.8004335726572648,3
+onehot__applicant_credit_score_type_9,applicant_credit_score_type,-0.24767536199964693,3
+onehot__co-applicant_credit_score_type_1,co-applicant_credit_score_type,-0.033193900522103956,3
+onehot__co-applicant_credit_score_type_10,co-applicant_credit_score_type,-0.11956659507099225,3
+onehot__co-applicant_credit_score_type_11,co-applicant_credit_score_type,-0.04429777454824638,3
+onehot__co-applicant_credit_score_type_1111,co-applicant_credit_score_type,0.13797116214938704,3
+onehot__co-applicant_credit_score_type_12,co-applicant_credit_score_type,0.031541228069867644,3
+onehot__co-applicant_credit_score_type_13,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_14,co-applicant_credit_score_type,0.07613099160338903,3
+onehot__co-applicant_credit_score_type_15,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_2,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_3,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_4,co-applicant_credit_score_type,0.22357332786652806,3
+onehot__co-applicant_credit_score_type_5,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_6,co-applicant_credit_score_type,0.0,3
+onehot__co-applicant_credit_score_type_7,co-applicant_credit_score_type,0.2556350092593917,3
+onehot__co-applicant_credit_score_type_8,co-applicant_credit_score_type,-0.09966173675053047,3
+onehot__co-applicant_credit_score_type_9,co-applicant_credit_score_type,-0.13308014309849384,3
+onehot__applicant_ethnicity-1_1,applicant_ethnicity-1,0.0,3
+onehot__applicant_ethnicity-1_11,applicant_ethnicity-1,-0.10785360206798542,3
+onehot__applicant_ethnicity-1_12,applicant_ethnicity-1,0.017482051385145136,3
+onehot__applicant_ethnicity-1_13,applicant_ethnicity-1,0.36028449928203765,3
+onehot__applicant_ethnicity-1_14,applicant_ethnicity-1,-0.08564634869723244,3
+onehot__applicant_ethnicity-1_2,applicant_ethnicity-1,0.1699646556351931,3
+onehot__applicant_ethnicity-1_3,applicant_ethnicity-1,0.0,3
+onehot__applicant_ethnicity-1_4,applicant_ethnicity-1,0.0,3
+onehot__applicant_ethnicity-1_missing,applicant_ethnicity-1,0.0,3
+onehot__co-applicant_ethnicity-1_1,co-applicant_ethnicity-1,0.09152862075658978,3
+onehot__co-applicant_ethnicity-1_11,co-applicant_ethnicity-1,-0.256730425261305,3
+onehot__co-applicant_ethnicity-1_12,co-applicant_ethnicity-1,-0.2394498841714595,3
+onehot__co-applicant_ethnicity-1_13,co-applicant_ethnicity-1,0.0,3
+onehot__co-applicant_ethnicity-1_14,co-applicant_ethnicity-1,-0.11166728561035205,3
+onehot__co-applicant_ethnicity-1_2,co-applicant_ethnicity-1,0.16874205843384962,3
+onehot__co-applicant_ethnicity-1_3,co-applicant_ethnicity-1,0.0,3
+onehot__co-applicant_ethnicity-1_4,co-applicant_ethnicity-1,0.058325802437143956,3
+onehot__co-applicant_ethnicity-1_5,co-applicant_ethnicity-1,0.0,3
+onehot__co-applicant_ethnicity-1_missing,co-applicant_ethnicity-1,0.0,3
+onehot__applicant_ethnicity_observed_1,applicant_ethnicity_observed,0.0,3
+onehot__applicant_ethnicity_observed_2,applicant_ethnicity_observed,0.0,3
+onehot__applicant_ethnicity_observed_3,applicant_ethnicity_observed,0.2081732533968986,3
+onehot__co-applicant_ethnicity_observed_1,co-applicant_ethnicity_observed,0.0,3
+onehot__co-applicant_ethnicity_observed_2,co-applicant_ethnicity_observed,-0.011675681783052078,3
+onehot__co-applicant_ethnicity_observed_3,co-applicant_ethnicity_observed,0.0,3
+onehot__co-applicant_ethnicity_observed_4,co-applicant_ethnicity_observed,0.0,3
+onehot__applicant_race-1_1,applicant_race-1,0.06787155038819681,3
+onehot__applicant_race-1_2,applicant_race-1,0.31736488197450013,3
+onehot__applicant_race-1_21,applicant_race-1,0.0,3
+onehot__applicant_race-1_22,applicant_race-1,-0.05406950542395341,3
+onehot__applicant_race-1_23,applicant_race-1,0.0,3
+onehot__applicant_race-1_24,applicant_race-1,0.0,3
+onehot__applicant_race-1_25,applicant_race-1,0.0,3
+onehot__applicant_race-1_26,applicant_race-1,0.0,3
+onehot__applicant_race-1_27,applicant_race-1,-0.10006683135455126,3
+onehot__applicant_race-1_3,applicant_race-1,-0.22517872904029218,3
+onehot__applicant_race-1_4,applicant_race-1,0.0,3
+onehot__applicant_race-1_41,applicant_race-1,0.0,3
+onehot__applicant_race-1_42,applicant_race-1,0.0,3
+onehot__applicant_race-1_43,applicant_race-1,0.0,3
+onehot__applicant_race-1_44,applicant_race-1,0.0,3
+onehot__applicant_race-1_5,applicant_race-1,0.16940609048328975,3
+onehot__applicant_race-1_6,applicant_race-1,0.0,3
+onehot__applicant_race-1_7,applicant_race-1,0.0391274406958831,3
+onehot__applicant_race-1_missing,applicant_race-1,0.0,3
+onehot__co-applicant_race-1_1,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_2,co-applicant_race-1,-0.20185990222298955,3
+onehot__co-applicant_race-1_21,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_22,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_23,co-applicant_race-1,0.20397464796963058,3
+onehot__co-applicant_race-1_24,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_25,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_26,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_27,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_3,co-applicant_race-1,-0.11895881575588425,3
+onehot__co-applicant_race-1_4,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_41,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_42,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_43,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_44,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_5,co-applicant_race-1,0.09749684778007987,3
+onehot__co-applicant_race-1_6,co-applicant_race-1,0.2488086014034766,3
+onehot__co-applicant_race-1_7,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_8,co-applicant_race-1,0.0,3
+onehot__co-applicant_race-1_missing,co-applicant_race-1,0.0,3
+onehot__applicant_race_observed_1,applicant_race_observed,0.0,3
+onehot__applicant_race_observed_2,applicant_race_observed,0.0,3
+onehot__applicant_race_observed_3,applicant_race_observed,0.0,3
+onehot__co-applicant_race_observed_1,co-applicant_race_observed,0.0,3
+onehot__co-applicant_race_observed_2,co-applicant_race_observed,-0.09207450563072016,3
+onehot__co-applicant_race_observed_3,co-applicant_race_observed,0.15370716396138273,3
+onehot__co-applicant_race_observed_4,co-applicant_race_observed,0.0,3
+onehot__applicant_sex_1,applicant_sex,0.0,3
+onehot__applicant_sex_2,applicant_sex,0.051970656347780406,3
+onehot__applicant_sex_3,applicant_sex,-0.11293726329647538,3
+onehot__applicant_sex_4,applicant_sex,0.0,3
+onehot__applicant_sex_6,applicant_sex,0.0,3
+onehot__co-applicant_sex_1,co-applicant_sex,-0.16207104419399562,3
+onehot__co-applicant_sex_2,co-applicant_sex,0.0,3
+onehot__co-applicant_sex_3,co-applicant_sex,0.171520761587949,3
+onehot__co-applicant_sex_4,co-applicant_sex,0.0,3
+onehot__co-applicant_sex_5,co-applicant_sex,0.0,3
+onehot__co-applicant_sex_6,co-applicant_sex,0.0,3
+onehot__applicant_sex_observed_1,applicant_sex_observed,0.08431651772161859,3
+onehot__applicant_sex_observed_2,applicant_sex_observed,0.0,3
+onehot__applicant_sex_observed_3,applicant_sex_observed,-0.41895600440402914,3
+onehot__co-applicant_sex_observed_1,co-applicant_sex_observed,0.07801828349377081,3
+onehot__co-applicant_sex_observed_2,co-applicant_sex_observed,0.0,3
+onehot__co-applicant_sex_observed_3,co-applicant_sex_observed,0.0,3
+onehot__co-applicant_sex_observed_4,co-applicant_sex_observed,0.0,3
+onehot__submission_of_application_1,submission_of_application,0.06462034731423452,3
+onehot__submission_of_application_1111,submission_of_application,0.0,3
+onehot__submission_of_application_2,submission_of_application,-0.17366310388276548,3
+onehot__initially_payable_to_institution_1,initially_payable_to_institution,1.478797361359038,3
+onehot__initially_payable_to_institution_1111,initially_payable_to_institution,0.0,3
+onehot__initially_payable_to_institution_2,initially_payable_to_institution,1.5545504736987033,3
+onehot__initially_payable_to_institution_3,initially_payable_to_institution,-6.2133465024562815,3
+onehot__aus-1_1,aus-1,0.0,3
+onehot__aus-1_1111,aus-1,0.08078249814661279,3
+onehot__aus-1_2,aus-1,0.047730985173007834,3
+onehot__aus-1_3,aus-1,0.0756907590666967,3
+onehot__aus-1_4,aus-1,0.0,3
+onehot__aus-1_5,aus-1,-0.22023620902718508,3
+onehot__aus-1_6,aus-1,-0.7982001473229366,3
+onehot__aus-1_7,aus-1,-1.0863797421975492,3
+onehot__state_code_AK,state_code,0.0,3
+onehot__state_code_AL,state_code,0.07655461957046485,3
+onehot__state_code_AR,state_code,0.05732330809916997,3
+onehot__state_code_AZ,state_code,0.0,3
+onehot__state_code_CA,state_code,0.0,3
+onehot__state_code_CO,state_code,0.12617317456106086,3
+onehot__state_code_CT,state_code,-0.49341361011153806,3
+onehot__state_code_DC,state_code,-0.06633877533405648,3
+onehot__state_code_DE,state_code,-0.04463601414348589,3
+onehot__state_code_FL,state_code,-0.3853199278638937,3
+onehot__state_code_GA,state_code,-0.08314527967535103,3
+onehot__state_code_GU,state_code,0.0,3
+onehot__state_code_HI,state_code,0.0,3
+onehot__state_code_IA,state_code,0.0776778602649783,3
+onehot__state_code_ID,state_code,0.02618330015474731,3
+onehot__state_code_IL,state_code,-0.01753168855956875,3
+onehot__state_code_IN,state_code,0.03242661435232728,3
+onehot__state_code_KS,state_code,0.0,3
+onehot__state_code_KY,state_code,0.0,3
+onehot__state_code_LA,state_code,-0.16434088630596605,3
+onehot__state_code_MA,state_code,-0.06858544813705315,3
+onehot__state_code_MD,state_code,0.0,3
+onehot__state_code_ME,state_code,0.0,3
+onehot__state_code_MI,state_code,0.250522727547925,3
+onehot__state_code_MN,state_code,0.2810094487427419,3
+onehot__state_code_MO,state_code,0.004396071940991613,3
+onehot__state_code_MS,state_code,0.2918165978032983,3
+onehot__state_code_MT,state_code,0.0,3
+onehot__state_code_NC,state_code,0.03158157150918965,3
+onehot__state_code_ND,state_code,0.1461209392793138,3
+onehot__state_code_NE,state_code,0.22992803115249014,3
+onehot__state_code_NH,state_code,0.0,3
+onehot__state_code_NJ,state_code,-0.20173197659659436,3
+onehot__state_code_NM,state_code,-0.032614338940742976,3
+onehot__state_code_NV,state_code,-0.25825293408035704,3
+onehot__state_code_NY,state_code,-0.32488396921662277,3
+onehot__state_code_OH,state_code,0.021434609354028224,3
+onehot__state_code_OK,state_code,0.2886415853548291,3
+onehot__state_code_OR,state_code,0.0,3
+onehot__state_code_PA,state_code,0.1977311091271822,3
+onehot__state_code_PR,state_code,0.0,3
+onehot__state_code_RI,state_code,0.0,3
+onehot__state_code_SC,state_code,-0.1386899452920531,3
+onehot__state_code_SD,state_code,0.0,3
+onehot__state_code_TN,state_code,-0.21579221160217976,3
+onehot__state_code_TX,state_code,-0.048057403140726464,3
+onehot__state_code_UT,state_code,0.009305799571099872,3
+onehot__state_code_VA,state_code,0.0337462236385899,3
+onehot__state_code_VI,state_code,0.0,3
+onehot__state_code_VT,state_code,-0.036956309944003736,3
+onehot__state_code_WA,state_code,0.0,3
+onehot__state_code_WI,state_code,0.20127837645785185,3
+onehot__state_code_WV,state_code,-0.07298620280142495,3
+onehot__state_code_WY,state_code,0.16249561766293485,3
+onehot__state_code_missing,state_code,-1.7403858397120828,3
+onehot__conforming_loan_limit_C,conforming_loan_limit,0.0,3
+onehot__conforming_loan_limit_NC,conforming_loan_limit,-0.009744920548171622,3
+onehot__conforming_loan_limit_U,conforming_loan_limit,0.0,3
+onehot__conforming_loan_limit_not applicable,conforming_loan_limit,0.35113832751394364,3
+onehot__derived_loan_product_type_Conventional:First Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_Conventional:Subordinate Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_FHA:First Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_FHA:Subordinate Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_FSA/RHS:First Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_FSA/RHS:Subordinate Lien,derived_loan_product_type,0.0,3
+onehot__derived_loan_product_type_VA:First Lien,derived_loan_product_type,0.06791822466961746,3
+onehot__derived_dwelling_category_Multifamily:Manufactured,derived_dwelling_category,0.7602644375102006,3
+onehot__derived_dwelling_category_Multifamily:Site-Built,derived_dwelling_category,0.0,3
+onehot__derived_dwelling_category_Single Family (1-4 Units):Manufactured,derived_dwelling_category,-0.7675109594722132,3
+onehot__derived_dwelling_category_Single Family (1-4 Units):Site-Built,derived_dwelling_category,0.0,3
+onehot__derived_ethnicity_Ethnicity Not Available,derived_ethnicity,0.18604903722471516,3
+onehot__derived_ethnicity_Free Form Text Only,derived_ethnicity,0.0,3
+onehot__derived_ethnicity_Hispanic or Latino,derived_ethnicity,0.0,3
+onehot__derived_ethnicity_Joint,derived_ethnicity,-0.1525971876243374,3
+onehot__derived_ethnicity_Not Hispanic or Latino,derived_ethnicity,0.013656244893940994,3
+onehot__derived_race_2 or more minority races,derived_race,-0.3428958683601442,3
+onehot__derived_race_American Indian or Alaska Native,derived_race,0.05747908423700192,3
+onehot__derived_race_Asian,derived_race,-0.13906939729306456,3
+onehot__derived_race_Black or African American,derived_race,0.0,3
+onehot__derived_race_Free Form Text Only,derived_race,0.0,3
+onehot__derived_race_Joint,derived_race,0.050540158993041685,3
+onehot__derived_race_Native Hawaiian or Other Pacific Islander,derived_race,-0.09541745047314865,3
+onehot__derived_race_Race Not Available,derived_race,0.04804821755453916,3
+onehot__derived_race_White,derived_race,0.1705190257885554,3
+onehot__derived_sex_Female,derived_sex,0.0,3
+onehot__derived_sex_Joint,derived_sex,0.07111078125756454,3
+onehot__derived_sex_Male,derived_sex,0.0,3
+onehot__derived_sex_Sex Not Available,derived_sex,-0.016977917593569918,3
+onehot__applicant_age_25-34,applicant_age,0.03143036037979075,3
+onehot__applicant_age_35-44,applicant_age,-0.11836753391633037,3
+onehot__applicant_age_45-54,applicant_age,-0.21069853656641896,3
+onehot__applicant_age_55-64,applicant_age,-0.06837972740657858,3
+onehot__applicant_age_65-74,applicant_age,0.0,3
+onehot__applicant_age_<25,applicant_age,0.00042232841730926155,3
+onehot__applicant_age_>74,applicant_age,0.023579886488173718,3
+onehot__applicant_age_missing,applicant_age,0.8072025040431041,3
+onehot__co-applicant_age_25-34,co-applicant_age,0.028196509442241138,3
+onehot__co-applicant_age_35-44,co-applicant_age,0.03448307480136139,3
+onehot__co-applicant_age_45-54,co-applicant_age,0.0,3
+onehot__co-applicant_age_55-64,co-applicant_age,-0.012904819146779267,3
+onehot__co-applicant_age_65-74,co-applicant_age,0.16438260825416928,3
+onehot__co-applicant_age_<25,co-applicant_age,0.0,3
+onehot__co-applicant_age_>74,co-applicant_age,-0.07168359044701605,3
+onehot__co-applicant_age_missing,co-applicant_age,0.0,3
+onehot__dti_band_20-30,dti_band,0.7062240245700461,3
+onehot__dti_band_30-36,dti_band,0.5153561573775556,3
+onehot__dti_band_36-49,dti_band,0.5343371578351229,3
+onehot__dti_band_50-60,dti_band,0.0,3
+onehot__dti_band_<20,dti_band,-0.25106787620287985,3
+onehot__dti_band_>60,dti_band,-1.252131116818549,3
+onehot__dti_band_missing,dti_band,-0.3010066908335049,3
+onehot__loan_term_band_120,loan_term_band,0.006858840987207605,3
+onehot__loan_term_band_180,loan_term_band,0.14087079570220926,3
+onehot__loan_term_band_240,loan_term_band,-0.449373386571255,3
+onehot__loan_term_band_300,loan_term_band,-0.2525695227254785,3
+onehot__loan_term_band_360,loan_term_band,0.01284719480277239,3
+onehot__loan_term_band_missing,loan_term_band,-1.4759526909352467,3
+onehot__loan_term_band_other,loan_term_band,0.19464893889087287,3
+onehot__ltv_band_80-90,ltv_band,0.08188073874392145,3
+onehot__ltv_band_90-95,ltv_band,0.0,3
+onehot__ltv_band_95-100,ltv_band,0.06720656629734596,3
+onehot__ltv_band_<=80,ltv_band,0.20334920434701576,3
+onehot__ltv_band_>100,ltv_band,0.0,3
+onehot__ltv_band_missing,ltv_band,-0.29187670712362557,3
+onehot__x_dti_loan_type_20-30 x 1,x_dti_loan_type,-0.33470646069704324,3
+onehot__x_dti_loan_type_20-30 x 2,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_20-30 x 3,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_20-30 x 4,x_dti_loan_type,0.21077309630107013,3
+onehot__x_dti_loan_type_30-36 x 1,x_dti_loan_type,0.004774656631142726,3
+onehot__x_dti_loan_type_30-36 x 2,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_30-36 x 3,x_dti_loan_type,-0.2579589532526927,3
+onehot__x_dti_loan_type_30-36 x 4,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_36-49 x 1,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_36-49 x 2,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_36-49 x 3,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_36-49 x 4,x_dti_loan_type,0.007207989564830224,3
+onehot__x_dti_loan_type_50-60 x 1,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_50-60 x 2,x_dti_loan_type,0.0521954516018773,3
+onehot__x_dti_loan_type_50-60 x 3,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_50-60 x 4,x_dti_loan_type,-0.1708179657339908,3
+onehot__x_dti_loan_type_<20 x 1,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_<20 x 2,x_dti_loan_type,-0.16408272571804233,3
+onehot__x_dti_loan_type_<20 x 3,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_<20 x 4,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_>60 x 1,x_dti_loan_type,-0.27497498981934126,3
+onehot__x_dti_loan_type_>60 x 2,x_dti_loan_type,-1.6082919795966082,3
+onehot__x_dti_loan_type_>60 x 3,x_dti_loan_type,1.8270256598303005,3
+onehot__x_dti_loan_type_>60 x 4,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_missing x 1,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_missing x 2,x_dti_loan_type,0.08378944641216303,3
+onehot__x_dti_loan_type_missing x 3,x_dti_loan_type,0.0,3
+onehot__x_dti_loan_type_missing x 4,x_dti_loan_type,-1.3246712111626964,3
+onehot__x_dti_ltv_20-30 x 80-90,x_dti_ltv,0.17772980525232496,3
+onehot__x_dti_ltv_20-30 x 90-95,x_dti_ltv,0.03305335667292219,3
+onehot__x_dti_ltv_20-30 x 95-100,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_20-30 x <=80,x_dti_ltv,0.08578609105058098,3
+onehot__x_dti_ltv_20-30 x >100,x_dti_ltv,-0.14852757493227475,3
+onehot__x_dti_ltv_20-30 x missing,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_30-36 x 80-90,x_dti_ltv,0.24883567339901308,3
+onehot__x_dti_ltv_30-36 x 90-95,x_dti_ltv,0.20597238772518411,3
+onehot__x_dti_ltv_30-36 x 95-100,x_dti_ltv,0.374768408142022,3
+onehot__x_dti_ltv_30-36 x <=80,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_30-36 x >100,x_dti_ltv,-0.1283568267338459,3
+onehot__x_dti_ltv_30-36 x missing,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_36-49 x 80-90,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_36-49 x 90-95,x_dti_ltv,0.29749947823476824,3
+onehot__x_dti_ltv_36-49 x 95-100,x_dti_ltv,0.21343286821114202,3
+onehot__x_dti_ltv_36-49 x <=80,x_dti_ltv,-0.09174234769898641,3
+onehot__x_dti_ltv_36-49 x >100,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_36-49 x missing,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_50-60 x 80-90,x_dti_ltv,-0.08584096080567967,3
+onehot__x_dti_ltv_50-60 x 90-95,x_dti_ltv,-0.2851705594224559,3
+onehot__x_dti_ltv_50-60 x 95-100,x_dti_ltv,0.4324937789453582,3
+onehot__x_dti_ltv_50-60 x <=80,x_dti_ltv,-0.2362132213510155,3
+onehot__x_dti_ltv_50-60 x >100,x_dti_ltv,0.15970542611429817,3
+onehot__x_dti_ltv_50-60 x missing,x_dti_ltv,1.1964496570958691,3
+onehot__x_dti_ltv_<20 x 80-90,x_dti_ltv,0.10217924804556558,3
+onehot__x_dti_ltv_<20 x 90-95,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_<20 x 95-100,x_dti_ltv,-0.1388581866427389,3
+onehot__x_dti_ltv_<20 x <=80,x_dti_ltv,0.16146386325259124,3
+onehot__x_dti_ltv_<20 x >100,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_<20 x missing,x_dti_ltv,-0.3669707886237519,3
+onehot__x_dti_ltv_>60 x 80-90,x_dti_ltv,-0.5701347094206319,3
+onehot__x_dti_ltv_>60 x 90-95,x_dti_ltv,-0.5972859709592752,3
+onehot__x_dti_ltv_>60 x 95-100,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_>60 x <=80,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_>60 x >100,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_>60 x missing,x_dti_ltv,0.006061498674544787,3
+onehot__x_dti_ltv_missing x 80-90,x_dti_ltv,0.0,3
+onehot__x_dti_ltv_missing x 90-95,x_dti_ltv,-1.0318958093747668,3
+onehot__x_dti_ltv_missing x 95-100,x_dti_ltv,-0.13214582159754823,3
+onehot__x_dti_ltv_missing x <=80,x_dti_ltv,0.4286635038522586,3
+onehot__x_dti_ltv_missing x >100,x_dti_ltv,0.44245511370105867,3
+onehot__x_dti_ltv_missing x missing,x_dti_ltv,-0.4673440446632338,3
+onehot__x_construction_loan_type_1 x 1,x_construction_loan_type,0.0,3
+onehot__x_construction_loan_type_1 x 2,x_construction_loan_type,-0.12006406312671614,3
+onehot__x_construction_loan_type_1 x 3,x_construction_loan_type,0.0,3
+onehot__x_construction_loan_type_1 x 4,x_construction_loan_type,0.0,3
+onehot__x_construction_loan_type_2 x 1,x_construction_loan_type,-0.1485463038850518,3
+onehot__x_construction_loan_type_2 x 2,x_construction_loan_type,0.5114453521517064,3
+onehot__x_construction_loan_type_2 x 3,x_construction_loan_type,0.0,3
+onehot__x_construction_loan_type_2 x 4,x_construction_loan_type,0.0,3
+onehot__x_lien_loan_amount_1 x 100-200k,x_lien_loan_amount,0.044763970560764865,3
+onehot__x_lien_loan_amount_1 x 200-400k,x_lien_loan_amount,0.0,3
+onehot__x_lien_loan_amount_1 x 25-50k,x_lien_loan_amount,0.0,3
+onehot__x_lien_loan_amount_1 x 50-100k,x_lien_loan_amount,0.015517203169954589,3
+onehot__x_lien_loan_amount_1 x <=25k,x_lien_loan_amount,-0.023118967544880863,3
+onehot__x_lien_loan_amount_1 x >400k,x_lien_loan_amount,0.01630299057081487,3
+onehot__x_lien_loan_amount_2 x 100-200k,x_lien_loan_amount,-0.372529428607825,3
+onehot__x_lien_loan_amount_2 x 200-400k,x_lien_loan_amount,-0.1718192115862717,3
+onehot__x_lien_loan_amount_2 x 25-50k,x_lien_loan_amount,0.0,3
+onehot__x_lien_loan_amount_2 x 50-100k,x_lien_loan_amount,-0.11637546778447319,3
+onehot__x_lien_loan_amount_2 x <=25k,x_lien_loan_amount,1.2070480339869516,3
+onehot__x_lien_loan_amount_2 x >400k,x_lien_loan_amount,0.0,3
+flags__entity_applicant,entity_applicant,0.0,3
+flags__location_unknown,location_unknown,-0.22593808846065017,3
+flags__has_coapplicant,has_coapplicant,0.0,3
+flags__income_le_0,income_le_0,-0.3164964699674752,3
+flags__manufactured_conventional,manufactured_conventional,-0.1485463038850518,3
+flags__manufactured_location_unknown,manufactured_location_unknown,-1.7439993266380693,3
+flags__dti_above_program_limit,dti_above_program_limit,-2.250347354924335,3
+flags__ltv_at_standard_value,ltv_at_standard_value,0.16073096877203094,3
+flags__is_exempt_record,is_exempt_record,2.3897880780531446,3
+missing__missingindicator_property_value,property_value,-0.8027214494735844,3
+missing__missingindicator_income,income,0.3743957619607476,3
+missing__missingindicator_tract_population,tract_population,-0.22593808846065017,3
+missing__missingindicator_tract_minority_population_percent,tract_minority_population_percent,-0.22593808846065017,3
+missing__missingindicator_ffiec_msa_md_median_family_income,ffiec_msa_md_median_family_income,0.0,3
+missing__missingindicator_tract_to_msa_income_percentage,tract_to_msa_income_percentage,-0.2513800499322005,3
+missing__missingindicator_tract_owner_occupied_units,tract_owner_occupied_units,-0.22593808846065017,3
+missing__missingindicator_tract_one_to_four_family_homes,tract_one_to_four_family_homes,-0.22593808846065017,3
+missing__missingindicator_tract_median_age_of_housing_units,tract_median_age_of_housing_units,0.0,3
+missing__missingindicator_computed_ltv,computed_ltv,-0.8027214494735844,3
+missing__missingindicator_ltv_gap,ltv_gap,0.3292990645284798,3
+missing__missingindicator_property_to_income,property_to_income,-0.3711817367198545,3
+missing__missingindicator_loan_to_income,loan_to_income,0.0,3
+missing__missingindicator_county_code_rate,county_code_rate,0.7272937536912665,3
+spline__loan_amount_sp_0,loan_amount,0.0,3
+spline__loan_amount_sp_1,loan_amount,0.0,3
+spline__loan_amount_sp_2,loan_amount,0.05290468982131074,3
+spline__loan_amount_sp_3,loan_amount,0.0,3
+spline__loan_amount_sp_4,loan_amount,0.08727710341626856,3
+spline__loan_amount_sp_5,loan_amount,-0.01405622544055595,3
+spline__loan_amount_sp_6,loan_amount,0.0,3
+spline__property_value_sp_0,property_value,-0.8945922616293479,3
+spline__property_value_sp_1,property_value,-0.5332752390400284,3
+spline__property_value_sp_2,property_value,0.09667520879809471,3
+spline__property_value_sp_3,property_value,0.0,3
+spline__property_value_sp_4,property_value,0.19152309193887654,3
+spline__property_value_sp_5,property_value,0.10762407116300987,3
+spline__property_value_sp_6,property_value,0.0,3
+spline__income_sp_0,income,-1.2041871552058692,3
+spline__income_sp_1,income,-0.5476107984592629,3
+spline__income_sp_2,income,0.0,3
+spline__income_sp_3,income,0.0,3
+spline__income_sp_4,income,0.023520756908826743,3
+spline__income_sp_5,income,0.3258915372330741,3
+spline__income_sp_6,income,0.19988003875592,3
+spline__total_units_sp_0,total_units,0.0,3
+spline__total_units_sp_1,total_units,0.2916613375743933,3
+spline__total_units_sp_2,total_units,0.0,3
+spline__total_units_sp_3,total_units,0.0,3
+spline__total_units_sp_4,total_units,0.0,3
+spline__total_units_sp_5,total_units,0.0,3
+spline__total_units_sp_6,total_units,0.0,3
+spline__tract_population_sp_0,tract_population,0.0,3
+spline__tract_population_sp_1,tract_population,0.08580614109926095,3
+spline__tract_population_sp_2,tract_population,0.0,3
+spline__tract_population_sp_3,tract_population,-0.05642737158534207,3
+spline__tract_population_sp_4,tract_population,0.08672782463916269,3
+spline__tract_population_sp_5,tract_population,0.0,3
+spline__tract_population_sp_6,tract_population,0.0,3
+spline__tract_minority_population_percent_sp_0,tract_minority_population_percent,0.0,3
+spline__tract_minority_population_percent_sp_1,tract_minority_population_percent,-0.04296798596862272,3
+spline__tract_minority_population_percent_sp_2,tract_minority_population_percent,0.03839473929540348,3
+spline__tract_minority_population_percent_sp_3,tract_minority_population_percent,0.08827615631134304,3
+spline__tract_minority_population_percent_sp_4,tract_minority_population_percent,0.05943496229827448,3
+spline__tract_minority_population_percent_sp_5,tract_minority_population_percent,-0.25564575704215436,3
+spline__tract_minority_population_percent_sp_6,tract_minority_population_percent,0.0,3
+spline__ffiec_msa_md_median_family_income_sp_0,ffiec_msa_md_median_family_income,0.0,3
+spline__ffiec_msa_md_median_family_income_sp_1,ffiec_msa_md_median_family_income,0.06859249291943299,3
+spline__ffiec_msa_md_median_family_income_sp_2,ffiec_msa_md_median_family_income,0.15762044615077997,3
+spline__ffiec_msa_md_median_family_income_sp_3,ffiec_msa_md_median_family_income,-0.07727504968909088,3
+spline__ffiec_msa_md_median_family_income_sp_4,ffiec_msa_md_median_family_income,-0.0019127622947742347,3
+spline__ffiec_msa_md_median_family_income_sp_5,ffiec_msa_md_median_family_income,0.0,3
+spline__ffiec_msa_md_median_family_income_sp_6,ffiec_msa_md_median_family_income,0.0,3
+spline__tract_to_msa_income_percentage_sp_0,tract_to_msa_income_percentage,0.0,3
+spline__tract_to_msa_income_percentage_sp_1,tract_to_msa_income_percentage,0.09687689912211142,3
+spline__tract_to_msa_income_percentage_sp_2,tract_to_msa_income_percentage,0.0,3
+spline__tract_to_msa_income_percentage_sp_3,tract_to_msa_income_percentage,-0.041461626722160194,3
+spline__tract_to_msa_income_percentage_sp_4,tract_to_msa_income_percentage,0.09951622599024998,3
+spline__tract_to_msa_income_percentage_sp_5,tract_to_msa_income_percentage,0.0,3
+spline__tract_to_msa_income_percentage_sp_6,tract_to_msa_income_percentage,0.0,3
+spline__tract_owner_occupied_units_sp_0,tract_owner_occupied_units,0.0,3
+spline__tract_owner_occupied_units_sp_1,tract_owner_occupied_units,0.0,3
+spline__tract_owner_occupied_units_sp_2,tract_owner_occupied_units,0.0,3
+spline__tract_owner_occupied_units_sp_3,tract_owner_occupied_units,-0.0906034321849444,3
+spline__tract_owner_occupied_units_sp_4,tract_owner_occupied_units,0.0,3
+spline__tract_owner_occupied_units_sp_5,tract_owner_occupied_units,0.08388802550469153,3
+spline__tract_owner_occupied_units_sp_6,tract_owner_occupied_units,0.0,3
+spline__tract_one_to_four_family_homes_sp_0,tract_one_to_four_family_homes,-1.3347846676047375,3
+spline__tract_one_to_four_family_homes_sp_1,tract_one_to_four_family_homes,-0.24451100629536898,3
+spline__tract_one_to_four_family_homes_sp_2,tract_one_to_four_family_homes,0.04550102921152149,3
+spline__tract_one_to_four_family_homes_sp_3,tract_one_to_four_family_homes,0.06406434032844513,3
+spline__tract_one_to_four_family_homes_sp_4,tract_one_to_four_family_homes,0.0,3
+spline__tract_one_to_four_family_homes_sp_5,tract_one_to_four_family_homes,0.10170887422883688,3
+spline__tract_one_to_four_family_homes_sp_6,tract_one_to_four_family_homes,0.0,3
+spline__tract_median_age_of_housing_units_sp_0,tract_median_age_of_housing_units,0.0,3
+spline__tract_median_age_of_housing_units_sp_1,tract_median_age_of_housing_units,-0.10484450642214861,3
+spline__tract_median_age_of_housing_units_sp_2,tract_median_age_of_housing_units,0.11486195296098584,3
+spline__tract_median_age_of_housing_units_sp_3,tract_median_age_of_housing_units,-0.08269990776780166,3
+spline__tract_median_age_of_housing_units_sp_4,tract_median_age_of_housing_units,0.0,3
+spline__tract_median_age_of_housing_units_sp_5,tract_median_age_of_housing_units,0.059677110454849344,3
+spline__tract_median_age_of_housing_units_sp_6,tract_median_age_of_housing_units,0.0,3
+spline__exempt_code_count_sp_0,exempt_code_count,0.0,3
+spline__exempt_code_count_sp_1,exempt_code_count,0.0,3
+spline__exempt_code_count_sp_2,exempt_code_count,0.0,3
+spline__exempt_code_count_sp_3,exempt_code_count,0.0,3
+spline__exempt_code_count_sp_4,exempt_code_count,0.0,3
+spline__exempt_code_count_sp_5,exempt_code_count,0.5393323320110291,3
+spline__exempt_code_count_sp_6,exempt_code_count,0.0,3
+spline__computed_ltv_sp_0,computed_ltv,0.0,3
+spline__computed_ltv_sp_1,computed_ltv,0.48164252509414723,3
+spline__computed_ltv_sp_2,computed_ltv,0.4233234149433343,3
+spline__computed_ltv_sp_3,computed_ltv,0.00872741101419296,3
+spline__computed_ltv_sp_4,computed_ltv,0.26357345958507633,3
+spline__computed_ltv_sp_5,computed_ltv,-0.37985416550756707,3
+spline__computed_ltv_sp_6,computed_ltv,-3.46961307626193,3
+spline__ltv_gap_sp_0,ltv_gap,0.0,3
+spline__ltv_gap_sp_1,ltv_gap,0.18224531506595462,3
+spline__ltv_gap_sp_2,ltv_gap,-0.14848102344980418,3
+spline__ltv_gap_sp_3,ltv_gap,0.16579478459454292,3
+spline__ltv_gap_sp_4,ltv_gap,0.0,3
+spline__ltv_gap_sp_5,ltv_gap,-0.10009041514984557,3
+spline__ltv_gap_sp_6,ltv_gap,0.0,3
+spline__property_to_income_sp_0,property_to_income,0.0,3
+spline__property_to_income_sp_1,property_to_income,-1.1706955220537654,3
+spline__property_to_income_sp_2,property_to_income,0.0,3
+spline__property_to_income_sp_3,property_to_income,-0.19510026065602282,3
+spline__property_to_income_sp_4,property_to_income,0.40127442996044144,3
+spline__property_to_income_sp_5,property_to_income,0.15386885877766032,3
+spline__property_to_income_sp_6,property_to_income,0.0,3
+spline__loan_to_income_sp_0,loan_to_income,0.0,3
+spline__loan_to_income_sp_1,loan_to_income,0.5146606987197098,3
+spline__loan_to_income_sp_2,loan_to_income,0.22223683576332734,3
+spline__loan_to_income_sp_3,loan_to_income,0.0,3
+spline__loan_to_income_sp_4,loan_to_income,0.0,3
+spline__loan_to_income_sp_5,loan_to_income,-0.5690952537297377,3
+spline__loan_to_income_sp_6,loan_to_income,-0.6830749400905274,3
+spline__county_code_rate_sp_0,county_code_rate,0.0,3
+spline__county_code_rate_sp_1,county_code_rate,-0.12540656213426393,3
+spline__county_code_rate_sp_2,county_code_rate,0.027622490585210446,3
+spline__county_code_rate_sp_3,county_code_rate,-0.047188281831922536,3
+spline__county_code_rate_sp_4,county_code_rate,0.16908621131615184,3
+spline__county_code_rate_sp_5,county_code_rate,0.0,3
+spline__county_code_rate_sp_6,county_code_rate,0.0,3
+onehot__loan_type_1,loan_type,0.0,4
+onehot__loan_type_2,loan_type,0.0,4
+onehot__loan_type_3,loan_type,0.07103443675805791,4
+onehot__loan_type_4,loan_type,0.0,4
+onehot__lien_status_1,lien_status,0.6160776863811198,4
+onehot__lien_status_2,lien_status,0.0,4
+onehot__preapproval_1,preapproval,2.73985902159734,4
+onehot__preapproval_2,preapproval,-1.6810265206959365,4
+onehot__reverse_mortgage_1,reverse_mortgage,2.1615620889929725,4
+onehot__reverse_mortgage_1111,reverse_mortgage,0.0,4
+onehot__reverse_mortgage_2,reverse_mortgage,-1.7406233623023368,4
+onehot__open-end_line_of_credit_1,open-end_line_of_credit,0.0,4
+onehot__open-end_line_of_credit_1111,open-end_line_of_credit,0.0,4
+onehot__open-end_line_of_credit_2,open-end_line_of_credit,0.18500594291723715,4
+onehot__business_or_commercial_purpose_1,business_or_commercial_purpose,-0.2325524005174231,4
+onehot__business_or_commercial_purpose_1111,business_or_commercial_purpose,0.0,4
+onehot__business_or_commercial_purpose_2,business_or_commercial_purpose,0.0,4
+onehot__negative_amortization_1,negative_amortization,0.0,4
+onehot__negative_amortization_1111,negative_amortization,0.0,4
+onehot__negative_amortization_2,negative_amortization,0.0,4
+onehot__interest_only_payment_1,interest_only_payment,-0.26567594454298443,4
+onehot__interest_only_payment_1111,interest_only_payment,0.0,4
+onehot__interest_only_payment_2,interest_only_payment,0.0,4
+onehot__balloon_payment_1,balloon_payment,0.0,4
+onehot__balloon_payment_1111,balloon_payment,0.0,4
+onehot__balloon_payment_2,balloon_payment,-0.32851105998854285,4
+onehot__other_nonamortizing_features_1,other_nonamortizing_features,0.0,4
+onehot__other_nonamortizing_features_1111,other_nonamortizing_features,0.0,4
+onehot__other_nonamortizing_features_2,other_nonamortizing_features,-0.2753477551256344,4
+onehot__construction_method_1,construction_method,0.0,4
+onehot__construction_method_2,construction_method,0.0,4
+onehot__occupancy_type_1,occupancy_type,0.0,4
+onehot__occupancy_type_2,occupancy_type,-0.16756714354194907,4
+onehot__occupancy_type_3,occupancy_type,0.30182166385200243,4
+onehot__manufactured_home_secured_property_type_1,manufactured_home_secured_property_type,0.0,4
+onehot__manufactured_home_secured_property_type_1111,manufactured_home_secured_property_type,0.0,4
+onehot__manufactured_home_secured_property_type_2,manufactured_home_secured_property_type,0.0,4
+onehot__manufactured_home_secured_property_type_3,manufactured_home_secured_property_type,0.0,4
+onehot__manufactured_home_land_property_interest_1,manufactured_home_land_property_interest,0.0,4
+onehot__manufactured_home_land_property_interest_1111,manufactured_home_land_property_interest,0.0,4
+onehot__manufactured_home_land_property_interest_2,manufactured_home_land_property_interest,-0.0585241641383838,4
+onehot__manufactured_home_land_property_interest_3,manufactured_home_land_property_interest,0.4833538765552035,4
+onehot__manufactured_home_land_property_interest_4,manufactured_home_land_property_interest,0.44741078054673994,4
+onehot__manufactured_home_land_property_interest_5,manufactured_home_land_property_interest,-0.05045506637737653,4
+onehot__applicant_credit_score_type_1,applicant_credit_score_type,0.026736136882813077,4
+onehot__applicant_credit_score_type_11,applicant_credit_score_type,0.22847551258743123,4
+onehot__applicant_credit_score_type_1111,applicant_credit_score_type,0.0,4
+onehot__applicant_credit_score_type_12,applicant_credit_score_type,-0.040663641191235125,4
+onehot__applicant_credit_score_type_13,applicant_credit_score_type,0.0,4
+onehot__applicant_credit_score_type_14,applicant_credit_score_type,-0.25309571812234166,4
+onehot__applicant_credit_score_type_15,applicant_credit_score_type,-0.052072957179174484,4
+onehot__applicant_credit_score_type_2,applicant_credit_score_type,0.0,4
+onehot__applicant_credit_score_type_3,applicant_credit_score_type,0.003767806821253876,4
+onehot__applicant_credit_score_type_4,applicant_credit_score_type,0.001853808284861739,4
+onehot__applicant_credit_score_type_5,applicant_credit_score_type,0.0,4
+onehot__applicant_credit_score_type_6,applicant_credit_score_type,0.006800502922233517,4
+onehot__applicant_credit_score_type_7,applicant_credit_score_type,0.0,4
+onehot__applicant_credit_score_type_8,applicant_credit_score_type,-0.8908598313435794,4
+onehot__applicant_credit_score_type_9,applicant_credit_score_type,-0.2576001222966185,4
+onehot__co-applicant_credit_score_type_1,co-applicant_credit_score_type,-0.07075802120589689,4
+onehot__co-applicant_credit_score_type_10,co-applicant_credit_score_type,-0.1326773597237433,4
+onehot__co-applicant_credit_score_type_11,co-applicant_credit_score_type,-0.024811749319310756,4
+onehot__co-applicant_credit_score_type_1111,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_12,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_13,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_14,co-applicant_credit_score_type,0.12689936996223447,4
+onehot__co-applicant_credit_score_type_15,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_2,co-applicant_credit_score_type,0.054801304498915356,4
+onehot__co-applicant_credit_score_type_3,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_4,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_5,co-applicant_credit_score_type,0.0,4
+onehot__co-applicant_credit_score_type_6,co-applicant_credit_score_type,0.0738562589098938,4
+onehot__co-applicant_credit_score_type_7,co-applicant_credit_score_type,0.2338005182611853,4
+onehot__co-applicant_credit_score_type_8,co-applicant_credit_score_type,-0.1515013556838028,4
+onehot__co-applicant_credit_score_type_9,co-applicant_credit_score_type,-0.09752771854105043,4
+onehot__applicant_ethnicity-1_1,applicant_ethnicity-1,-0.10606466039721582,4
+onehot__applicant_ethnicity-1_11,applicant_ethnicity-1,-0.04200279423388952,4
+onehot__applicant_ethnicity-1_12,applicant_ethnicity-1,0.016023549772520747,4
+onehot__applicant_ethnicity-1_13,applicant_ethnicity-1,0.1461185216574826,4
+onehot__applicant_ethnicity-1_14,applicant_ethnicity-1,-0.2023325609345793,4
+onehot__applicant_ethnicity-1_2,applicant_ethnicity-1,0.0,4
+onehot__applicant_ethnicity-1_3,applicant_ethnicity-1,0.0,4
+onehot__applicant_ethnicity-1_4,applicant_ethnicity-1,0.0,4
+onehot__applicant_ethnicity-1_missing,applicant_ethnicity-1,0.0,4
+onehot__co-applicant_ethnicity-1_1,co-applicant_ethnicity-1,0.02848936242950311,4
+onehot__co-applicant_ethnicity-1_11,co-applicant_ethnicity-1,-0.3097620138065172,4
+onehot__co-applicant_ethnicity-1_12,co-applicant_ethnicity-1,-0.3048955460885611,4
+onehot__co-applicant_ethnicity-1_13,co-applicant_ethnicity-1,0.0,4
+onehot__co-applicant_ethnicity-1_14,co-applicant_ethnicity-1,0.0,4
+onehot__co-applicant_ethnicity-1_2,co-applicant_ethnicity-1,0.013470949144116999,4
+onehot__co-applicant_ethnicity-1_3,co-applicant_ethnicity-1,-0.1089792562164017,4
+onehot__co-applicant_ethnicity-1_4,co-applicant_ethnicity-1,0.17913036480364355,4
+onehot__co-applicant_ethnicity-1_5,co-applicant_ethnicity-1,0.03368631201670923,4
+onehot__co-applicant_ethnicity-1_missing,co-applicant_ethnicity-1,0.0,4
+onehot__applicant_ethnicity_observed_1,applicant_ethnicity_observed,0.0,4
+onehot__applicant_ethnicity_observed_2,applicant_ethnicity_observed,0.0,4
+onehot__applicant_ethnicity_observed_3,applicant_ethnicity_observed,0.2479768115323567,4
+onehot__co-applicant_ethnicity_observed_1,co-applicant_ethnicity_observed,0.0,4
+onehot__co-applicant_ethnicity_observed_2,co-applicant_ethnicity_observed,-0.15304323822947863,4
+onehot__co-applicant_ethnicity_observed_3,co-applicant_ethnicity_observed,0.0,4
+onehot__co-applicant_ethnicity_observed_4,co-applicant_ethnicity_observed,0.03368631201670923,4
+onehot__applicant_race-1_1,applicant_race-1,0.0,4
+onehot__applicant_race-1_2,applicant_race-1,0.2213514067385281,4
+onehot__applicant_race-1_21,applicant_race-1,-0.06289057715088066,4
+onehot__applicant_race-1_22,applicant_race-1,-0.1487673692139033,4
+onehot__applicant_race-1_23,applicant_race-1,0.11664000348470366,4
+onehot__applicant_race-1_24,applicant_race-1,0.0,4
+onehot__applicant_race-1_25,applicant_race-1,0.0,4
+onehot__applicant_race-1_26,applicant_race-1,0.0,4
+onehot__applicant_race-1_27,applicant_race-1,0.0,4
+onehot__applicant_race-1_3,applicant_race-1,-0.2496386940226539,4
+onehot__applicant_race-1_4,applicant_race-1,0.0,4
+onehot__applicant_race-1_41,applicant_race-1,0.0,4
+onehot__applicant_race-1_42,applicant_race-1,0.0,4
+onehot__applicant_race-1_43,applicant_race-1,0.0,4
+onehot__applicant_race-1_44,applicant_race-1,0.0,4
+onehot__applicant_race-1_5,applicant_race-1,0.2281024952288228,4
+onehot__applicant_race-1_6,applicant_race-1,0.0,4
+onehot__applicant_race-1_7,applicant_race-1,0.11898585055317457,4
+onehot__applicant_race-1_missing,applicant_race-1,0.0,4
+onehot__co-applicant_race-1_1,co-applicant_race-1,0.13790312895110382,4
+onehot__co-applicant_race-1_2,co-applicant_race-1,-0.041918709038442824,4
+onehot__co-applicant_race-1_21,co-applicant_race-1,-0.2283493502902033,4
+onehot__co-applicant_race-1_22,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_23,co-applicant_race-1,0.13033683077700048,4
+onehot__co-applicant_race-1_24,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_25,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_26,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_27,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_3,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_4,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_41,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_42,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_43,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_44,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_5,co-applicant_race-1,0.2492897538094489,4
+onehot__co-applicant_race-1_6,co-applicant_race-1,0.284791863363716,4
+onehot__co-applicant_race-1_7,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_8,co-applicant_race-1,0.0,4
+onehot__co-applicant_race-1_missing,co-applicant_race-1,0.0,4
+onehot__applicant_race_observed_1,applicant_race_observed,0.0,4
+onehot__applicant_race_observed_2,applicant_race_observed,0.0,4
+onehot__applicant_race_observed_3,applicant_race_observed,0.0,4
+onehot__co-applicant_race_observed_1,co-applicant_race_observed,0.0,4
+onehot__co-applicant_race_observed_2,co-applicant_race_observed,0.0,4
+onehot__co-applicant_race_observed_3,co-applicant_race_observed,0.0,4
+onehot__co-applicant_race_observed_4,co-applicant_race_observed,0.0,4
+onehot__applicant_sex_1,applicant_sex,0.0,4
+onehot__applicant_sex_2,applicant_sex,0.027504674355165973,4
+onehot__applicant_sex_3,applicant_sex,-0.06997031574062312,4
+onehot__applicant_sex_4,applicant_sex,0.0,4
+onehot__applicant_sex_6,applicant_sex,0.0,4
+onehot__co-applicant_sex_1,co-applicant_sex,-0.07431604306095675,4
+onehot__co-applicant_sex_2,co-applicant_sex,0.0,4
+onehot__co-applicant_sex_3,co-applicant_sex,0.37176700703398285,4
+onehot__co-applicant_sex_4,co-applicant_sex,0.0,4
+onehot__co-applicant_sex_5,co-applicant_sex,0.0,4
+onehot__co-applicant_sex_6,co-applicant_sex,0.0,4
+onehot__applicant_sex_observed_1,applicant_sex_observed,0.0,4
+onehot__applicant_sex_observed_2,applicant_sex_observed,0.0,4
+onehot__applicant_sex_observed_3,applicant_sex_observed,-0.3717548039873332,4
+onehot__co-applicant_sex_observed_1,co-applicant_sex_observed,0.10202454937064963,4
+onehot__co-applicant_sex_observed_2,co-applicant_sex_observed,0.0,4
+onehot__co-applicant_sex_observed_3,co-applicant_sex_observed,0.0,4
+onehot__co-applicant_sex_observed_4,co-applicant_sex_observed,0.0,4
+onehot__submission_of_application_1,submission_of_application,0.0,4
+onehot__submission_of_application_1111,submission_of_application,0.0,4
+onehot__submission_of_application_2,submission_of_application,-0.23462887424670334,4
+onehot__initially_payable_to_institution_1,initially_payable_to_institution,1.247099670343216,4
+onehot__initially_payable_to_institution_1111,initially_payable_to_institution,0.0,4
+onehot__initially_payable_to_institution_2,initially_payable_to_institution,1.218790894274626,4
+onehot__initially_payable_to_institution_3,initially_payable_to_institution,-6.414340465520557,4
+onehot__aus-1_1,aus-1,0.17159925796047687,4
+onehot__aus-1_1111,aus-1,0.0,4
+onehot__aus-1_2,aus-1,0.20336384485743708,4
+onehot__aus-1_3,aus-1,0.30024902502669387,4
+onehot__aus-1_4,aus-1,0.0,4
+onehot__aus-1_5,aus-1,0.0,4
+onehot__aus-1_6,aus-1,-0.6565949354629976,4
+onehot__aus-1_7,aus-1,-0.989592239441366,4
+onehot__state_code_AK,state_code,0.0,4
+onehot__state_code_AL,state_code,0.08017306094785966,4
+onehot__state_code_AR,state_code,0.0,4
+onehot__state_code_AZ,state_code,-0.01889832894127688,4
+onehot__state_code_CA,state_code,-0.03256123926447785,4
+onehot__state_code_CO,state_code,0.17759271010390204,4
+onehot__state_code_CT,state_code,-0.4590148305467669,4
+onehot__state_code_DC,state_code,-0.00899091608313984,4
+onehot__state_code_DE,state_code,0.0,4
+onehot__state_code_FL,state_code,-0.4349888049083887,4
+onehot__state_code_GA,state_code,-0.03427291013005979,4
+onehot__state_code_GU,state_code,0.0,4
+onehot__state_code_HI,state_code,0.05081785644841333,4
+onehot__state_code_IA,state_code,0.1265300340113693,4
+onehot__state_code_ID,state_code,0.07912254426873216,4
+onehot__state_code_IL,state_code,-0.14338245112469072,4
+onehot__state_code_IN,state_code,-0.023913596791127385,4
+onehot__state_code_KS,state_code,0.07472241018972012,4
+onehot__state_code_KY,state_code,0.0,4
+onehot__state_code_LA,state_code,-0.031510554397345326,4
+onehot__state_code_MA,state_code,-0.140615296046768,4
+onehot__state_code_MD,state_code,0.0,4
+onehot__state_code_ME,state_code,-0.027344382254593923,4
+onehot__state_code_MI,state_code,0.1913549124388976,4
+onehot__state_code_MN,state_code,0.3563778854441986,4
+onehot__state_code_MO,state_code,0.023448231725434247,4
+onehot__state_code_MS,state_code,0.3364542862151849,4
+onehot__state_code_MT,state_code,0.0,4
+onehot__state_code_NC,state_code,0.089208958640742,4
+onehot__state_code_ND,state_code,0.2367426010987551,4
+onehot__state_code_NE,state_code,0.0761245997427469,4
+onehot__state_code_NH,state_code,0.0,4
+onehot__state_code_NJ,state_code,-0.036474846760400366,4
+onehot__state_code_NM,state_code,0.01887145925238527,4
+onehot__state_code_NV,state_code,-0.2294712182305176,4
+onehot__state_code_NY,state_code,-0.2113966830373599,4
+onehot__state_code_OH,state_code,0.0,4
+onehot__state_code_OK,state_code,0.25945468249907083,4
+onehot__state_code_OR,state_code,0.0,4
+onehot__state_code_PA,state_code,0.10932628891330848,4
+onehot__state_code_PR,state_code,0.0,4
+onehot__state_code_RI,state_code,0.0,4
+onehot__state_code_SC,state_code,-0.23083574121835063,4
+onehot__state_code_SD,state_code,0.0,4
+onehot__state_code_TN,state_code,-0.18751849296326556,4
+onehot__state_code_TX,state_code,-0.03293224706447124,4
+onehot__state_code_UT,state_code,0.08990792937339008,4
+onehot__state_code_VA,state_code,0.09287702230328305,4
+onehot__state_code_VI,state_code,0.0,4
+onehot__state_code_VT,state_code,-0.653397466475522,4
+onehot__state_code_WA,state_code,0.0,4
+onehot__state_code_WI,state_code,0.06567394247148618,4
+onehot__state_code_WV,state_code,-0.0932435847231118,4
+onehot__state_code_WY,state_code,0.08644331823959818,4
+onehot__state_code_missing,state_code,-1.523682462586789,4
+onehot__conforming_loan_limit_C,conforming_loan_limit,-0.001880006999964629,4
+onehot__conforming_loan_limit_NC,conforming_loan_limit,0.0,4
+onehot__conforming_loan_limit_U,conforming_loan_limit,0.0,4
+onehot__conforming_loan_limit_not applicable,conforming_loan_limit,0.36430795878776034,4
+onehot__derived_loan_product_type_Conventional:First Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_Conventional:Subordinate Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_FHA:First Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_FHA:Subordinate Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_FSA/RHS:First Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_FSA/RHS:Subordinate Lien,derived_loan_product_type,0.0,4
+onehot__derived_loan_product_type_VA:First Lien,derived_loan_product_type,0.07103443675805791,4
+onehot__derived_dwelling_category_Multifamily:Manufactured,derived_dwelling_category,0.855859296930875,4
+onehot__derived_dwelling_category_Multifamily:Site-Built,derived_dwelling_category,0.0,4
+onehot__derived_dwelling_category_Single Family (1-4 Units):Manufactured,derived_dwelling_category,-0.7894474731396568,4
+onehot__derived_dwelling_category_Single Family (1-4 Units):Site-Built,derived_dwelling_category,0.0,4
+onehot__derived_ethnicity_Ethnicity Not Available,derived_ethnicity,0.11664086105077426,4
+onehot__derived_ethnicity_Free Form Text Only,derived_ethnicity,0.0,4
+onehot__derived_ethnicity_Hispanic or Latino,derived_ethnicity,0.0,4
+onehot__derived_ethnicity_Joint,derived_ethnicity,-0.01423501107635449,4
+onehot__derived_ethnicity_Not Hispanic or Latino,derived_ethnicity,0.12351996968502028,4
+onehot__derived_race_2 or more minority races,derived_race,-0.33056442802532393,4
+onehot__derived_race_American Indian or Alaska Native,derived_race,0.1698457718389149,4
+onehot__derived_race_Asian,derived_race,0.0,4
+onehot__derived_race_Black or African American,derived_race,0.0,4
+onehot__derived_race_Free Form Text Only,derived_race,0.0,4
+onehot__derived_race_Joint,derived_race,0.042749324601195064,4
+onehot__derived_race_Native Hawaiian or Other Pacific Islander,derived_race,-0.06138580761734951,4
+onehot__derived_race_Race Not Available,derived_race,0.05106181702200283,4
+onehot__derived_race_White,derived_race,0.08341668983392743,4
+onehot__derived_sex_Female,derived_sex,0.06507025372905641,4
+onehot__derived_sex_Joint,derived_sex,0.20111062156506604,4
+onehot__derived_sex_Male,derived_sex,0.0,4
+onehot__derived_sex_Sex Not Available,derived_sex,-0.01778820539623713,4
+onehot__applicant_age_25-34,applicant_age,0.03800445726914526,4
+onehot__applicant_age_35-44,applicant_age,-0.08092856506999031,4
+onehot__applicant_age_45-54,applicant_age,-0.19228903874108474,4
+onehot__applicant_age_55-64,applicant_age,-0.038016804789174574,4
+onehot__applicant_age_65-74,applicant_age,0.0,4
+onehot__applicant_age_<25,applicant_age,0.03632965447748706,4
+onehot__applicant_age_>74,applicant_age,0.05901788173103395,4
+onehot__applicant_age_missing,applicant_age,0.8050439554398835,4
+onehot__co-applicant_age_25-34,co-applicant_age,0.0,4
+onehot__co-applicant_age_35-44,co-applicant_age,0.0,4
+onehot__co-applicant_age_45-54,co-applicant_age,-0.03543858327553319,4
+onehot__co-applicant_age_55-64,co-applicant_age,-0.04284047537935191,4
+onehot__co-applicant_age_65-74,co-applicant_age,0.06576565012147052,4
+onehot__co-applicant_age_<25,co-applicant_age,0.0,4
+onehot__co-applicant_age_>74,co-applicant_age,-0.022399425017351222,4
+onehot__co-applicant_age_missing,co-applicant_age,0.019403227036450695,4
+onehot__dti_band_20-30,dti_band,0.6393749893013713,4
+onehot__dti_band_30-36,dti_band,0.5510529073299666,4
+onehot__dti_band_36-49,dti_band,0.4745028301856771,4
+onehot__dti_band_50-60,dti_band,0.0,4
+onehot__dti_band_<20,dti_band,-0.22778582788933324,4
+onehot__dti_band_>60,dti_band,-1.0782775774651832,4
+onehot__dti_band_missing,dti_band,-0.2662786283943193,4
+onehot__loan_term_band_120,loan_term_band,0.0854096357815962,4
+onehot__loan_term_band_180,loan_term_band,0.019554679682172536,4
+onehot__loan_term_band_240,loan_term_band,-0.4989070532844982,4
+onehot__loan_term_band_300,loan_term_band,-0.2457655050083663,4
+onehot__loan_term_band_360,loan_term_band,0.0,4
+onehot__loan_term_band_missing,loan_term_band,-1.4663825956875487,4
+onehot__loan_term_band_other,loan_term_band,0.19075872372849606,4
+onehot__ltv_band_80-90,ltv_band,0.04520134000469267,4
+onehot__ltv_band_90-95,ltv_band,-0.08216418448166506,4
+onehot__ltv_band_95-100,ltv_band,0.07034300603768644,4
+onehot__ltv_band_<=80,ltv_band,0.076644723271169,4
+onehot__ltv_band_>100,ltv_band,0.0,4
+onehot__ltv_band_missing,ltv_band,-0.22583165172849134,4
+onehot__x_dti_loan_type_20-30 x 1,x_dti_loan_type,-0.1738328706406313,4
+onehot__x_dti_loan_type_20-30 x 2,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_20-30 x 3,x_dti_loan_type,0.07806559956847639,4
+onehot__x_dti_loan_type_20-30 x 4,x_dti_loan_type,0.05312822477362961,4
+onehot__x_dti_loan_type_30-36 x 1,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_30-36 x 2,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_30-36 x 3,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_30-36 x 4,x_dti_loan_type,0.13603196800385475,4
+onehot__x_dti_loan_type_36-49 x 1,x_dti_loan_type,0.0256389435075608,4
+onehot__x_dti_loan_type_36-49 x 2,x_dti_loan_type,0.1173312036955989,4
+onehot__x_dti_loan_type_36-49 x 3,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_36-49 x 4,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_50-60 x 1,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_50-60 x 2,x_dti_loan_type,0.040021340766623816,4
+onehot__x_dti_loan_type_50-60 x 3,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_50-60 x 4,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_<20 x 1,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_<20 x 2,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_<20 x 3,x_dti_loan_type,-0.013074396665973506,4
+onehot__x_dti_loan_type_<20 x 4,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_>60 x 1,x_dti_loan_type,-0.31181577774991387,4
+onehot__x_dti_loan_type_>60 x 2,x_dti_loan_type,-1.7561128709156302,4
+onehot__x_dti_loan_type_>60 x 3,x_dti_loan_type,1.867229648162993,4
+onehot__x_dti_loan_type_>60 x 4,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_missing x 1,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_missing x 2,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_missing x 3,x_dti_loan_type,0.0,4
+onehot__x_dti_loan_type_missing x 4,x_dti_loan_type,-0.8892311187777092,4
+onehot__x_dti_ltv_20-30 x 80-90,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_20-30 x 90-95,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_20-30 x 95-100,x_dti_ltv,-0.04635228057075565,4
+onehot__x_dti_ltv_20-30 x <=80,x_dti_ltv,0.03114124906620809,4
+onehot__x_dti_ltv_20-30 x >100,x_dti_ltv,-0.17374172613196465,4
+onehot__x_dti_ltv_20-30 x missing,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_30-36 x 80-90,x_dti_ltv,0.08829235167233301,4
+onehot__x_dti_ltv_30-36 x 90-95,x_dti_ltv,0.3769046944718171,4
+onehot__x_dti_ltv_30-36 x 95-100,x_dti_ltv,0.3524084038936722,4
+onehot__x_dti_ltv_30-36 x <=80,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_30-36 x >100,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_30-36 x missing,x_dti_ltv,-0.01984089460449502,4
+onehot__x_dti_ltv_36-49 x 80-90,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_36-49 x 90-95,x_dti_ltv,0.3587576033277892,4
+onehot__x_dti_ltv_36-49 x 95-100,x_dti_ltv,0.20189890173282507,4
+onehot__x_dti_ltv_36-49 x <=80,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_36-49 x >100,x_dti_ltv,-0.018329161702678946,4
+onehot__x_dti_ltv_36-49 x missing,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_50-60 x 80-90,x_dti_ltv,-0.18965444721650604,4
+onehot__x_dti_ltv_50-60 x 90-95,x_dti_ltv,-0.2497862238044873,4
+onehot__x_dti_ltv_50-60 x 95-100,x_dti_ltv,0.36826680646900695,4
+onehot__x_dti_ltv_50-60 x <=80,x_dti_ltv,-0.28586203584410375,4
+onehot__x_dti_ltv_50-60 x >100,x_dti_ltv,0.23489549383361008,4
+onehot__x_dti_ltv_50-60 x missing,x_dti_ltv,1.0852586323545228,4
+onehot__x_dti_ltv_<20 x 80-90,x_dti_ltv,0.1855921935664304,4
+onehot__x_dti_ltv_<20 x 90-95,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_<20 x 95-100,x_dti_ltv,-0.2597594086532413,4
+onehot__x_dti_ltv_<20 x <=80,x_dti_ltv,0.20783558671537672,4
+onehot__x_dti_ltv_<20 x >100,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_<20 x missing,x_dti_ltv,-0.27570144682866593,4
+onehot__x_dti_ltv_>60 x 80-90,x_dti_ltv,-0.41648960425542403,4
+onehot__x_dti_ltv_>60 x 90-95,x_dti_ltv,-0.8519538250301044,4
+onehot__x_dti_ltv_>60 x 95-100,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_>60 x <=80,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_>60 x >100,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_>60 x missing,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_missing x 80-90,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_missing x 90-95,x_dti_ltv,-0.860476645026,4
+onehot__x_dti_ltv_missing x 95-100,x_dti_ltv,0.0,4
+onehot__x_dti_ltv_missing x <=80,x_dti_ltv,0.48960406574501564,4
+onehot__x_dti_ltv_missing x >100,x_dti_ltv,0.19430577671322766,4
+onehot__x_dti_ltv_missing x missing,x_dti_ltv,-0.4836172286353272,4
+onehot__x_construction_loan_type_1 x 1,x_construction_loan_type,0.0,4
+onehot__x_construction_loan_type_1 x 2,x_construction_loan_type,-0.1635446110273328,4
+onehot__x_construction_loan_type_1 x 3,x_construction_loan_type,0.023294988582294524,4
+onehot__x_construction_loan_type_1 x 4,x_construction_loan_type,0.0,4
+onehot__x_construction_loan_type_2 x 1,x_construction_loan_type,-0.21007059629938374,4
+onehot__x_construction_loan_type_2 x 2,x_construction_loan_type,0.38574161702337795,4
+onehot__x_construction_loan_type_2 x 3,x_construction_loan_type,0.0,4
+onehot__x_construction_loan_type_2 x 4,x_construction_loan_type,0.0,4
+onehot__x_lien_loan_amount_1 x 100-200k,x_lien_loan_amount,0.02323035424357083,4
+onehot__x_lien_loan_amount_1 x 200-400k,x_lien_loan_amount,-0.009033274096832218,4
+onehot__x_lien_loan_amount_1 x 25-50k,x_lien_loan_amount,0.034335911310065435,4
+onehot__x_lien_loan_amount_1 x 50-100k,x_lien_loan_amount,0.007688516029758198,4
+onehot__x_lien_loan_amount_1 x <=25k,x_lien_loan_amount,-0.18639812603829717,4
+onehot__x_lien_loan_amount_1 x >400k,x_lien_loan_amount,0.0,4
+onehot__x_lien_loan_amount_2 x 100-200k,x_lien_loan_amount,-0.3547687621625537,4
+onehot__x_lien_loan_amount_2 x 200-400k,x_lien_loan_amount,-0.059769969319096096,4
+onehot__x_lien_loan_amount_2 x 25-50k,x_lien_loan_amount,0.0,4
+onehot__x_lien_loan_amount_2 x 50-100k,x_lien_loan_amount,-0.06814144375005073,4
+onehot__x_lien_loan_amount_2 x <=25k,x_lien_loan_amount,1.1978601831572933,4
+onehot__x_lien_loan_amount_2 x >400k,x_lien_loan_amount,0.01015693574307292,4
+flags__entity_applicant,entity_applicant,0.0,4
+flags__location_unknown,location_unknown,-0.23945868455986388,4
+flags__has_coapplicant,has_coapplicant,0.0,4
+flags__income_le_0,income_le_0,-0.4729233945387059,4
+flags__manufactured_conventional,manufactured_conventional,-0.21007059629938374,4
+flags__manufactured_location_unknown,manufactured_location_unknown,-1.7538139682920875,4
+flags__dti_above_program_limit,dti_above_program_limit,-2.289650998426117,4
+flags__ltv_at_standard_value,ltv_at_standard_value,0.19369375475095954,4
+flags__is_exempt_record,is_exempt_record,2.4712508664690667,4
+missing__missingindicator_property_value,property_value,-0.8187824357505896,4
+missing__missingindicator_income,income,0.3263597189586823,4
+missing__missingindicator_tract_population,tract_population,-0.23945868455986388,4
+missing__missingindicator_tract_minority_population_percent,tract_minority_population_percent,-0.23945868455986388,4
+missing__missingindicator_ffiec_msa_md_median_family_income,ffiec_msa_md_median_family_income,0.0,4
+missing__missingindicator_tract_to_msa_income_percentage,tract_to_msa_income_percentage,-0.044633266174607715,4
+missing__missingindicator_tract_owner_occupied_units,tract_owner_occupied_units,-0.23945868455986388,4
+missing__missingindicator_tract_one_to_four_family_homes,tract_one_to_four_family_homes,-0.23945868455986388,4
+missing__missingindicator_tract_median_age_of_housing_units,tract_median_age_of_housing_units,-0.0012494331391317256,4
+missing__missingindicator_computed_ltv,computed_ltv,-0.8187824357505896,4
+missing__missingindicator_ltv_gap,ltv_gap,0.196099238578675,4
+missing__missingindicator_property_to_income,property_to_income,-0.3249741630824906,4
+missing__missingindicator_loan_to_income,loan_to_income,0.0,4
+missing__missingindicator_county_code_rate,county_code_rate,0.5025997186929266,4
+spline__loan_amount_sp_0,loan_amount,0.0,4
+spline__loan_amount_sp_1,loan_amount,-0.13858956238261194,4
+spline__loan_amount_sp_2,loan_amount,0.06229027019960864,4
+spline__loan_amount_sp_3,loan_amount,0.0,4
+spline__loan_amount_sp_4,loan_amount,0.0,4
+spline__loan_amount_sp_5,loan_amount,0.0,4
+spline__loan_amount_sp_6,loan_amount,0.0,4
+spline__property_value_sp_0,property_value,-0.627591897796747,4
+spline__property_value_sp_1,property_value,-0.5743489839379323,4
+spline__property_value_sp_2,property_value,0.10782896063423573,4
+spline__property_value_sp_3,property_value,0.0,4
+spline__property_value_sp_4,property_value,0.26996022547770293,4
+spline__property_value_sp_5,property_value,0.0,4
+spline__property_value_sp_6,property_value,0.0,4
+spline__income_sp_0,income,-1.2450911163896494,4
+spline__income_sp_1,income,-0.4405103374617917,4
+spline__income_sp_2,income,0.0,4
+spline__income_sp_3,income,0.0,4
+spline__income_sp_4,income,0.05677727663106414,4
+spline__income_sp_5,income,0.2828971931131096,4
+spline__income_sp_6,income,0.17189352481759312,4
+spline__total_units_sp_0,total_units,0.0,4
+spline__total_units_sp_1,total_units,0.28395348199714837,4
+spline__total_units_sp_2,total_units,0.0,4
+spline__total_units_sp_3,total_units,0.0,4
+spline__total_units_sp_4,total_units,0.0,4
+spline__total_units_sp_5,total_units,0.0,4
+spline__total_units_sp_6,total_units,0.0,4
+spline__tract_population_sp_0,tract_population,0.0,4
+spline__tract_population_sp_1,tract_population,0.0,4
+spline__tract_population_sp_2,tract_population,0.03683031225247542,4
+spline__tract_population_sp_3,tract_population,-0.19024017744985797,4
+spline__tract_population_sp_4,tract_population,0.03999230775139319,4
+spline__tract_population_sp_5,tract_population,0.0,4
+spline__tract_population_sp_6,tract_population,0.0,4
+spline__tract_minority_population_percent_sp_0,tract_minority_population_percent,0.0,4
+spline__tract_minority_population_percent_sp_1,tract_minority_population_percent,0.0060331346727888506,4
+spline__tract_minority_population_percent_sp_2,tract_minority_population_percent,0.0,4
+spline__tract_minority_population_percent_sp_3,tract_minority_population_percent,-0.0038626156639683215,4
+spline__tract_minority_population_percent_sp_4,tract_minority_population_percent,0.0002630748929855408,4
+spline__tract_minority_population_percent_sp_5,tract_minority_population_percent,-0.2787860113616916,4
+spline__tract_minority_population_percent_sp_6,tract_minority_population_percent,0.0,4
+spline__ffiec_msa_md_median_family_income_sp_0,ffiec_msa_md_median_family_income,0.0,4
+spline__ffiec_msa_md_median_family_income_sp_1,ffiec_msa_md_median_family_income,0.1029031226706054,4
+spline__ffiec_msa_md_median_family_income_sp_2,ffiec_msa_md_median_family_income,0.13184469583951475,4
+spline__ffiec_msa_md_median_family_income_sp_3,ffiec_msa_md_median_family_income,-0.03538492606201858,4
+spline__ffiec_msa_md_median_family_income_sp_4,ffiec_msa_md_median_family_income,0.0,4
+spline__ffiec_msa_md_median_family_income_sp_5,ffiec_msa_md_median_family_income,0.0,4
+spline__ffiec_msa_md_median_family_income_sp_6,ffiec_msa_md_median_family_income,0.0,4
+spline__tract_to_msa_income_percentage_sp_0,tract_to_msa_income_percentage,0.0,4
+spline__tract_to_msa_income_percentage_sp_1,tract_to_msa_income_percentage,0.07291961303656738,4
+spline__tract_to_msa_income_percentage_sp_2,tract_to_msa_income_percentage,0.0,4
+spline__tract_to_msa_income_percentage_sp_3,tract_to_msa_income_percentage,-0.033347876464203605,4
+spline__tract_to_msa_income_percentage_sp_4,tract_to_msa_income_percentage,0.07969141505432681,4
+spline__tract_to_msa_income_percentage_sp_5,tract_to_msa_income_percentage,0.0,4
+spline__tract_to_msa_income_percentage_sp_6,tract_to_msa_income_percentage,0.0,4
+spline__tract_owner_occupied_units_sp_0,tract_owner_occupied_units,0.0,4
+spline__tract_owner_occupied_units_sp_1,tract_owner_occupied_units,0.0,4
+spline__tract_owner_occupied_units_sp_2,tract_owner_occupied_units,0.0,4
+spline__tract_owner_occupied_units_sp_3,tract_owner_occupied_units,0.0,4
+spline__tract_owner_occupied_units_sp_4,tract_owner_occupied_units,0.052047994037466704,4
+spline__tract_owner_occupied_units_sp_5,tract_owner_occupied_units,0.21853185680269763,4
+spline__tract_owner_occupied_units_sp_6,tract_owner_occupied_units,0.0,4
+spline__tract_one_to_four_family_homes_sp_0,tract_one_to_four_family_homes,-0.5395727590978333,4
+spline__tract_one_to_four_family_homes_sp_1,tract_one_to_four_family_homes,-0.3831830704516205,4
+spline__tract_one_to_four_family_homes_sp_2,tract_one_to_four_family_homes,0.2720676766446316,4
+spline__tract_one_to_four_family_homes_sp_3,tract_one_to_four_family_homes,0.0,4
+spline__tract_one_to_four_family_homes_sp_4,tract_one_to_four_family_homes,0.12215928971715945,4
+spline__tract_one_to_four_family_homes_sp_5,tract_one_to_four_family_homes,0.0,4
+spline__tract_one_to_four_family_homes_sp_6,tract_one_to_four_family_homes,0.0,4
+spline__tract_median_age_of_housing_units_sp_0,tract_median_age_of_housing_units,0.0,4
+spline__tract_median_age_of_housing_units_sp_1,tract_median_age_of_housing_units,-0.07643549803985351,4
+spline__tract_median_age_of_housing_units_sp_2,tract_median_age_of_housing_units,0.11739997498650108,4
+spline__tract_median_age_of_housing_units_sp_3,tract_median_age_of_housing_units,0.0,4
+spline__tract_median_age_of_housing_units_sp_4,tract_median_age_of_housing_units,0.0,4
+spline__tract_median_age_of_housing_units_sp_5,tract_median_age_of_housing_units,0.10626397645289873,4
+spline__tract_median_age_of_housing_units_sp_6,tract_median_age_of_housing_units,0.0,4
+spline__exempt_code_count_sp_0,exempt_code_count,0.0,4
+spline__exempt_code_count_sp_1,exempt_code_count,-0.007116367824115332,4
+spline__exempt_code_count_sp_2,exempt_code_count,0.0,4
+spline__exempt_code_count_sp_3,exempt_code_count,0.0,4
+spline__exempt_code_count_sp_4,exempt_code_count,0.0,4
+spline__exempt_code_count_sp_5,exempt_code_count,0.5440480712462304,4
+spline__exempt_code_count_sp_6,exempt_code_count,0.0,4
+spline__computed_ltv_sp_0,computed_ltv,0.0,4
+spline__computed_ltv_sp_1,computed_ltv,0.4663462797968,4
+spline__computed_ltv_sp_2,computed_ltv,0.3056886317491252,4
+spline__computed_ltv_sp_3,computed_ltv,0.0,4
+spline__computed_ltv_sp_4,computed_ltv,0.06543412624726516,4
+spline__computed_ltv_sp_5,computed_ltv,-0.4756186011052601,4
+spline__computed_ltv_sp_6,computed_ltv,-3.256036202497504,4
+spline__ltv_gap_sp_0,ltv_gap,0.0,4
+spline__ltv_gap_sp_1,ltv_gap,0.208447715700529,4
+spline__ltv_gap_sp_2,ltv_gap,-0.07290418357230395,4
+spline__ltv_gap_sp_3,ltv_gap,0.23010347199373324,4
+spline__ltv_gap_sp_4,ltv_gap,0.0,4
+spline__ltv_gap_sp_5,ltv_gap,0.0,4
+spline__ltv_gap_sp_6,ltv_gap,0.0,4
+spline__property_to_income_sp_0,property_to_income,0.0,4
+spline__property_to_income_sp_1,property_to_income,-0.8734839967245976,4
+spline__property_to_income_sp_2,property_to_income,0.22308947441361668,4
+spline__property_to_income_sp_3,property_to_income,-0.01927698994893727,4
+spline__property_to_income_sp_4,property_to_income,0.6169452269967111,4
+spline__property_to_income_sp_5,property_to_income,0.41103895021375264,4
+spline__property_to_income_sp_6,property_to_income,0.0,4
+spline__loan_to_income_sp_0,loan_to_income,0.0,4
+spline__loan_to_income_sp_1,loan_to_income,0.5711207944518222,4
+spline__loan_to_income_sp_2,loan_to_income,0.16011831669451082,4
+spline__loan_to_income_sp_3,loan_to_income,0.010690038518900078,4
+spline__loan_to_income_sp_4,loan_to_income,0.0,4
+spline__loan_to_income_sp_5,loan_to_income,-0.6232390249893968,4
+spline__loan_to_income_sp_6,loan_to_income,-0.8027269816912969,4
+spline__county_code_rate_sp_0,county_code_rate,0.0,4
+spline__county_code_rate_sp_1,county_code_rate,-0.2646629798773923,4
+spline__county_code_rate_sp_2,county_code_rate,0.0796236630954861,4
+spline__county_code_rate_sp_3,county_code_rate,-0.05026772297744728,4
+spline__county_code_rate_sp_4,county_code_rate,0.008574546226293648,4
+spline__county_code_rate_sp_5,county_code_rate,0.0,4
+spline__county_code_rate_sp_6,county_code_rate,0.0,4
