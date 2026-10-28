@@ -1,0 +1,21 @@
+# Best of 47 Optuna trials (configs/sweeps/extratrees_optuna.yaml), trial 23, CV AUC 0.91484.
+# Selected on the frozen folds, so optimistic: adopt only after make compare + the fresh-folds check.
+model: extratrees
+features:
+- census_zero_to_nan
+- tract_income_zero_to_nan
+- housing_age_negative_to_nan
+- multifamily_levels
+- drop_derived_duplicates
+- dti_order
+- age_order
+- computed_ltv
+- property_to_income
+- drop_county_msa_ids
+extratrees_fit:
+  rank_numeric: true
+extratrees_params:
+  max_features: 0.35
+  min_samples_leaf: 5
+  bootstrap: false
+  max_depth: 20
