@@ -1,0 +1,10 @@
+# TODO 11.4: weights for LightGBM, CatBoost, XGBoost and the tuned ExtraTrees chosen by hill climbing on the
+# fold AUC, scored nested and compared with the current blend (LightGBM + CatBoost county, 50/50 log-odds).
+base: 20261003T084548Z_406e4210                      # LightGBM, tuned
+candidates:
+  catboost_county: 20261014T085450Z_d96c8be4         # CatBoost + raw county / MSA, untuned
+  xgboost: 20261014T125236Z_f0fe3121                 # XGBoost, untuned
+  extratrees_tuned: 20261019T060754Z_7bc88a0b        # ExtraTrees, Optuna best
+reference: [base, catboost_county]
+method: logit
+max_steps: 30          # cap only: with 4 models the climb stops long before (weights in steps of 1/31 at most)
