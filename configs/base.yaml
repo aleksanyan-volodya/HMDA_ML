@@ -64,7 +64,9 @@ logreg:
   C_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]   # inverse penalty strength, one value per decade (the
                                                  # penalty acts multiplicatively). Chosen by inner CV; a best
                                                  # value at either end stops the run (the grid must be widened)
-  spline_knots: 5              # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
+  l1_ratio_grid: [0.0]         # share of L1 in the penalty, chosen with C by the inner CV. 0 = pure L2 (lbfgs,
+                               # the logreg.yaml run); 1 = pure L1 (lasso); between = elastic net. > 0 uses saga
+  spline_knots: 5             # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
   max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
 
 # CatBoost (model: catboost, src/cv.py CatBoostModel). Starting values of TODO 7.6, not tuned.
@@ -96,3 +98,15 @@ xgb_params:
 xgb_fit:
   max_rounds: 5000             # upper cap; hitting it stops the run
   early_stopping_rounds: 200   # same patience as LightGBM and CatBoost
+
+# ExtraTrees (model: extratrees, src/cv.py ExtraTreesModel). Nothing searched; checked once on a
+# 30k-row sample of fold 0 (leaf 1 / 5 / 20 x 200 / 500 trees): leaf 1 best, 200 = 500 trees.
+extratrees_params:
+  n_estimators: 300            # more trees only reduce averaging noise; 200 and 500 scored the same
+  min_samples_leaf: 1          # fully grown trees: best on the sample (0.888 vs 0.881 at 5, 0.867 at 20)
+  max_features: sqrt           # random subset of sqrt(columns) per split (library default)
+  bootstrap: false             # library default: every tree sees all rows (true = a bootstrap sample)
+  max_depth: null              # library default: no depth limit, trees grow until min_samples_leaf
+extratrees_fit:
+  rank_numeric: false          # true = numeric columns replaced by their rank in [0, 1] before the forest
+                               # (random thresholds then fall where the rows are, not in skewed tails)

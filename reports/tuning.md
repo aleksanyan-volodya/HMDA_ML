@@ -93,3 +93,25 @@ Result: the tuned LightGBM is "configs/experiments/lgbm_optuna_best.yaml" (learn
 
 - +0.00210 over the untuned model on the frozen folds, +0.00194 on fresh splits never used for any choice: selecting the best of 100 trials flattered it by only ~0.0002.
 - Per-fold fresh results: "reports/tuning/fresh_lgbm_optuna_best_vs_lgbm_best_features.csv".
+
+## ExtraTrees: joint search with Optuna (TODO 7.19)
+
+Search file "configs/sweeps/extratrees_optuna.yaml", on the ranked-numerics ExtraTrees (run 20261014T135428Z_542eac1f, CV 0.90185). TPE sampler (seed 0), trial 0 = the untuned settings, 300 trees fixed (more trees only reduce averaging noise). Night of 2026-10-18: stopped by the 8 h cap after 47 of 60 trials; every trial in "reports/tuning/extratrees_optuna.csv".
+
+| setting | untuned | best (trial 23) | range searched |
+|---|---|---|---|
+| max_features | sqrt (17 of 307 columns) | 0.35 (107 columns) | sqrt, 0.1, 0.2, 0.35 |
+| min_samples_leaf | 1 | 5 | 1 to 30 |
+| bootstrap | false | false | false, true |
+| max_depth | none | 20 | none, 30, 20 |
+
+| | CV AUC | gain | gain / corrected SE | folds up |
+|---|---|---|---|---|
+| untuned (trial 0) | 0.90185 | | | |
+| best, logged refit (run 20261019T060754Z_7bc88a0b) | 0.91484 | +0.01299 | 41.0 | 5 of 5 |
+| median of the 47 trials | 0.91286 | | | |
+
+- The refit reproduces trial 23 exactly. Adopted as the ExtraTrees candidate: the gain is far beyond the selection effect of ~25 distinct trials.
+- The number of columns per split matters most: median AUC 0.907 at 0.1, 0.912 at 0.2, 0.914 at 0.35, still rising at the largest value searched. max_depth 20, the shallowest value searched, beats 30 and no limit. Both are at the edge of their range, so a wider search would probably gain a little more. Bootstrap never reached the top trials.
+- About half the trials repeated settings already tried (small, mostly categorical space): ~25 distinct settings were scored.
+- Tuning made ExtraTrees stronger but more like the boosted models: rank correlation with LightGBM 0.785 -> 0.910.
