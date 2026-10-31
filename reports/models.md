@@ -10,6 +10,7 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | XGBoost, starting values (max_cat_to_onehot 64 carried over from LightGBM) | configs/experiments/xgb.yaml | 20261014T125236Z_f0fe3121 | 0.91649 | -0.00257 (-4.3 SE, 0 of 5 folds) | not submitted |
 | ExtraTrees, Optuna best (max_features 0.35, leaf 5, depth 20) | configs/experiments/extratrees_optuna_best.yaml | 20261019T060754Z_7bc88a0b | 0.91484 | -0.00421 (-5.7 SE, 0 of 5 folds) | not submitted |
 | MLP with embeddings, starting values | configs/experiments/mlp.yaml | 20261031T101220Z_4cee5616 | 0.89819 | -0.02086 (-24.0 SE, 0 of 5 folds) | not submitted |
+| MLP, final (no raw ids, dropout 0.4, weight decay 0.1, numeric bins, 60 epochs) | configs/experiments/mlp_combo_e60.yaml | 20261031T130048Z_752fd022 | 0.91003 | -0.00903 (-12.8 SE, 0 of 5 folds) | not submitted |
 | MLP, 30 epochs, no raw county / MSA ids (best variant) | configs/experiments/mlp_no_ids.yaml | 20261031T110304Z_0de0f840 | 0.90758 | -0.01147 (-9.5 SE, 0 of 5 folds) | not submitted |
 | Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
@@ -120,8 +121,14 @@ MLP, combined runs, 2026-10-31 (reference: mlp_no_ids, CV 0.90758):
 | mlp_combo, 20261031T115412Z_33a6dc74 | no ids, dropout 0.4, weight decay 0.1, 8 numeric bins | 0.90935 | +0.00177 | 1.0 (rejected) | 4 | +0.00556 (5.1 SE) |
 | mlp_combo_deep, 20261031T120130Z_5c758eab | same, layers 128 x 4 | 0.90801 | +0.00042 | 0.2 (rejected) | 3 | +0.00421 (3.7 SE) |
 
-- Highest score of the MLP runs, but mlp_combo does not pass the rule over mlp_no_ids: mlp_no_ids stays the MLP on record, and 0.90935 is quoted as the best score reached, not as an adopted gain.
+- Highest score of the MLP runs, but mlp_combo does not pass the rule over mlp_no_ids: mlp_no_ids stayed the MLP on record at this step (superseded by the 60-epoch run below).
 - The regularisation fixed the overfitting: with mlp_combo the inner AUC now peaks at the end of the schedule (chosen epochs 24 to 30 of 30; fold 0: 0.91334 at epoch 26). The numeric bins needed it: alone they gained +0.00104.
 - A stronger net is less useful to the blend: rank correlation with LightGBM 0.870 for mlp_no_ids, 0.926 for mlp_combo.
 - Blend test on LightGBM + CatBoost, weight chosen without the scored fold: mlp_no_ids +0.00015 (1.6 SE, 4 of 5 folds): does not pass; mlp_combo gets weight 0 in every fold. Hill climbing with mlp_no_ids among the candidates keeps LightGBM 0.40, CatBoost 0.40, ExtraTrees 0.20 and no MLP.
-- Conclusion (TODO 7.24 closed): after 9 runs a tuned net with embeddings reaches 0.909: clearly above the linear models, ~0.010 below LightGBM, and it adds nothing to the blend. On this data the raw ids and capacity had to be cut back before the net beat a linear model.
+
+MLP, last run, 2026-10-31 ("configs/experiments/mlp_combo_e60.yaml", run 20261031T130048Z_752fd022, 18 minutes on CPU):
+
+- mlp_combo with the schedule doubled: CV 0.91003. Vs mlp_combo +0.00067 (1.0 SE, rejected); vs mlp_no_ids +0.00244 (2.4 SE, passes): this run is the MLP on record.
+- The budget is no longer the limit: chosen epochs 31 to 47 of 60, and on fold 0 the inner AUC is flat from about epoch 40 (0.9147). Training longer would not help this network.
+- Blend on LightGBM + CatBoost, weight chosen without the scored fold (0.025 to 0.05): +0.00001 (0.5 SE), does not pass. Rank correlation with LightGBM 0.910.
+- Conclusion (TODO 7.24 closed): after 10 runs a tuned net with embeddings reaches 0.910: clearly above the logistic regressions (+0.0062 over L1), still 0.009 below LightGBM (-12.8 SE), and it adds nothing to the blend. The raw ids and the network's capacity had to be cut back before it beat a linear model. As the net improved it ranked rows more like the trees (rank correlation 0.825 to 0.910), so its value to the blend did not rise with its score.
