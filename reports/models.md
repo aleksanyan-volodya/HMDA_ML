@@ -9,6 +9,7 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | CatBoost, untuned, + raw county and MSA ids | configs/experiments/catboost_county.yaml | 20261014T085450Z_d96c8be4 | 0.91859 | -0.00046 (-0.5 SE, 1 of 5 folds) | not submitted |
 | XGBoost, starting values (max_cat_to_onehot 64 carried over from LightGBM) | configs/experiments/xgb.yaml | 20261014T125236Z_f0fe3121 | 0.91649 | -0.00257 (-4.3 SE, 0 of 5 folds) | not submitted |
 | ExtraTrees, Optuna best (max_features 0.35, leaf 5, depth 20) | configs/experiments/extratrees_optuna_best.yaml | 20261019T060754Z_7bc88a0b | 0.91484 | -0.00421 (-5.7 SE, 0 of 5 folds) | not submitted |
+| MLP with embeddings, starting values | configs/experiments/mlp.yaml | 20261031T101220Z_4cee5616 | 0.89819 | -0.02086 (-24.0 SE, 0 of 5 folds) | not submitted |
 | Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
 | Logistic regression (L2, quantile splines, one-hot, crossings, county rate) | configs/experiments/logreg.yaml | 20261013T154151Z_83e8fb23 | 0.90332 | -0.01573 (-21.4 SE, 5 of 5 folds) | not submitted |
@@ -88,3 +89,8 @@ Fresh-split check of the blend, finished 2026-10-19 (TODO 7.25, "make fresh-blen
 - Adopted: LightGBM + CatBoost county, 50/50 log-odds, is the best model so far. It is the blend of submission 5 (LB 0.92118).
 - Fresh gain +0.00083 against +0.00108 on the frozen folds: choosing the blend on those folds flattered it by ~0.00025. The nested selection's gain of 0 was low power, not absence of an effect.
 - Scope: only this blend is confirmed. The 0.4 / 0.4 / 0.2 blend with ExtraTrees (11.4) was not on these splits. Any later change to the blend needs its own check.
+MLP with embeddings, 2026-10-31 (TODO 7.24, "src/mlp.py", run 20261031T101220Z_4cee5616, 7 minutes on CPU):
+
+- CV 0.89819: below the L1 logistic regression (-0.00560, -5.8 SE) and the tuned ExtraTrees (-0.01665, -13.1 SE). A net that loses to a linear model on the same data is underperforming, not at its limit.
+- Overfits early: on fold 0 the inner AUC peaks at epoch 10 (0.89906) while the training loss keeps falling (0.218 to 0.167 by epoch 25). Epochs chosen: 10 to 16 of 60. Training stopped with the learning rate still at ~60% of its maximum, so the low-rate end of the cosine was never reached.
+- Different from the trees (rank correlation 0.825 with LightGBM, 0.831 with CatBoost), but too weak to help: added to LightGBM + CatBoost, weight 0.05 gives +0.00004 (0.6 SE), 0.10 gives -0.00006.
