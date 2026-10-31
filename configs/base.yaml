@@ -110,3 +110,17 @@ extratrees_params:
 extratrees_fit:
   rank_numeric: false          # true = numeric columns replaced by their rank in [0, 1] before the forest
                                # (random thresholds then fall where the rows are, not in skewed tails)
+
+# MLP with categorical embeddings (model: mlp, src/mlp.py). Starting values, not tuned.
+mlp:
+  device: auto                 # auto = the GPU if there is one, else the CPU
+  hidden: [512, 256, 128]      # width of each layer; narrowing funnel, the usual shape for tabular data
+  dropout: 0.2                 # share of units switched off, also on the embeddings: 84k rows overfit fast
+  emb_max_dim: 32              # cap on an embedding's size: uncapped, county alone would get 139 dimensions
+  min_level_rows: 5            # levels with fewer rows share one "rare or unseen" embedding (same floor
+                               # as the 5-row leaves of the tuned LightGBM)
+  batch_size: 1024             # ~80 steps per epoch on 84k rows; small enough to be noisy, fast on a GPU
+  lr: 0.001                    # Adam's usual starting value; follows a cosine down to 0 over max_epochs
+  weight_decay: 0.01           # AdamW's default; limits embedding sizes, which dropout alone does not
+  max_epochs: 60               # length of the learning-rate curve: raise it to train longer
+  patience: 15                 # epochs without a better inner AUC before stopping; a quarter of max_epochs

@@ -279,8 +279,14 @@ class ExtraTreesModel:
         return self.model_.predict_proba(Z)[:, 1]
 
 
+def MLPModel(cfg: dict):
+    # Imported here: torch is only loaded by the runs that use it.
+    from mlp import MLPModel as Model
+    return Model(cfg)
+
+
 MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel,
-          "xgb": XGBModel, "extratrees": ExtraTreesModel}
+          "xgb": XGBModel, "extratrees": ExtraTreesModel, "mlp": MLPModel}
 
 
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None,
@@ -311,6 +317,7 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None,
         oof[is_valid] = model.predict(valid_part[cols])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
         extra = (f"  trees {model.n_trees_}" if hasattr(model, "n_trees_")
+                 else f"  epochs {model.n_epochs_}" if hasattr(model, "n_epochs_")
                  else f"  C {model.C_}  l1_ratio {model.l1_ratio_}" if hasattr(model, "C_") else "")
         if coefs is not None and hasattr(model, "coef_table"):
             coefs.append(model.coef_table().assign(fold=k))

@@ -1,0 +1,16 @@
+# TODO 7.24: MLP with categorical embeddings (src/mlp.py). Same features as catboost_county.yaml: the raw county
+# and MSA ids stay, because embeddings are the reason to use a net here, and they helped CatBoost (+3.6 SE).
+# Network settings in base.yaml (mlp), starting values, not tuned.
+model: mlp
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income
