@@ -9,7 +9,7 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | CatBoost, untuned, + raw county and MSA ids | configs/experiments/catboost_county.yaml | 20261014T085450Z_d96c8be4 | 0.91859 | -0.00046 (-0.5 SE, 1 of 5 folds) | not submitted |
 | XGBoost, starting values (max_cat_to_onehot 64 carried over from LightGBM) | configs/experiments/xgb.yaml | 20261014T125236Z_f0fe3121 | 0.91649 | -0.00257 (-4.3 SE, 0 of 5 folds) | not submitted |
 | ExtraTrees, Optuna best (max_features 0.35, leaf 5, depth 20) | configs/experiments/extratrees_optuna_best.yaml | 20261019T060754Z_7bc88a0b | 0.91484 | -0.00421 (-5.7 SE, 0 of 5 folds) | not submitted |
-| Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds) | not submitted |
+| Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
 | Logistic regression (L2, quantile splines, one-hot, crossings, county rate) | configs/experiments/logreg.yaml | 20261013T154151Z_83e8fb23 | 0.90332 | -0.01573 (-21.4 SE, 5 of 5 folds) | not submitted |
 | Logistic regression, L1 (lasso), same features | configs/experiments/logreg_l1.yaml | 20261018T172507Z_6c8c7142 | 0.90379 | -0.01526 (-18.9 SE, 5 of 5 folds) | not submitted |
@@ -45,7 +45,7 @@ Final blend selection, 2026-10-14 ("src/select_blend.py", "configs/blends/final_
 - Forward selection, equal weights, log-odds, from the tuned LightGBM over 8 candidates: only CatBoost + county is added (+0.00108, 2.2 SE). Every other model lowers an equal-weight blend (XGBoost -0.0004, ExtraTrees -0.0016, logistic -0.0032; LightGBM seeds +0.0003 at most, under the rule).
 - Nested estimate (selection redone without each fold): the selection keeps LightGBM alone in 4 of 5 folds, gain 0.00000. Read as low power, not harm: with 4 folds the rule rarely proves a +0.001 gain, and it never chose a worse blend.
 - Weighted blend (non-negative least squares on log-odds, "src/weight_blend.py"), nested: +0.00012 (0.5 SE), does not pass. ExtraTrees and the logistic regression get weight 0 in every fold; CatBoost only ~0.08 (least squares targets probability error, not ranking); the weights jump between LightGBM seeds.
-- Candidate final model: LightGBM + CatBoost county, 50/50 log-odds (run 20261014T115111Z_918eb62b, CV 0.92014). To confirm on fresh splits before adoption ("make fresh-blend", about 8 hours).
+- Candidate final model: LightGBM + CatBoost county, 50/50 log-odds (run 20261014T115111Z_918eb62b, CV 0.92014). Confirmed on fresh splits, see "Fresh-split check of the blend" below.
 
 L1 and elastic net, 2026-10-18 (TODO 7.22):
 
@@ -75,3 +75,16 @@ Hill climbing, 2026-10-19 (TODO 11.4, "src/hill_climb.py", "configs/blends/hill_
 - Weights found: LightGBM 0.40, CatBoost 0.40, ExtraTrees 0.20, XGBoost 0, the same in 3 of the 5 nested climbs (the other two: 0.50 / 0.33 / 0.17 and 1/3 each). XGBoost is never added.
 - Nested AUC 0.92039. Vs the current blend (LightGBM + CatBoost 50/50): +0.00026, 1.4 SE, 4 of 5 folds: does not pass; the 50/50 blend stays. Vs LightGBM alone: +0.00134, 2.9 SE, 5 of 5 folds: passes.
 - The second line is new evidence for blending itself: the equal-weight forward selection, gated by the rule at each step, kept LightGBM alone in 4 of 5 nested folds (gain 0); the free climb, scored the same nested way, beats LightGBM alone on every fold.
+
+Fresh-split check of the blend, finished 2026-10-19 (TODO 7.25, "make fresh-blend", "reports/tuning/fresh_blend_lgbm_catboost.log", per-fold results in "reports/tuning/fresh_blend_lgbm_optuna_best_catboost_county_vs_lgbm_optuna_best.csv"):
+
+| split seed | LightGBM | blend 50/50 | gain | folds up |
+|---|---|---|---|---|
+| 1 | 0.91899 | 0.91992 | +0.00093 | 5 of 5 |
+| 2 | 0.91930 | 0.91994 | +0.00064 | 4 of 5 |
+| 3 | 0.91914 | 0.92005 | +0.00091 | 5 of 5 |
+
+- All 15 paired folds: +0.00083, corrected SE 0.00022, 3.8 SE, 14 of 15 folds up (worst fold -0.00026): CONFIRMED under the rule. These splits were never used for any choice.
+- Adopted: LightGBM + CatBoost county, 50/50 log-odds, is the best model so far. It is the blend of submission 5 (LB 0.92118).
+- Fresh gain +0.00083 against +0.00108 on the frozen folds: choosing the blend on those folds flattered it by ~0.00025. The nested selection's gain of 0 was low power, not absence of an effect.
+- Scope: only this blend is confirmed. The 0.4 / 0.4 / 0.2 blend with ExtraTrees (11.4) was not on these splits. Any later change to the blend needs its own check.
