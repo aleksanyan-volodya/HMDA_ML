@@ -119,6 +119,7 @@ mlp:
   emb_max_dim: 32              # cap on an embedding's size: uncapped, county alone would get 139 dimensions
   min_level_rows: 5            # levels with fewer rows share one "rare or unseen" embedding (same floor
                                # as the 5-row leaves of the tuned LightGBM)
+  numeric_bins: 0              # 0 = one quantile-normal input per numeric column; > 0 = piecewise-linear encoding
   batch_size: 1024             # ~80 steps per epoch on 84k rows; small enough to be noisy, fast on a GPU
   lr: 0.001                    # Adam's usual starting value; follows a cosine down to 0 over max_epochs
   weight_decay: 0.01           # AdamW's default; limits embedding sizes, which dropout alone does not

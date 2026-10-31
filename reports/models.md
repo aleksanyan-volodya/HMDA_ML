@@ -10,6 +10,7 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | XGBoost, starting values (max_cat_to_onehot 64 carried over from LightGBM) | configs/experiments/xgb.yaml | 20261014T125236Z_f0fe3121 | 0.91649 | -0.00257 (-4.3 SE, 0 of 5 folds) | not submitted |
 | ExtraTrees, Optuna best (max_features 0.35, leaf 5, depth 20) | configs/experiments/extratrees_optuna_best.yaml | 20261019T060754Z_7bc88a0b | 0.91484 | -0.00421 (-5.7 SE, 0 of 5 folds) | not submitted |
 | MLP with embeddings, starting values | configs/experiments/mlp.yaml | 20261031T101220Z_4cee5616 | 0.89819 | -0.02086 (-24.0 SE, 0 of 5 folds) | not submitted |
+| MLP, 30 epochs, no raw county / MSA ids (best variant) | configs/experiments/mlp_no_ids.yaml | 20261031T110304Z_0de0f840 | 0.90758 | -0.01147 (-9.5 SE, 0 of 5 folds) | not submitted |
 | Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
 | Logistic regression (L2, quantile splines, one-hot, crossings, county rate) | configs/experiments/logreg.yaml | 20261013T154151Z_83e8fb23 | 0.90332 | -0.01573 (-21.4 SE, 5 of 5 folds) | not submitted |
@@ -94,3 +95,33 @@ MLP with embeddings, 2026-10-31 (TODO 7.24, "src/mlp.py", run 20261031T101220Z_4
 - CV 0.89819: below the L1 logistic regression (-0.00560, -5.8 SE) and the tuned ExtraTrees (-0.01665, -13.1 SE). A net that loses to a linear model on the same data is underperforming, not at its limit.
 - Overfits early: on fold 0 the inner AUC peaks at epoch 10 (0.89906) while the training loss keeps falling (0.218 to 0.167 by epoch 25). Epochs chosen: 10 to 16 of 60. Training stopped with the learning rate still at ~60% of its maximum, so the low-rate end of the cosine was never reached.
 - Different from the trees (rank correlation 0.825 with LightGBM, 0.831 with CatBoost), but too weak to help: added to LightGBM + CatBoost, weight 0.05 gives +0.00004 (0.6 SE), 0.10 gives -0.00006.
+
+MLP variants, 2026-10-31 (TODO 7.24). One change each, on the 30-epoch schedule; each reason and prediction was written before the run, in its config file. Reference: mlp_e30, itself compared with the first run.
+
+| variant | run | CV AUC | gain vs reference | gain / corrected SE | folds up | vs L1 | predicted |
+|---|---|---|---|---|---|---|---|
+| mlp_e30: schedule 60 -> 30 epochs | 20261031T105421Z_bfd111f3 | 0.89917 | +0.00098 | 1.3 (rejected) | 4 | -0.00462 | better: wrong |
+| mlp_no_ids: raw county / MSA removed | 20261031T110304Z_0de0f840 | 0.90758 | +0.00841 | 5.7 | 5 | +0.00379 (2.7 SE) | better, least sure: right, and the largest gain |
+| mlp_reg: dropout 0.4, weight decay 0.1 | 20261031T111436Z_a38395ae | 0.90415 | +0.00498 | 3.4 | 5 | +0.00036 | better: right |
+| mlp_deep: 4 layers of 128 | 20261031T112551Z_97154e36 | 0.90368 | +0.00450 | 5.1 | 5 | -0.00012 | better than the reference: right |
+| mlp_small: layers 128, 64 | 20261031T111916Z_8aecb716 | 0.90251 | +0.00333 | 3.4 | 5 | -0.00128 | better: right |
+| mlp_numeric: 8 bins per numeric column | 20261031T113420Z_f81dac67 | 0.90021 | +0.00104 | 2.3 | 5 | -0.00358 | the biggest gain: wrong |
+
+- The raw ids behave for the net as for LightGBM (dropping them: +0.0084 here, +0.009 there), not as for CatBoost. The embeddings memorised counties.
+- The schedule was not the limit: with the learning rate decayed to 0 the inner AUC stays flat after epoch ~11. The early peak is overfitting, not a too-high rate.
+- The numeric bins reach a higher peak much earlier (fold 0, inner AUC at epoch 10: 0.9040 against 0.8988), then overfit faster: loss 0.155 at the end against 0.172. They may be worth more once the net is regularised: the combined run tests it.
+- All four changes that limit memorisation pass; regularisation moves the chosen epochs from 10-16 to 25-30.
+- Blend, added to LightGBM + CatBoost: see the nested result under "MLP, combined runs" (mlp_no_ids +0.00016 at weight 0.1, 1.5 SE; at weight 0.05 +0.00013 reads 2.7 SE on the same folds, but the weight was chosen on those folds; the others at most +0.00007).
+
+MLP, combined runs, 2026-10-31 (reference: mlp_no_ids, CV 0.90758):
+
+| run | changes | CV AUC | gain vs mlp_no_ids | gain / corrected SE | folds up | vs L1 |
+|---|---|---|---|---|---|---|
+| mlp_combo, 20261031T115412Z_33a6dc74 | no ids, dropout 0.4, weight decay 0.1, 8 numeric bins | 0.90935 | +0.00177 | 1.0 (rejected) | 4 | +0.00556 (5.1 SE) |
+| mlp_combo_deep, 20261031T120130Z_5c758eab | same, layers 128 x 4 | 0.90801 | +0.00042 | 0.2 (rejected) | 3 | +0.00421 (3.7 SE) |
+
+- Highest score of the MLP runs, but mlp_combo does not pass the rule over mlp_no_ids: mlp_no_ids stays the MLP on record, and 0.90935 is quoted as the best score reached, not as an adopted gain.
+- The regularisation fixed the overfitting: with mlp_combo the inner AUC now peaks at the end of the schedule (chosen epochs 24 to 30 of 30; fold 0: 0.91334 at epoch 26). The numeric bins needed it: alone they gained +0.00104.
+- A stronger net is less useful to the blend: rank correlation with LightGBM 0.870 for mlp_no_ids, 0.926 for mlp_combo.
+- Blend test on LightGBM + CatBoost, weight chosen without the scored fold: mlp_no_ids +0.00015 (1.6 SE, 4 of 5 folds): does not pass; mlp_combo gets weight 0 in every fold. Hill climbing with mlp_no_ids among the candidates keeps LightGBM 0.40, CatBoost 0.40, ExtraTrees 0.20 and no MLP.
+- Conclusion (TODO 7.24 closed): after 9 runs a tuned net with embeddings reaches 0.909: clearly above the linear models, ~0.010 below LightGBM, and it adds nothing to the blend. On this data the raw ids and capacity had to be cut back before the net beat a linear model.

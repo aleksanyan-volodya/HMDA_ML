@@ -29,10 +29,15 @@ class Encoder:
                      (84 counties of test are absent from train) and a rare county cannot be memorised
       numeric     -> quantile-normal (neural nets train badly on skewed columns: loan amount goes up
                      to 375M for a median of 285k) + NaN filled with 0, the middle of that scale,
-                     + a missing flag for each column that has NaN (missingness is predictive here)"""
+                     + a missing flag for each column that has NaN (missingness is predictive here)
+                     numeric_bins > 0: piecewise-linear encoding instead of the one quantile-normal value
+                     (Gorishniy et al., 2022): one input per quantile bin, 1 below the value, 0 above it,
+                     the value's position inside its own bin. A numeric column then has as many inputs
+                     as a mid-sized categorical, and the net can bend its effect without deep layers."""
 
-    def __init__(self, min_level_rows: int):
+    def __init__(self, min_level_rows: int, numeric_bins: int = 0):
         self.min_level_rows = min_level_rows
+        self.numeric_bins = numeric_bins
 
     @staticmethod
     def _text(s: pd.Series) -> pd.Series:
@@ -51,14 +56,23 @@ class Encoder:
             self.levels_[c] = {v: i + 1 for i, v in enumerate(counts.index[counts >= self.min_level_rows])}
         num = self._numbers(X)
         self.flags_ = [c for c in self.num_ if num[c].isna().any()]
-        self.quantiles_ = QuantileTransformer(n_quantiles=1000, output_distribution="normal", random_state=0).fit(num)
+        if self.numeric_bins:
+            q = np.linspace(0, 1, self.numeric_bins + 1)       # repeated edges removed: discrete columns have fewer bins
+            self.edges_ = {c: np.unique(np.nanquantile(num[c].to_numpy(), q)) for c in self.num_}
+        else:
+            self.quantiles_ = QuantileTransformer(n_quantiles=1000, output_distribution="normal", random_state=0).fit(num)
         return self
+
+    def _bins(self, num: pd.DataFrame) -> np.ndarray:
+        return np.hstack([np.clip((num[c].to_numpy()[:, None] - e[:-1]) / np.diff(e), 0, 1)
+                          for c, e in self.edges_.items()])
 
     def transform(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
         codes = np.column_stack([self._text(X[c]).map(self.levels_[c]).fillna(0).to_numpy(dtype="int64")
                                  for c in self.cat_])
         num = self._numbers(X)
-        floats = np.hstack([np.nan_to_num(self.quantiles_.transform(num)), num[self.flags_].isna().to_numpy()])
+        values = self._bins(num) if self.numeric_bins else self.quantiles_.transform(num)
+        floats = np.hstack([np.nan_to_num(values), num[self.flags_].isna().to_numpy()])
         return codes, floats.astype("float32")
 
     @property
@@ -67,7 +81,8 @@ class Encoder:
 
     @property
     def n_floats(self) -> int:
-        return len(self.num_) + len(self.flags_)
+        width = sum(len(e) - 1 for e in self.edges_.values()) if self.numeric_bins else len(self.num_)
+        return width + len(self.flags_)
 
 
 class Net(nn.Module):
@@ -149,10 +164,10 @@ class MLPModel:
         y = np.asarray(y, dtype="float32")
         inner = fold == np.unique(fold)[0]
         print(f"  choosing the number of epochs on inner fold {np.unique(fold)[0]} ({self.device})", flush=True)
-        encoder = Encoder(self.p["min_level_rows"]).fit(X[~inner])
+        encoder = Encoder(self.p["min_level_rows"], self.p["numeric_bins"]).fit(X[~inner])
         _, self.n_epochs_ = self._train(encoder, X[~inner], y[~inner], self.p["max_epochs"], X[inner], y[inner])
         print(f"  refit on {len(X)} rows for {self.n_epochs_} epochs", flush=True)
-        self.encoder_ = Encoder(self.p["min_level_rows"]).fit(X)
+        self.encoder_ = Encoder(self.p["min_level_rows"], self.p["numeric_bins"]).fit(X)
         self.net_, _ = self._train(self.encoder_, X, y, self.n_epochs_)
         return self
 

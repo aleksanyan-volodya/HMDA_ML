@@ -1,0 +1,19 @@
+# TODO 7.24 variant: the new reference for the other variants, first run with the 30-epoch schedule.
+# Shorter schedule. The first run's best epochs were 10 to 16 of 60 and it stopped with the learning rate
+# still at ~60%, so the low-rate end of the cosine was never reached.
+model: mlp
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income
+mlp:
+  max_epochs: 30
+  patience: 30                 # no early stop: the low-rate end of the cosine is what this schedule is for
