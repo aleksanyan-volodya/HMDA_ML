@@ -132,3 +132,28 @@ MLP, last run, 2026-10-31 ("configs/experiments/mlp_combo_e60.yaml", run 2026103
 - The budget is no longer the limit: chosen epochs 31 to 47 of 60, and on fold 0 the inner AUC is flat from about epoch 40 (0.9147). Training longer would not help this network.
 - Blend on LightGBM + CatBoost, weight chosen without the scored fold (0.025 to 0.05): +0.00001 (0.5 SE), does not pass. Rank correlation with LightGBM 0.910.
 - Conclusion (TODO 7.24 closed): after 10 runs a tuned net with embeddings reaches 0.910: clearly above the logistic regressions (+0.0062 over L1), still 0.009 below LightGBM (-12.8 SE), and it adds nothing to the blend. The raw ids and the network's capacity had to be cut back before it beat a linear model. As the net improved it ranked rows more like the trees (rank correlation 0.825 to 0.910), so its value to the blend did not rise with its score.
+
+Expert models, 2026-10-31 (TODO 7.14, 7.15, 7.16, 7.23): the tuned LightGBM restricted to one block of the 55 adopted columns (features.py BLOCKS; configs/experiments/expert_*.yaml), not retuned. About 40 seconds each.
+
+| block | columns | run | CV AUC | rank correlation with LightGBM | blend gain, weight chosen without the scored fold |
+|---|---|---|---|---|---|
+| finance | 12 | 20261031T132600Z_d6773f67 | 0.86737 | 0.731 | +0.00000 (0.0 SE, 2 of 5 folds) |
+| process and loan terms | 18 | 20261031T132717Z_ff0a4ae5 | 0.82946 | 0.697 | +0.00004 (0.9 SE, 4 of 5 folds) |
+| geography and census | 8 | 20261031T132634Z_df45cba9 | 0.67314 | 0.403 | -0.00002 (-0.7 SE, 0 of 5 folds) |
+| demographics | 17 | 20261031T132746Z_e63bd31a | 0.63546 | 0.364 | not tested: fairness diagnostic, goes to TODO 12.8 ([N12]) |
+
+- As expected, restricting a model decorrelates it strongly, but no block passes: decorrelated models this weak do not lift the blend. Hill climbing with the three blocks among the candidates ignores them (LightGBM 0.40, CatBoost 0.40, ExtraTrees 0.20).
+- Alone, finance and process score far higher than geography and demographics. The block scores do not say what each block adds once the others are present: that is the ablation of TODO 13.3.
+- Blocks are chosen by meaning, not by these scores. The process block contains the two confirmed process artefacts.
+
+Stacking, 2026-10-31 (TODO 11.5, 11.9, "src/stack.py", "configs/blends/stack.yaml"): a logistic regression on 9 models (all but the demographics expert), fitted on the other folds' rows and scored on each fold.
+
+| input of the meta-model | AUC | gain vs LightGBM + CatBoost 50/50 | gain / corrected SE | folds up |
+|---|---|---|---|---|
+| log-odds | 0.92038 | +0.00025 | 0.9 | 3 of 5 |
+| ranks | 0.91893 | -0.00121 | -6.7 | 0 of 5 |
+| probabilities | 0.91880 | -0.00133 | -1.3 | 0 of 5 |
+
+- Does not pass. The 50/50 blend stays: simple averaging, hill climbing and stacking reach the same level (0.9201 to 0.9204), and only the simplest one is confirmed on fresh splits.
+- XGBoost and the L1 logistic regression get negative coefficients: with correlated inputs a free meta-model subtracts models to fit noise, the variance risk of note [N14].
+- Log-odds is the right input for the stack: ranks lose by -6.7 SE (the reason was not tested). This does not contradict TODO 11.3, where rank and log-odds tied for an equal-weight average of 2 models.

@@ -290,6 +290,31 @@ TRANSFORMS = {
 }
 
 
+# Expert models (TODO 7.14-7.16, 7.23, [N11]): the 55 adopted columns split by meaning, each block a
+# model of its own. A restricted model is worse alone but its errors differ, which is what a blend needs.
+# only_<block> keeps one block: it must come LAST in a config, after every transform that adds columns.
+BLOCKS = {
+    "finance": ["loan_amount", "income", "property_value", "loan_to_value_ratio", "loan_term", "dti_order",
+                "computed_ltv", "ltv_gap", "property_to_income", "conforming_loan_limit",
+                "applicant_credit_score_type", "co-applicant_credit_score_type"],
+    "geography": ["state_code", "ffiec_msa_md_median_family_income", *TRACT],
+    "process": ["loan_type", "lien_status", "preapproval", "reverse_mortgage", "open-end_line_of_credit",
+                "business_or_commercial_purpose", "negative_amortization", "interest_only_payment",
+                "balloon_payment", "other_nonamortizing_features", "construction_method", "occupancy_type",
+                "manufactured_home_secured_property_type", "manufactured_home_land_property_interest",
+                "submission_of_application", "initially_payable_to_institution", "aus-1", "total_units"],
+    # 7.16: a fairness result first ([N12]), not a blend candidate unless decided in writing in 12.8
+    "demographics": ["applicant_ethnicity-1", "co-applicant_ethnicity-1", "applicant_ethnicity_observed",
+                     "co-applicant_ethnicity_observed", "applicant_race-1", "co-applicant_race-1",
+                     "applicant_race_observed", "co-applicant_race_observed", "applicant_sex", "co-applicant_sex",
+                     "applicant_sex_observed", "co-applicant_sex_observed", "derived_ethnicity", "derived_race",
+                     "derived_sex", "applicant_age_order", "co-applicant_age_order"],
+}
+_ALL = set(FEATURES) | {c for _, _, added in TRANSFORMS.values() for c in added}
+for _name, _keep in BLOCKS.items():
+    TRANSFORMS[f"only_{_name}"] = (None, sorted(_ALL - set(_keep)), [])
+
+
 def build(train: pd.DataFrame, test: pd.DataFrame, names: list[str]) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
     """Apply the named transforms in order; return (train, test, feature list)."""
     unknown = [n for n in names if n not in TRANSFORMS]
