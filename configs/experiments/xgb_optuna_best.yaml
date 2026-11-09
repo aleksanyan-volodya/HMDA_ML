@@ -1,0 +1,20 @@
+# Best of 42 Optuna trials (configs/sweeps/xgb_optuna.yaml), trial 21, CV AUC 0.91848.
+# Selected on the frozen folds, so optimistic: adopt only after make compare + the fresh-folds check.
+model: xgb
+features:
+- census_zero_to_nan
+- tract_income_zero_to_nan
+- housing_age_negative_to_nan
+- multifamily_levels
+- drop_derived_duplicates
+- dti_order
+- age_order
+- computed_ltv
+- property_to_income
+- drop_county_msa_ids
+xgb_params:
+  max_depth: 11
+  min_child_weight: 1.638519241479818
+  lambda: 4.757939570776144
+  colsample_bytree: 0.7102175152568961
+  subsample: 0.8332006934328013
