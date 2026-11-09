@@ -1,0 +1,9 @@
+# Weights from hill climbing (configs/blends/hill_climb_v2.yaml): 2/6, 2/6, 1/6, 1/6, the same in 4 of the 5 nested
+# climbs. Log-odds. Candidate only: passes on the frozen folds, not yet checked on fresh splits.
+runs:
+  - 20261003T084548Z_406e4210    # LightGBM, tuned
+  - 20261014T085450Z_d96c8be4    # CatBoost + raw county / MSA, untuned
+  - 20261019T060754Z_7bc88a0b    # ExtraTrees, Optuna best
+  - 20261031T215118Z_05b22e57    # XGBoost, Optuna best
+weights: [2, 2, 1, 1]
+method: logit

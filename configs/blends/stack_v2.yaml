@@ -1,0 +1,13 @@
+# TODO 11.5 / 11.9: stacking on every model logged so far except the seeds of LightGBM (same model) and the older
+# versions. The demographics expert stays out ([N12]: its use must be decided in writing in 12.8).
+base: 20261003T084548Z_406e4210                      # LightGBM, tuned
+candidates:
+  catboost_county: 20261014T085450Z_d96c8be4         # CatBoost + raw county / MSA, untuned
+  xgboost_tuned: 20261031T215118Z_05b22e57        # XGBoost, Optuna best
+  extratrees_tuned: 20261019T060754Z_7bc88a0b        # ExtraTrees, Optuna best
+  logreg_l1: 20261018T172507Z_6c8c7142               # logistic regression, L1
+  mlp: 20261031T130048Z_752fd022                     # MLP, final
+  expert_finance: 20261031T132600Z_d6773f67
+  expert_geography: 20261031T132634Z_df45cba9
+  expert_process: 20261031T132717Z_ff0a4ae5
+reference: [base, catboost_county]

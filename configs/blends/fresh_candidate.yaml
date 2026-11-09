@@ -1,0 +1,9 @@
+# TODO 7.25: fresh-split check of the hill-climbing blend against the adopted 50/50 blend, same 15 folds, same rule.
+# Quick members first, so a failure shows before the 2 hours of CatBoost in each split.
+members:
+  lgbm: configs/experiments/lgbm_optuna_best.yaml
+  xgboost: configs/experiments/xgb_optuna_best.yaml
+  extratrees: configs/experiments/extratrees_optuna_best.yaml
+  catboost: configs/experiments/catboost_county.yaml
+reference: {lgbm: 1, catboost: 1}
+candidate: {lgbm: 2, catboost: 2, extratrees: 1, xgboost: 1}

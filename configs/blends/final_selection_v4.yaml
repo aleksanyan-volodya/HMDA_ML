@@ -1,0 +1,16 @@
+# Final blend selection, fourth pass (2026-11-01): as v3 with the tuned CatBoost.
+# Third pass: as final_selection_v2.yaml with the tuned XGBoost (reports/tuning.md).
+# Second pass: as final_selection.yaml, with the tuned ExtraTrees
+# (TODO 7.19) instead of the untuned one and the L1 logistic regression (TODO 7.22, passed the rule
+# over L2) instead of the L2 one. Equal weights, log-odds.
+base: 20261003T084548Z_406e4210                      # LightGBM, tuned (seed 0)
+candidates:
+  catboost_tuned: 20261101T090757Z_9ef0b007        # CatBoost + raw county / MSA, Optuna best
+  xgboost_tuned: 20261031T215118Z_05b22e57        # XGBoost, Optuna best
+  extratrees_tuned: 20261019T060754Z_7bc88a0b        # ExtraTrees, Optuna best (0.91484)
+  logreg_l1: 20261018T172507Z_6c8c7142               # logistic regression, L1
+  lgbm_seed1: 20261014T121106Z_b0f15259              # LightGBM, same settings, other seeds:
+  lgbm_seed2: 20261014T121310Z_2680831b              # adding them = averaging seeds inside the blend
+  lgbm_seed3: 20261014T121444Z_3f885697
+  lgbm_seed4: 20261014T121801Z_073a828b
+method: logit

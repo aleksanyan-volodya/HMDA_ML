@@ -5,7 +5,7 @@
 RUN := uv run --locked
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check-data folds cv tune optuna fresh fresh-blend blend compare submit test
+.PHONY: help setup check-data folds cv tune optuna fresh fresh-blend fresh-blends blend compare submit test
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -38,6 +38,10 @@ fresh:  ## Re-check a candidate on fresh fold splits: make fresh REF=<exp.yaml> 
 fresh-blend:  ## Check a 50/50 blend on fresh splits: make fresh-blend REF=<exp.yaml> WITH=<exp.yaml>
 	@test -n "$(REF)" -a -n "$(WITH)" || { echo "usage: make fresh-blend REF=<experiment.yaml> WITH=<experiment.yaml>"; exit 1; }
 	$(RUN) python src/fresh_folds.py $(REF) --blend-with $(WITH)
+
+fresh-blends:  ## Check weighted blends on fresh splits, resumable: make fresh-blends SPEC=configs/blends/<name>.yaml
+	@test -n "$(SPEC)" || { echo "usage: make fresh-blends SPEC=configs/blends/<name>.yaml"; exit 1; }
+	$(RUN) python src/fresh_folds.py --blends $(SPEC)
 
 blend:  ## Blend logged runs into a new logged run: make blend BLEND=configs/blends/<name>.yaml
 	@test -n "$(BLEND)" || { echo "usage: make blend BLEND=configs/blends/<name>.yaml"; exit 1; }
