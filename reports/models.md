@@ -12,6 +12,9 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | MLP with embeddings, starting values | configs/experiments/mlp.yaml | 20261031T101220Z_4cee5616 | 0.89819 | -0.02086 (-24.0 SE, 0 of 5 folds) | not submitted |
 | MLP, final (no raw ids, dropout 0.4, weight decay 0.1, numeric bins, 60 epochs) | configs/experiments/mlp_combo_e60.yaml | 20261031T130048Z_752fd022 | 0.91003 | -0.00903 (-12.8 SE, 0 of 5 folds) | not submitted |
 | MLP, 30 epochs, no raw county / MSA ids (best variant) | configs/experiments/mlp_no_ids.yaml | 20261031T110304Z_0de0f840 | 0.90758 | -0.01147 (-9.5 SE, 0 of 5 folds) | not submitted |
+| XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 20261031T215118Z_05b22e57 | 0.91848 | -0.00057 (-1.0 SE, 2 of 5 folds) | not submitted |
+| Blend LightGBM 2/6, CatBoost county 2/6, ExtraTrees 1/6, XGBoost 1/6, log-odds (adopted 2026-11-01) | configs/blends/lgbm_cat_et_xgb.yaml | 20261031T220901Z_1ff742f2 | 0.92054 | +0.00149 vs LightGBM; fresh splits +0.00070 over the 50/50 blend (7.6 SE, 15 of 15) | not submitted |
+| CatBoost, Optuna winner (rejected, untuned stays) | configs/experiments/catboost_optuna_best.yaml | 20261101T090757Z_9ef0b007 | 0.91837 | -0.00068 (-0.9 SE, 2 of 5 folds) | not submitted |
 | Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
 | Logistic regression (L2, quantile splines, one-hot, crossings, county rate) | configs/experiments/logreg.yaml | 20261013T154151Z_83e8fb23 | 0.90332 | -0.01573 (-21.4 SE, 5 of 5 folds) | not submitted |
@@ -157,3 +160,47 @@ Stacking, 2026-10-31 (TODO 11.5, 11.9, "src/stack.py", "configs/blends/stack.yam
 - Does not pass. The 50/50 blend stays: simple averaging, hill climbing and stacking reach the same level (0.9201 to 0.9204), and only the simplest one is confirmed on fresh splits.
 - XGBoost and the L1 logistic regression get negative coefficients: with correlated inputs a free meta-model subtracts models to fit noise, the variance risk of note [N14].
 - Log-odds is the right input for the stack: ranks lose by -6.7 SE (the reason was not tested). This does not contradict TODO 11.3, where rank and log-odds tied for an equal-weight average of 2 models.
+
+Blending with the tuned XGBoost, 2026-10-31 ("configs/blends/final_selection_v3.yaml", "hill_climb_v2.yaml", "stack_v2.yaml"; rank correlation with LightGBM 0.971, up from 0.961):
+
+| method | AUC | gain vs LightGBM + CatBoost 50/50 | gain / corrected SE | folds up | verdict |
+|---|---|---|---|---|---|
+| hill climbing, nested | 0.92050 | +0.00036 | 4.0 | 5 of 5 | passes |
+| stacking on log-odds, 9 models | 0.92044 | +0.00031 | 1.2 | 4 of 5 | does not pass |
+| forward selection, equal weights, gated by the rule | 0.92014 | 0 | | | keeps the 50/50 blend |
+
+- Hill climbing finds LightGBM 2/6, CatBoost 2/6, ExtraTrees 1/6, XGBoost 1/6 in 4 of the 5 nested climbs (run 20261031T220901Z_1ff742f2, 0.92054 on all folds, optimistic). Before XGBoost was tuned it gave +0.00026 (1.4 SE): the tuned model is what lifts it over the rule. On top of the 50/50 at equal weights, ExtraTrees adds +0.00025, XGBoost +0.00009, both together +0.00035: the two gains roughly add up.
+- Candidate, not adopted: this is the fourth pass of blend selection on the frozen folds, and the 50/50 blend lost ~0.00025 of its gain on fresh splits. If this one lost as much, ~0.0001 would be left. It needs its own fresh-split check, against the 50/50 blend on the same splits.
+
+Blending with the CatBoost search winner, 2026-11-01 ("configs/blends/final_selection_v4.yaml", "hill_climb_v3.yaml", "stack_v3.yaml"): rejected as a model (-0.00022, -0.6 SE vs the untuned one), and worse in every blend. Rank correlation with LightGBM 0.954 against 0.947: closer to the other models, so less to add.
+
+| blend | AUC | vs candidate 2/6, 2/6, 1/6, 1/6 with the untuned CatBoost (0.92054) |
+|---|---|---|
+| same weights, winner instead of untuned CatBoost | 0.92025 | -0.00029, -2.1 SE, 0 of 5 folds |
+| LightGBM + winner 50/50 | 0.91982 | -0.00072, -4.0 SE, 0 of 5 folds |
+
+The final_selection_v4 result file (LightGBM alone) and hill_climb_v3 are records of this test, not a choice. The candidate stays run 20261031T220901Z_1ff742f2, with the 50/50 blend adopted until it passes on fresh splits.
+
+Fresh-split check of the 4-model blend, finished 2026-11-01 (TODO 7.25, "make fresh-blends SPEC=configs/blends/fresh_candidate.yaml", "reports/tuning/fresh_candidate.log", per-fold results in "reports/tuning/fresh_fresh_candidate.csv", member predictions in oof/fresh/). Candidate LightGBM 2/6, CatBoost county 2/6, ExtraTrees 1/6, XGBoost 1/6 against the 50/50 blend, same 15 folds:
+
+| split seed | 50/50 blend | 4-model blend | gain | folds up |
+|---|---|---|---|---|
+| 1 | 0.91966 | 0.92038 | +0.00072 | 5 of 5 |
+| 2 | 0.91976 | 0.92043 | +0.00066 | 5 of 5 |
+| 3 | 0.91971 | 0.92043 | +0.00072 | 5 of 5 |
+
+- All 15 paired folds: +0.00070, corrected SE 0.00009, 7.6 SE, 15 of 15 folds up: CONFIRMED. Adopted: the 4-model blend (run 20261031T220901Z_1ff742f2) replaces the 50/50 blend as the best model.
+- The fresh gain (+0.00070) is larger than on the frozen folds (+0.00040 for the logged blend, +0.00036 nested): unlike the 50/50 blend, this one was not flattered by being chosen on the frozen folds.
+- It is the tuned ExtraTrees and XGBoost that make the difference: the same LightGBM and the same untuned CatBoost are in both blends.
+
+Public LB gap, 2026-10-31 (written then, lost from this file afterwards, restored 2026-11-09). The leader was given as 0.931 against our 0.92118; corrected 2026-11-09 to 0.92301. Quick checks only, no model refit:
+
+| check | result | reading |
+|---|---|---|
+| public LB noise, 1,000 draws of 13,500 OOF rows of the 50/50 blend | SD of one score 0.0038; SD of a paired gap between two models 0.0014 (blend vs ExtraTrees) | the scale to read any LB gap against |
+| adversarial validation, LightGBM, 5 folds, 200 trees | AUC 0.5015 (55 adopted features), 0.5022 (+ raw county / MSA ids) | test looks like train: no shift to exploit (TODO 2.7) |
+| exact twins, all 56 columns | 0.01% of test rows | the label agrees, but too few rows to matter |
+| near twins, 6 other keys | 0.28% to 2.76% of test rows | best gain on top of the blend +0.00002 (0.6 SE) |
+
+- Twin value is measured on labelled rows: each row's twin labels come from the other folds only, as a train twin would for a test row, and are added to the blend's log-odds at 5 strengths, keeping the best (so the figure is optimistic). Raw agreement looks strong on near twins (P(accepted) 0.82 if the twin was accepted, 0.28 if denied, on tract + amount + value), yet the blend gains nothing: it already knows what the twin knows. Rows sharing a key are not proven to be the same application.
+- The leader's public score is 0.92301, not 0.931 (nor the 0.95 quoted on 2026-10-19). Against our best public score (0.92158, submission 6) the gap is 0.0014: 0.4 SD of one public score and 1.0 SD of a paired gap. It is within the public-LB noise and says nothing about the private 70%. The checks stand (no shift, no duplicates to exploit), but there was no 0.011 gap to explain.
