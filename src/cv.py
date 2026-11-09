@@ -181,6 +181,7 @@ class CatBoostModel:
         self.params = {**cfg["catboost_params"], "random_seed": cfg["model_seeds"][0]}
         self.max_rounds = cfg["catboost_fit"]["max_rounds"]
         self.patience = cfg["catboost_fit"]["early_stopping_rounds"]
+        self.single_fit = cfg["catboost_fit"]["single_fit"]
 
     @staticmethod
     def _prepare(X: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
@@ -191,8 +192,21 @@ class CatBoostModel:
             X[c] = X[c].astype("string").fillna("missing").astype(object)
         return X, cat
 
+    def _fit_once(self, X: pd.DataFrame, y: np.ndarray, cat: list[str], fold: np.ndarray) -> "CatBoostModel":
+        """Search only (tune_optuna.py): one fit on all inner folds but one, the tree count taken on that
+        one, no refit. 1 fit instead of 5 and fewer rows, so scores run lower: good enough to rank settings."""
+        stop = fold == np.unique(fold)[0]
+        params = {k: v for k, v in self.params.items() if k != "logging_level"}   # refused together with verbose
+        self.model_ = cb.CatBoost({**params, "iterations": self.max_rounds}).fit(
+            cb.Pool(X[~stop], y[~stop], cat_features=cat), eval_set=cb.Pool(X[stop], y[stop], cat_features=cat),
+            early_stopping_rounds=self.patience, use_best_model=True, verbose=PROGRESS_EVERY)
+        self.n_trees_ = self.model_.tree_count_
+        return self
+
     def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "CatBoostModel":
         X, cat = self._prepare(X)
+        if self.single_fit:
+            return self._fit_once(X, np.asarray(y), cat, fold)
         pool = cb.Pool(X, np.asarray(y), cat_features=cat)
         inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
         # logging_level (Silent) left out here only: CatBoost refuses it together with verbose_eval
@@ -289,11 +303,13 @@ MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "
           "xgb": XGBModel, "extratrees": ExtraTreesModel, "mlp": MLPModel}
 
 
-def run_cv(cfg: dict, folds: pd.DataFrame | None = None,
-           coefs: list | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
+def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = None,
+           only_folds: list[int] | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
     """folds: (id, fold) to use instead of the frozen folds. Only for checks on fresh splits
     (src/fresh_folds.py); such runs are not comparable with reports/runs.csv and are not logged.
-    coefs: if given, each fold model's coefficient table (linear models only) is appended to it."""
+    coefs: if given, each fold model's coefficient table (linear models only) is appended to it.
+    only_folds: score these outer folds only, for a cheap search (tune_optuna.py). The predictions returned
+    are then incomplete and test predictions are skipped: such a run must not be logged."""
     if cfg["model"] not in MODELS:
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
     train, test = load()
@@ -304,7 +320,7 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None,
     oof = np.full(len(train), np.nan)
     test_pred = np.zeros(len(test))
     fold_auc = []
-    for k in range(cfg["n_folds"]):
+    for k in (range(cfg["n_folds"]) if only_folds is None else only_folds):
         is_valid = (train["fold"] == k).to_numpy()
         # Target encodings use labels, so they are computed here, inside the fold.
         fit_part, valid_part, test_k, encoded = encode_fold(train[~is_valid], train[is_valid], test,
@@ -324,9 +340,10 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None,
         print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}  ({time.perf_counter() - t_fold:.0f}s)", flush=True)
         # Test prediction = average of the k fold models, càd exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
-        test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
+        if only_folds is None:
+            test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
 
-    assert not np.isnan(oof).any(), "some train rows never received an OOF prediction"
+    assert only_folds is not None or not np.isnan(oof).any(), "some train rows never received an OOF prediction"
     oof_df = train[["id", "fold", TARGET]].assign(pred=oof)
     test_df = test[["id"]].assign(pred=test_pred)
     return oof_df, test_df, fold_auc, cols
