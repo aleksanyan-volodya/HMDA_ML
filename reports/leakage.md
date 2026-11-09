@@ -15,11 +15,13 @@ A column leaks when its value is written because of the decision, not before it.
 
 Three feature lists follow from it:
 
-- full: everything, for the leaderboard.
-- clean: full minus the 2 confirmed leaks. The fair model is built on it.
-- strict: clean minus the 3 partial or suspect signals. Used only to measure how much they matter (TODO 12.9), not as a model of its own.
+- full: everything, for the leaderboard (55 columns, configs/experiments/fair_full.yaml).
+- clean: full minus the 2 confirmed leaks. The fair model is built on it (53 columns, fair_clean.yaml).
+- strict: clean minus the 3 partial or suspect signals. Used only to measure how much they matter, not as a model of its own (38 columns, fair_strict.yaml).
 
 The partial signals stay in clean because they also carry real information (manual underwriting, manufactured homes sold without land), and for a tree a missing value can't be removed without dropping the whole column for every row.
+
+Strict is not perfectly free of them: "conforming_loan_limit" = U marks 21 location-unknown rows and stays in. This is too small to change the comparison.
 
 ## Verdicts
 
