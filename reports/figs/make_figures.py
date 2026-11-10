@@ -571,6 +571,34 @@ def worst_errors() -> None:
     publish("t11_worst_errors", md)
 
 
+def checks() -> None:
+    """Tests of explanations written in the report (rule: a hypothesis is stated, tested, then
+    reported as held or not). Each check reads the data only."""
+    train, test = load()
+    train, _, _ = build(train, test, ["dti_order"])
+    s = lambda c: train[c].astype("string")  # noqa: E731
+    out = ["Hypothesis: the DTI rank separates accepted from denied less well inside FHA and VA than inside "
+           "conventional loans. AUC of the DTI rank alone (higher DTI = lower score), rows with a DTI, "
+           f"products with at least {MIN_SLICE:,} rows:", ""]
+    rows = []
+    for prod, g in train[train.dti_order.notna()].groupby(s("derived_loan_product_type")[train.dti_order.notna()]):
+        if len(g) >= MIN_SLICE:
+            rows.append({"loan product": prod, "rows": f"{len(g):,}", "denied": f"{(g[TARGET] == 0).sum():,}",
+                         "AUC of the DTI rank": fmt(roc_auc_score(g[TARGET], -g.dti_order))})
+    out += [md_table(pd.DataFrame(rows)), ""]
+    site = s("construction_method") == "1"
+    out += ["Hypothesis: construction_method is repeated by the manufactured-home columns. Site-built rows "
+            "(construction_method = 1) and the value 'not applicable' in each manufactured-home column:", ""]
+    rows = []
+    for col, na in [("manufactured_home_secured_property_type", "3"), ("manufactured_home_land_property_interest", "5")]:
+        rows.append({"column": col, "site-built rows": f"{site.sum():,}",
+                     "of them not applicable": f"{(site & (s(col) == na)).sum():,}",
+                     "of them exempt (1111)": f"{(site & (s(col) == '1111')).sum():,}",
+                     "not applicable but not site-built": f"{(~site & (s(col) == na)).sum():,}"})
+    out.append(md_table(pd.DataFrame(rows)))
+    (FIGS / "checks.md").write_text("\n".join(out) + "\n")
+
+
 def shap() -> None:
     """F8 + F9: permutation importance and SHAP values of the tuned LightGBM, the largest member
     of the final blend (weight 1/3). One fit on folds 1-4, explained on 10,000 rows of fold 0;
@@ -664,7 +692,7 @@ def shap() -> None:
 
 STEPS = {"data_facts": data_facts, "missingness": missingness, "states": states, "transforms": transforms,
          "lb_noise": lb_noise, "cv_lb": cv_lb, "roc": roc, "rank_corr": rank_corr, "ablations": ablations,
-         "slices": slices, "worst_errors": worst_errors, "shap": shap}
+         "slices": slices, "worst_errors": worst_errors, "checks": checks, "shap": shap}
 
 if __name__ == "__main__":
     names = sys.argv[1:] or list(STEPS)
