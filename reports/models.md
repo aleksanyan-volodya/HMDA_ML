@@ -13,7 +13,7 @@ All on the frozen folds, compared with "make compare". The competition model is 
 | MLP, final (no raw ids, dropout 0.4, weight decay 0.1, numeric bins, 60 epochs) | configs/experiments/mlp_combo_e60.yaml | 20261031T130048Z_752fd022 | 0.91003 | -0.00903 (-12.8 SE, 0 of 5 folds) | not submitted |
 | MLP, 30 epochs, no raw county / MSA ids (best variant) | configs/experiments/mlp_no_ids.yaml | 20261031T110304Z_0de0f840 | 0.90758 | -0.01147 (-9.5 SE, 0 of 5 folds) | not submitted |
 | XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 20261031T215118Z_05b22e57 | 0.91848 | -0.00057 (-1.0 SE, 2 of 5 folds) | not submitted |
-| Blend LightGBM 2/6, CatBoost county 2/6, ExtraTrees 1/6, XGBoost 1/6, log-odds (adopted 2026-11-01) | configs/blends/lgbm_cat_et_xgb.yaml | 20261031T220901Z_1ff742f2 | 0.92054 | +0.00149 vs LightGBM; fresh splits +0.00070 over the 50/50 blend (7.6 SE, 15 of 15) | not submitted |
+| Blend LightGBM 2/6, CatBoost county 2/6, ExtraTrees 1/6, XGBoost 1/6, log-odds (adopted 2026-11-01) | configs/blends/lgbm_cat_et_xgb.yaml | 20261031T220901Z_1ff742f2 | 0.92054 | +0.00149 vs LightGBM; fresh splits +0.00070 over the 50/50 blend (7.6 SE, 15 of 15) | submission 6, LB 0.92158 |
 | CatBoost, Optuna winner (rejected, untuned stays) | configs/experiments/catboost_optuna_best.yaml | 20261101T090757Z_9ef0b007 | 0.91837 | -0.00068 (-0.9 SE, 2 of 5 folds) | not submitted |
 | Blend LightGBM + CatBoost county, equal weights, log-odds | configs/blends/lgbm_catboost_logit.yaml | 20261014T115111Z_918eb62b | 0.92014 | +0.00108 (2.2 SE, 5 of 5 folds); fresh splits +0.00083 (3.8 SE, 14 of 15 folds) | 0.92118 |
 | Blend LightGBM seeds 0-4, equal weights, log-odds | configs/blends/lgbm_seeds5.yaml | 20261014T122347Z_f574a592 | 0.91956 | +0.00050 (1.8 SE, 5 of 5 folds) | not submitted |
@@ -204,3 +204,79 @@ Public LB gap, 2026-10-31 (written then, lost from this file afterwards, restore
 
 - Twin value is measured on labelled rows: each row's twin labels come from the other folds only, as a train twin would for a test row, and are added to the blend's log-odds at 5 strengths, keeping the best (so the figure is optimistic). Raw agreement looks strong on near twins (P(accepted) 0.82 if the twin was accepted, 0.28 if denied, on tract + amount + value), yet the blend gains nothing: it already knows what the twin knows. Rows sharing a key are not proven to be the same application.
 - The leader's public score is 0.92301, not 0.931 (nor the 0.95 quoted on 2026-10-19). Against our best public score (0.92158, submission 6) the gap is 0.0014: 0.4 SD of one public score and 1.0 SD of a paired gap. It is within the public-LB noise and says nothing about the private 70%. The checks stand (no shift, no duplicates to exploit), but there was no 0.011 gap to explain.
+
+Confidence interval on the final AUC, 2026-11-09 (TODO 13.4, "make ci", "src/bootstrap_ci.py", "reports/tuning/ci_final.log"). Stratified bootstrap of the 105,000 out-of-fold rows, 2,000 resamples, seed 0:
+
+| model | run | pooled OOF AUC | 95% CI | bootstrap SD | mean of fold AUCs |
+|---|---|---|---|---|---|
+| final: 4-model blend | 20261031T220901Z_1ff742f2 | 0.92043 | [0.91764, 0.92318] | 0.00141 | 0.92054 |
+| safety: 50/50 blend | 20261014T115111Z_918eb62b | 0.92000 | [0.91723, 0.92275] | 0.00141 | 0.92014 |
+| tuned LightGBM alone | 20261003T084548Z_406e4210 | 0.91884 | [0.91588, 0.92153] | 0.00144 | 0.91905 |
+
+- The interval measures which rows were scored, not retraining: the fresh-split checks measure that part (spread of the 4-model blend over 3 splits: 0.92038 to 0.92043).
+- Pooled AUC (all rows ranked at once) is ~0.0001 to 0.0002 below the mean of the fold AUCs: the folds' scores are not on exactly the same scale. Quote one and say which.
+- The three intervals overlap, yet the differences between the models are real: two models scored on the same rows share most of the row noise, so the paired gain has a much smaller SD (paired bootstrap in make compare: 4-model blend vs 50/50 [+0.00021, +0.00066]). Overlapping single-model intervals are not a test of the difference.
+
+Leakage ablation, 2026-11-09 (TODO 12.9, configs from the fairness agent: configs/experiments/fair_*.yaml, tuned LightGBM settings, not retuned, same folds). fair_full is identical to the tuned LightGBM, so its run is 20261003T084548Z_406e4210.
+
+| feature list | columns | run | CV AUC | vs full | gain / corrected SE |
+|---|---|---|---|---|---|
+| full | 55 | 20261003T084548Z_406e4210 | 0.91905 | | |
+| clean: without the 2 confirmed leaks (preapproval, initially_payable_to_institution) | 53 | 20261109T170831Z_116f6267 | 0.89305 | -0.02600, bootstrap CI [-0.02793, -0.02421] | -13.6 |
+| strict: clean, also without aus-1, LTV, property value, DTI, the census fields, state, location flags | 38 | 20261109T170956Z_cd2c2a46 | 0.82343 | -0.09562, bootstrap CI [-0.09892, -0.09224] | -36.4 |
+
+- Clean vs strict: -0.06962 (-62.8 SE). Reading for the fairness and report agents, not a modelling decision: the strict list removes the main credit variables (LTV, DTI, property value) together with the suspect signals, so its loss is not a measure of leakage alone.
+- The two confirmed leaks cover 6% of train rows (4,713 + 1,566) but are worth 0.026 AUC: their outcome is fixed in train (0 denials with preapproval = 1, 0 approvals with initially_payable = 3), so they are the easiest rows to rank.
+
+Fair model cost in AUC, 2026-11-09 (configs from the fairness agent: fair_unaware.yaml, fair_reweigh.yaml; tuned LightGBM settings, not retuned, same folds). Both start from the clean list (confirmed leaks out). Reweighing (Kamiran and Calders 2012, "reweigh" in base.yaml, src/cv.py reweigh_weights): training weights w(g, y) = P(g) P(y) / P(g, y) by derived_race, computed on each fold's fit part (0.28 to 1.81 over the 5 folds, mean 1); derived_race sets the weights and is not a feature; scoring unweighted.
+
+| model | columns | run | CV AUC | vs row above | gain / corrected SE | paired bootstrap 95% CI |
+|---|---|---|---|---|---|---|
+| clean | 53 | 20261109T170831Z_116f6267 | 0.89305 | | | |
+| unaware: clean without the 17 demographic fields | 36 | 20261109T183150Z_8e9bf39c | 0.89060 | -0.00245 | -3.1 | [-0.00358, -0.00152] |
+| unaware + reweighing by derived_race | 36 | 20261109T183339Z_9ddab9a2 | 0.88985 | -0.00075 | -2.4 | [-0.00136, +0.00002] |
+
+- AUC is the cost side only. Whether the fair model is fairer is read from its OOF predictions by group (fairness agent, oof/ of both runs).
+- Dropping the demographic fields costs 0.0025 (5 of 5 folds down): small, but they carry some signal beyond the other 36 columns. Part of it may come back through proxies (12.3).
+- Reweighing costs a further 0.0008 (5 of 5 folds down, CI just touching 0): close to free in AUC. The tree count is picked on the weighted inner AUC, so the reweighed model chooses its own (113 to 158 trees, vs 100 to 152 unweighted).
+
+For the report: T9 ablations, H1-H3 and the fair models, 2026-11-10. All on the tuned LightGBM settings (not retuned), same folds, compared with make compare; base = full list, run 20261003T084548Z_406e4210, CV 0.91905.
+
+T9 rows (prediction = range registered on 2026-10-18):
+
+| # | ablation | predicted | observed | gain / corrected SE | run |
+|---|---|---|---|---|---|
+| A1 | no demographics (17 fields) | -0.002 [-0.004, 0] | -0.00270, 0 of 5 folds up: inside | -5.2 | 20a010b4 |
+| A2 | no process fields (preapproval, submission_of_application, initially_payable_to_institution, aus-1) | -0.015 [-0.025, -0.008] | -0.03384, 0 of 5 up: outside, larger loss | -15.1 | bc281e8f |
+| A3 | no census (6 tract columns, MSA median income) | -0.004 [-0.008, -0.002] | -0.00132, 1 of 5 up: outside, smaller loss | -2.0 | 29f2ea4d |
+| A4c | no target encoding, L1 logistic regression (vs run 6c8c7142) | -0.002 [-0.005, 0] | running (night of 2026-11-10) | | |
+| A5 | raw typed columns only, county and MSA ids kept | -0.014 [-0.020, -0.010] | -0.01207, 0 of 5 up: inside | -8.8 | fcc2e23f |
+| H1-H3 | one block: term_off_grid, ltv_blank_value_present, computed_ltv_above_100 (58 columns) | about +0.0001 to +0.0009 (sum of the T11 ranges) | -0.00016, 2 of 5 up: rejected, not in any blend | -0.2 | ebb1bd30 |
+
+- A2 misses its range because 2 of its 4 fields are the confirmed leaks (A9 alone: -0.026).
+- A3: the census columns matter less than predicted; the finance and process columns already carry most of what the tract describes.
+- H1-H3: the patterns seen in the worst errors are real in the residuals but give the model nothing new: paired bootstrap CI [-0.00060, +0.00061].
+
+Section 9, fair models: cost on CV and on the public leaderboard (submissions 7-10, not among the 2 final submissions):
+
+| feature list | model | run | CV AUC | public LB |
+|---|---|---|---|---|
+| Kaggle (leaks kept) | all features (tuned LightGBM, submission 4) | 406e4210 | 0.91905 | 0.9210 |
+| Kaggle | race-blind | 20a010b4 | 0.91636 (-0.0027, -5.2 SE) | 0.91869 |
+| Kaggle | race-blind + reweighing by derived_race | 6990a174 | 0.91560 (-0.0008 more, -0.9 SE) | 0.91855 |
+| clean (leaks out) | all features | 116f6267 | 0.89305 | |
+| clean | race-blind | 8e9bf39c | 0.89060 (-0.0025, -3.1 SE) | 0.89408 |
+| clean | race-blind + reweighing | 9ddab9a2 | 0.88985 (-0.0008 more, -2.4 SE) | 0.89342 |
+
+- Race-blind costs about 0.0025 on both lists and transfers to unseen rows (LB -0.0023 vs submission 4). Reweighing adds -0.0008 on CV and is within the leaderboard noise. The expensive step is removing the leaks (-0.026), not fairness.
+
+Section 9.3, proxy check (12.3, src/proxy_check.py, reports/tuning/proxy_check.csv): LightGBM predicts one race group vs all others from the 38 race-blind columns of A1; groups with at least 5,000 rows; mean of 5 fold AUCs, fold spread under +-0.01.
+
+| group | rows | from all 38 columns | from geography only (6 tract columns, MSA income, state) |
+|---|---|---|---|
+| White | 66,107 | 0.740 | 0.695 |
+| Race Not Available | 17,872 | 0.672 | 0.587 |
+| Black or African American | 8,991 | 0.840 | 0.796 |
+| Asian | 8,009 | 0.847 | 0.800 |
+
+- A race-blind model still sees race: the columns it keeps identify Black and Asian applicants at AUC 0.84 to 0.85, mostly through geography (0.80), which includes tract_minority_population_percent. The reading is the fairness agent's.
