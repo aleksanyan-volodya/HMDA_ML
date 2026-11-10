@@ -1,5 +1,7 @@
 # Weights from hill climbing (configs/blends/hill_climb_v2.yaml): 2/6, 2/6, 1/6, 1/6, the same in 4 of the 5 nested
-# climbs. Log-odds. Candidate only: passes on the frozen folds, not yet checked on fresh splits.
+# climbs. Log-odds. Final model (adopted 2026-11-01): run 20261031T220901Z_1ff742f2, CV 0.92054; confirmed on
+# fresh splits (+0.00070 over the 50/50 blend, 7.6 SE, 15 of 15 folds; reports/models.md); Kaggle submission 6,
+# public LB 0.92158, main final submission (reports/submissions.md).
 runs:
   - 20261003T084548Z_406e4210    # LightGBM, tuned
   - 20261014T085450Z_d96c8be4    # CatBoost + raw county / MSA, untuned
