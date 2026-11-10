@@ -25,6 +25,10 @@ features: []
 # each CV fold, not with the features above. Each entry: {column, parent, m}. Empty = none.
 target_encode: []
 
+# Fair model (reweighing, Kamiran and Calders 2012): a column whose groups get training weights
+# w(g, y) = P(g) P(y) / P(g, y), computed in each fold's fit part. null = unweighted. lgbm only.
+reweigh: null
+
 # LightGBM: Library defaults are used for anything not listed.
 lgbm_params:
   objective: binary

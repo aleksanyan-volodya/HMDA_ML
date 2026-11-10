@@ -5,7 +5,7 @@
 RUN := uv run --locked
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check-data folds cv tune optuna fresh fresh-blend fresh-blends blend compare submit test
+.PHONY: help setup check-data folds cv tune optuna fresh fresh-blend fresh-blends blend compare ci submit test figures
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -54,9 +54,17 @@ compare:  ## Paired gain over a reference run: make compare BASE=<run_id> [NEW=<
 	@test -n "$(BASE)" -a -n "$(NEW)" || { echo "usage: make compare BASE=<run_id> [NEW=<run_id>] (see reports/runs.csv)"; exit 1; }
 	$(RUN) python src/compare.py $(BASE) $(NEW)
 
+ci:  ## 95% bootstrap CI on the pooled OOF AUC: make ci RUNS="<run_id> [<run_id> ...]"
+	@test -n "$(RUNS)" || { echo "usage: make ci RUNS=\"<run_id> [<run_id> ...]\""; exit 1; }
+	$(RUN) python src/bootstrap_ci.py $(RUNS)
+
 submit:  ## Build a validated submission: make submit RUN_ID=<run_id>
 	@test -n "$(RUN_ID)" || { echo "usage: make submit RUN_ID=<run_id> (see reports/runs.csv)"; exit 1; }
 	$(RUN) python src/submit.py $(RUN_ID)
 
 test:  ## Run the test suite
 	$(RUN) pytest -q
+
+# Reads logged runs only; the "shap" step refits one LightGBM fold (~1.5 min). ~3 min in all.
+figures:  ## Rebuild report figures and tables (reports/figs/): make figures [STEPS="slices shap"]
+	$(RUN) python reports/figs/make_figures.py $(STEPS)

@@ -62,18 +62,19 @@ class LGBMModel:
         self.max_rounds = cfg["lgbm_fit"]["max_rounds"]
         self.patience = cfg["lgbm_fit"]["early_stopping_rounds"]
 
-    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "LGBMModel":
+    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray, weight: np.ndarray | None = None) -> "LGBMModel":
         inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
         # lgb.cv averages the AUC curves of the inner folds; the tuned tree count is the
-        # peak of that mean curve.
-        history = lgb.cv(self.params, lgb.Dataset(X, y), num_boost_round=self.max_rounds,
+        # peak of that mean curve. With weights, that inner AUC is weighted too (the reweighed
+        # objective picks its own tree count); the outer score stays unweighted.
+        history = lgb.cv(self.params, lgb.Dataset(X, y, weight=weight), num_boost_round=self.max_rounds,
                          folds=inner, callbacks=[lgb.early_stopping(self.patience, verbose=False),
                                     lgb.log_evaluation(PROGRESS_EVERY)])
         mean_auc = np.asarray(history["valid auc-mean"])
         if len(mean_auc) >= self.max_rounds:  # early stopping never triggered
             raise RuntimeError(f"tree search hit max_rounds={self.max_rounds}: raise the cap")
         self.n_trees_ = int(mean_auc.argmax()) + 1
-        self.booster_ = lgb.train(self.params, lgb.Dataset(X, y), num_boost_round=self.n_trees_)
+        self.booster_ = lgb.train(self.params, lgb.Dataset(X, y, weight=weight), num_boost_round=self.n_trees_)
         return self
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
@@ -299,6 +300,16 @@ def MLPModel(cfg: dict):
     return Model(cfg)
 
 
+def reweigh_weights(group: pd.Series, y: pd.Series) -> np.ndarray:
+    """Kamiran and Calders (2012): w(g, y) = P(g) P(y) / P(g, y) on the rows given, so group and label
+    are independent in the weighted data. The weights average exactly 1."""
+    g, y = pd.Series(group.astype(str).to_numpy()), pd.Series(np.asarray(y))
+    n = len(y)
+    p_g, p_y = g.map(g.value_counts()) / n, y.map(y.value_counts()) / n
+    p_gy = y.groupby([g, y]).transform("size") / n
+    return (p_g * p_y / p_gy).to_numpy()
+
+
 MODELS = {"constant": ConstantModel, "lgbm": LGBMModel, "logreg": LogRegModel, "catboost": CatBoostModel,
           "xgb": XGBModel, "extratrees": ExtraTreesModel, "mlp": MLPModel}
 
@@ -312,6 +323,8 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = No
     are then incomplete and test predictions are skipped: such a run must not be logged."""
     if cfg["model"] not in MODELS:
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
+    if cfg["reweigh"] and cfg["model"] != "lgbm":
+        raise NotImplementedError("reweigh is implemented for lgbm only")
     train, test = load()
     train, test, features = build(train, test, cfg["features"])
     print(f"{len(features)} features + {len(cfg['target_encode'])} target-encoded", flush=True)
@@ -328,8 +341,13 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = No
         cols = features + encoded
         t_fold = time.perf_counter()
         print(f"fold {k}: fitting on {len(fit_part)} rows", flush=True)
+        weighted = {}
+        if cfg["reweigh"]:   # weights from the fit part only; the column itself need not be a feature
+            weighted["weight"] = reweigh_weights(fit_part[cfg["reweigh"]], fit_part[TARGET])
+            print(f"  reweigh by {cfg['reweigh']}: weights {weighted['weight'].min():.2f} to "
+                  f"{weighted['weight'].max():.2f}", flush=True)
         model = MODELS[cfg["model"]](cfg).fit(fit_part[cols], fit_part[TARGET],
-                                               fit_part["fold"].to_numpy())
+                                               fit_part["fold"].to_numpy(), **weighted)
         oof[is_valid] = model.predict(valid_part[cols])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
         extra = (f"  trees {model.n_trees_}" if hasattr(model, "n_trees_")

@@ -167,6 +167,17 @@ def ltv_at_standard_value(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def error_hypotheses(df: pd.DataFrame) -> pd.DataFrame:
+    """[9.2] H1-H3 from the worst errors of the final blend (report 8.3, notebook 03), tested as one
+    block for the report only, not for the blend. NaN where an input is missing, so no new missing code.
+    H1 term not a multiple of 12 months; H2 combined LTV blank while the value is reported;
+    H3 loan amount above property value (computed LTV > 100)."""
+    df["term_off_grid"] = (df.loan_term % 12 != 0).astype("float").where(df.loan_term.notna())
+    df["ltv_blank_value_present"] = (df.loan_to_value_ratio.isna() & df.property_value.notna()).astype("int64")
+    df["computed_ltv_above_100"] = (df.loan_amount > df.property_value).astype("float").where(df.property_value.notna())
+    return df
+
+
 # ---------------------------------------------------------------- linear model only
 # A linear model can't build bands or crossings by itself, so they are given explicitly.
 # Every band includes "missing" as a level, so missing values keep their own effect.
@@ -266,6 +277,7 @@ TRANSFORMS = {
     "manufactured_location_unknown": (manufactured_location_unknown, [], ["manufactured_location_unknown"]),
     "dti_above_program_limit": (dti_above_program_limit, [], ["dti_above_program_limit"]),
     "ltv_at_standard_value": (ltv_at_standard_value, [], ["ltv_at_standard_value"]),
+    "error_hypotheses": (error_hypotheses, [], ["term_off_grid", "ltv_blank_value_present", "computed_ltv_above_100"]),
     # linear model only: bands replace the raw DTI text, the numeric term and the numeric LTV
     "linear_bands": (linear_bands, ["debt_to_income_ratio", "loan_term", "loan_to_value_ratio"],
                      ["dti_band", "loan_term_band", "ltv_band"]),
@@ -313,6 +325,12 @@ BLOCKS = {
 _ALL = set(FEATURES) | {c for _, _, added in TRANSFORMS.values() for c in added}
 for _name, _keep in BLOCKS.items():
     TRANSFORMS[f"only_{_name}"] = (None, sorted(_ALL - set(_keep)), [])
+# Fair model, unawareness (fair_unaware.yaml): the 17 demographic fields out; must come after age_order.
+TRANSFORMS["drop_demographics"] = (None, BLOCKS["demographics"], [])
+# Pre-registered ablations A2 and A3 (report T9), lists as registered on 2026-10-18
+TRANSFORMS["drop_process_fields"] = (None, ["preapproval", "submission_of_application",
+                                            "initially_payable_to_institution", "aus-1"], [])
+TRANSFORMS["drop_census"] = (None, [*TRACT, "ffiec_msa_md_median_family_income"], [])
 
 
 def build(train: pd.DataFrame, test: pd.DataFrame, names: list[str]) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
