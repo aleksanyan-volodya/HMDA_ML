@@ -31,7 +31,7 @@ Sources: Regulation C official commentary to 12 CFR 1003.4 (https://www.consumer
 
 1. preapproval = 1: leak. Comment 4(a)(4)-2: the preapproval requirement does not apply to applications denied, withdrawn or closed for incompleteness, which are reported as not requested. A denied application can't carry 1.
 
-2. initially_payable_to_institution = 3: leak. "Not applicable" is reported when the institution had not decided, at the time the application was withdrawn, denied or closed, whether the loan would be payable to it. Between originated and denied, 3 can only occur on a denial.
+2. initially_payable_to_institution = 3: leak. "Not applicable" is reported when the institution had not decided, at the time the application was withdrawn, denied or closed, whether the loan would be payable to it. The challenge keeps only originated and denied applications (action_taken = 1 or 3, stated on the challenge page), so 3 can only occur on a denial.
 
 3. submission_of_application: no leak. Every level is accepted between 0.83 and 0.91.
 

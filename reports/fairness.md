@@ -8,7 +8,7 @@ Three consequences for everything below:
 
 - An "error" of the model means a disagreement with the lender, not a wrong judgement of the applicant.
 - A gap between groups is an association. The data has no credit score, no interest rate and no applicant history, so it can't separate a difference in risk from a difference in treatment. We do not conclude discrimination where a gap appears, nor its absence where none does.
-- The rows are a selection. We read "accepted" as originated (action_taken = 1) against denied (action_taken = 3): this reading fits the two leak columns, but action_taken itself is not in our files. Applications that were withdrawn or closed as incomplete would then be outside the data, and we can't see who they were.
+- The rows are a selection. The challenge page (read 2026-11-09) states the scope: rows from the HMDA Modified LAR published by the CFPB / FFIEC, home purchase loans only (loan_purpose = 1), and only applications that were originated or denied (action_taken = 1 or 3); withdrawn, incomplete and other files are excluded. So "accepted" is originated against denied. Applicants who withdrew or never completed their file are outside the data, and we can't see who they were or whether they differ by group. The collection year is not given.
 
 ## Feature lists and the cost of removing the leaks
 
