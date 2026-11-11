@@ -249,12 +249,13 @@ T9 rows (prediction = range registered on 2026-10-18):
 | A1 | no demographics (17 fields) | -0.002 [-0.004, 0] | -0.00270, 0 of 5 folds up: inside | -5.2 | 20a010b4 |
 | A2 | no process fields (preapproval, submission_of_application, initially_payable_to_institution, aus-1) | -0.015 [-0.025, -0.008] | -0.03384, 0 of 5 up: outside, larger loss | -15.1 | bc281e8f |
 | A3 | no census (6 tract columns, MSA median income) | -0.004 [-0.008, -0.002] | -0.00132, 1 of 5 up: outside, smaller loss | -2.0 | 29f2ea4d |
-| A4c | no target encoding, L1 logistic regression (vs run 6c8c7142) | -0.002 [-0.005, 0] | running (night of 2026-11-10) | | |
+| A4c | no target encoding, L1 logistic regression (vs run 6c8c7142, 0.90379) | -0.002 [-0.005, 0] | -0.00008, CI [-0.00019, +0.00002], 2 of 5 folds up: inside, near 0 | -0.9 | 1dc8e77b |
 | A5 | raw typed columns only, county and MSA ids kept | -0.014 [-0.020, -0.010] | -0.01207, 0 of 5 up: inside | -8.8 | fcc2e23f |
 | H1-H3 | one block: term_off_grid, ltv_blank_value_present, computed_ltv_above_100 (58 columns) | about +0.0001 to +0.0009 (sum of the T11 ranges) | -0.00016, 2 of 5 up: rejected, not in any blend | -0.2 | ebb1bd30 |
 
 - A2 misses its range because 2 of its 4 fields are the confirmed leaks (A9 alone: -0.026).
 - A3: the census columns matter less than predicted; the finance and process columns already carry most of what the tract describes.
+- A4c: without the county rate the L1 model has no county information at all and loses nothing measurable (C = 0.3 in every fold, as with the rate): the other columns already carry what the county rate added for a linear model.
 - H1-H3: the patterns seen in the worst errors are real in the residuals but give the model nothing new: paired bootstrap CI [-0.00060, +0.00061].
 
 Section 9, fair models: cost on CV and on the public leaderboard (submissions 7-10, not among the 2 final submissions):
@@ -280,3 +281,18 @@ Section 9.3, proxy check (12.3, src/proxy_check.py, reports/tuning/proxy_check.c
 | Asian | 8,009 | 0.847 | 0.800 |
 
 - A race-blind model still sees race: the columns it keeps identify Black and Asian applicants at AUC 0.84 to 0.85, mostly through geography (0.80), which includes tract_minority_population_percent. The reading is the fairness agent's.
+
+Reproducibility re-runs of the 4 final members, 2026-11-10 (clean commit d782fce, same feature list and folds; config hashes differ only because base.yaml gained keys since):
+
+| member | logged run | re-run | fold AUCs | predictions |
+|---|---|---|---|---|
+| LightGBM tuned | 406e4210 | cc720ddf | identical (0.91905) | OOF and test identical |
+| ExtraTrees tuned | 7bc88a0b | f308315c | identical (0.91484) | identical to 1e-15 |
+| XGBoost tuned | 05b22e57 | 104e3dd7 | identical (0.91848) | identical |
+| CatBoost county | d96c8be4 | a8b526e0 | 0.91738 vs 0.91859, -0.0012, 5 of 5 folds lower | Spearman 0.979 with the logged OOF |
+
+- CatBoost does not reproduce. The change appeared between 2026-10-19 and 2026-11-01: per fold, the 2026-10-19 fresh-split log shows 1,800 to 2,800 trees and 1,000 to 3,200 s; the 2026-11-01 fresh-split log and this re-run show 1,100 to 1,800 trees and 260 to 330 s.
+- Ruled out (30-tree fits on the full data): the 5 settings made explicit on 2026-10-31 (identical to leaving them out, in a plain fit and in cb.cv); the progress output (verbose_eval: same history and tree count); the code (the code of commit 79f2bb7 gives the same model as today's); library versions (catboost 1.2.10 throughout; the 2026-10-31 re-lock only added PyTorch and its dependencies). Not found. The old runs' time per tree matches max_ctr_complexity = 4 (3 x slower in the 30-tree test), while the library now resolves the default to 1, but nothing found explains a different default.
+- Effect on the final model: the 4-model blend with the re-run CatBoost scores 0.92015 against the logged 0.92054 (-0.00039, -2.6 SE, 5 of 5 folds lower).
+- What stands: the Kaggle submissions use the saved predictions of the logged runs, so submission 6 and its LB score are unaffected. The fresh-split check of 2026-11-01 already ran with the re-run behaviour on both sides, so its +0.00070 is a check of the recipe, not of the exact CatBoost model submitted.
+- For the report (10.2): LightGBM, ExtraTrees and XGBoost rebuild bit for bit from the code and lockfile; CatBoost rebuilds to 0.9174, and the blend to 0.9202 instead of 0.9205.
