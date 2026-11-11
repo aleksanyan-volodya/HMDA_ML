@@ -362,8 +362,6 @@ The narrowing is clearest among applicants the lenders accepted. The TPR gap of 
 
 It is bought with calibration. The race-blind models predict for Black applicants about 3 points more acceptances than lenders gave (+0.029 on the Kaggle list, +0.031 on the clean list), 3.5 to 4 points when reweighed (+0.035, +0.038), and slightly fewer for White applicants (-0.005 to -0.007). The competition model was within 0.005 for both. This is how the gap narrows: one cut-off applied to scores that are now higher than the recorded rate for Black applicants and lower for White applicants. Whether that is a cost or the point depends on which notion of fairness is chosen; the section on the choice of metric takes it up.
 
-The gap does not close further because race is still in the remaining columns: from them alone, a model tells Black applicants from the others with AUC 0.840, mostly through geography (proxy check below). A model without the demographic fields is blind to the fields, not to race.
-
 Removing the leaks while keeping the demographic fields widens the Black-White gap by 1.0 point [0.6, 1.5] and the TPR gap from -0.038 to -0.055. The leak-free fair model still ends with a gap no wider than the Kaggle-list one (9.6 against 9.8 points).
 
 We thought the widening came from the 6,279 leak rows: there the Kaggle-list model reads the decision from the leak column, so race plays no part in its score, while the clean model must score those rows from the other columns, the demographic fields included. If so, the gap should barely change on the rows without a leak value and widen on the leak rows. The test reads the same out-of-fold predictions on each subset, with each model's same-rate cut-off set on all rows, and a paired bootstrap over rows (1,000 resamples).
@@ -376,9 +374,9 @@ We thought the widening came from the 6,279 leak rows: there the Kaggle-list mod
 
 The hypothesis is wrong. The widening is on the rows without a leak value; on the leak rows the gap narrows. The two groups have the same share of leak rows (6.0% and 5.9%), so the mix of rows does not explain it either.
 
-Other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay where they were. Reweighing targets race only, so this was expected for its step. For the race-blind step it means that removing the sex and ethnicity fields does not change these gaps. The age gaps are also unchanged within their intervals. The Female gap is worth one more remark: at the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate. A calibrated score can still widen a gap once a single cut-off turns it into yes or no.
+Other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay where they were. Neither removing the sex and ethnicity fields nor reweighing on race changes these gaps. The age gaps are also unchanged within their intervals. The Female gap is worth one more remark: at the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate. A calibrated score can still widen a gap once a single cut-off turns it into yes or no.
 
-Ranking quality falls evenly. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend. The clean-list models are 0.02 to 0.04 below it in most groups, the price of the leaks (0.038 for Asian applicants), and Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
+Ranking quality falls evenly. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend. The clean-list models are 0.02 to 0.04 below it in most groups. The two reweighed models differ only by the 2 leak columns: from fair_full_reweigh to fair_reweigh, AUC falls by 0.021 to 0.037 in every group except American Indian or Alaska Native (0.008) and blank age (0.004). Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
 
 Limits. All of this is on the training rows, out-of-fold; the intervals cover the sampling of rows, not the training of the models, and are not corrected for the many comparisons (where there is no real gap, about 1 interval in 20 still excludes 0). Reweighing was run once, on race only, with no tuning. Nothing here says whether a narrower gap is closer to the right decisions: the target is what lenders did, and the data cannot tell a difference in risk from a difference in treatment.
 
@@ -402,9 +400,19 @@ Reading:
 - The race-blind columns still tell a lot about race, most of all for Black and Asian applicants. A model without the demographic fields can still give different scores to these groups, through the columns that stand in for them.
 - Geography carries most of it: 8 columns reach 0.796 of the 0.840 for Black applicants, and 0.800 of the 0.847 for Asian applicants. Where the home is says much about who buys it, and the tract's minority share says it by definition. The 30 other columns (loan, income, lender process) add about 0.04.
 - "Race Not Available" depends much less on geography (0.587); the other columns lift it to 0.672.
-- This fits the fair models: removing the demographic fields closes only about a fifth of the gap between Black and White applicants.
 
-What this does not say. It measures what the columns reveal about race, not how much the competition model relies on that, and not why. Geography also carries information a lender may legitimately use, such as local prices and markets, so the same columns are both a proxy and a predictor; this check cannot separate the two. The settings were tuned for the accept / deny target, not for this task, so these AUCs are, if anything, a lower bound on what the columns reveal.
+What this does not say. It measures what the columns reveal about race, not how much the competition model relies on that, and not why. Geography also predicts the decision itself: a LightGBM on the geography and census columns alone reaches AUC 0.673 for accepted (run 20261031T132634Z_df45cba9). So the same columns are both a proxy for race and a predictor of the decision, and this check cannot separate the two. The model settings are those tuned for the accept / deny target, not retuned for this task.
+
+## The demographics-only model
+
+A LightGBM trained on the 17 demographic fields alone (race, ethnicity, sex and age of applicant and co-applicant, their derived summaries and the observed flags), with the tuned settings and the frozen folds, predicts the recorded decision with CV AUC 0.63546 (run 20261031T132746Z_e63bd31a, config expert_demographics). For comparison, the geography and census columns alone reach 0.673 and the finance columns alone 0.867. Its out-of-fold rank correlation with the tuned LightGBM is 0.364.
+
+So declared race, ethnicity, sex and age order the recorded decisions clearly better than chance (0.5), with no information on the loan, the income or the property. This is an association with the lenders' decisions, not a measure of their merit, and it does not say how the competition model uses these fields.
+
+Decision: this model does not enter any blend. Two reasons:
+
+- It was never a candidate. It was run as a fairness diagnostic, and the config says so; it was not entered in the blend selection, so its blend gain was not tested. The final blend was chosen without it.
+- A component that scores applicants on race, ethnicity, sex and age alone has no place in a model we judge on fairness. The competition model does keep these fields among its 55 columns, to describe what lenders did; a separate component built only on them would add weight on group membership alone, which is the opposite of what the fair models do.
 
 ## Which fairness criterion, and why
 

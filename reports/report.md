@@ -135,7 +135,7 @@ Every run uses the same 5 folds: StratifiedKFold(5, shuffle=True, random_state=4
 
 ### 5.3 Uncertainty and the decision rule
 
-The five fold models share 3/4 of their training rows, so the naive SE (std of fold AUCs / sqrt(5)) is too small. A change (a feature block, a setting, a model in a blend) is adopted if and only if its paired mean gain over the 5 folds is positive and at least 2 x the Nadeau-Bengio corrected SE, std of the per-fold gains x sqrt(1/k + 1/(k-1)), i.e. 1.5 x the naive SE at k = 5 (reports/validation.md). The rule was fixed before the first comparison and never changed. The formula was derived for repeated random splits, so for k-fold it is a heuristic. A paired stratified bootstrap CI on the pooled out-of-fold predictions is printed with every comparison; it covers test-row noise only.
+The five fold models share 3/4 of their training rows, so the naive SE (std of fold AUCs / sqrt(5)) is too small. A change (a feature block, a setting, a model in a blend) is adopted if and only if its paired mean gain over the 5 folds is positive and at least 2 x the Nadeau-Bengio corrected SE, std of the per-fold gains x sqrt(1/k + 1/(k-1)), i.e. 1.5 x the naive SE at k = 5 (reports/validation.md). The rule was fixed before the first comparison and never changed. The formula was derived for repeated random splits, so for k-fold it is a heuristic. A paired stratified bootstrap CI on the pooled out-of-fold predictions is printed with every comparison; it covers the sampling of rows only, not the variation from training on other rows.
 
 Because a candidate chosen on the frozen folds is flattered by the choice, each finalist was re-checked on 3 fresh 5-fold splits (seeds 1 to 3, 15 paired folds) never used for any decision. Three choices were confirmed this way: the tuned LightGBM, +0.00194 at 4.2 SE (reports/tuning.md); the LightGBM + CatBoost blend, +0.00083 at 3.8 SE, 14 of 15 folds; the final 4-model blend, +0.00070 over it at 7.6 SE, 15 of 15 (reports/models.md).
 
@@ -221,7 +221,7 @@ All blends average log-odds with fixed weights; log-odds and ranks tied for 2 mo
 - stacking with a logistic regression on 9 models: +0.00031, 1.2 SE, does not pass, and gives negative weights to correlated models;
 - hill climbing on the fold AUC: LightGBM 2/6, CatBoost 2/6, ExtraTrees 1/6, XGBoost 1/6 in 4 of 5 nested climbs, +0.00036, 4.0 SE over the 50/50 blend. Confirmed on fresh splits (+0.00070, 7.6 SE, 15 of 15), so it is the final model, run 1ff742f2.
 
-The MLP, the logistic regressions and the block models never entered a blend: each nested gain stayed under 2 SE (reports/models.md).
+The MLP, the logistic regressions and the three block models of section 6.2 never entered a blend: each nested gain stayed under 2 SE (reports/models.md). The demographics-only model was not tested in a blend (section 9.3).
 
 ## 7. Ablations
 
@@ -467,9 +467,12 @@ Proxy check (src/proxy_check.py, reports/tuning/proxy_check.csv): a LightGBM wit
 - Removing the declared race fields does not remove race from the inputs. The columns left identify Black or African American applicants at AUC 0.840 and Asian applicants at 0.847 (T13). In concrete terms: among the 10% of rows with the highest score from the 38 columns, 39% are Black applicants, against 9% in the whole data, and those rows hold 45% of all Black applicants; for Asian applicants, 38% against 8%, and 50% (reports/fairness.md).
 - Most of it comes through geography: the 8 geographic columns alone reach 0.796 and 0.800. They include tract_minority_population_percent, the share of minority residents in the applicant's tract, which describes the area, not the applicant. The 30 other columns add about 0.04.
 - "Race Not Available" is the least predictable group and depends least on geography: 0.587 from geography, 0.672 from all 38 columns.
-- What this check does not measure: how much the competition model relies on these columns as a stand-in for race. Geography also carries what a lender may legitimately use, such as local prices, so the same columns are both a proxy and a predictor, and the check cannot separate the two.
+- What this check does not measure: how much the competition model relies on these columns as a stand-in for race. Geography also predicts the decision itself: a LightGBM on the geography and census columns alone reaches AUC 0.673 for accepted (run df45cba9, section 6.2). So the same columns are both a proxy for race and a predictor of the decision, and the check cannot separate the two. The settings are those tuned for the accept / deny target, not retuned for predicting race.
 
-The demographics-only model was kept out of every blend (reports/models.md). [pending, from reports/fairness.md: the written justification of that decision]
+The demographics-only model (T13, upper table): a LightGBM on the 17 demographic fields alone, with the tuned settings, orders the recorded decisions at CV AUC 0.635, against 0.673 for the geography and census columns alone and 0.867 for the finance columns (section 6.2); its out-of-fold rank correlation with the tuned LightGBM is 0.364 (reports/models.md). Declared race, ethnicity, sex and age thus order the decisions better than chance with no information on the loan, the income or the property. This is an association with the lenders' decisions, not a measure of their merit, and it does not say how the competition model uses these fields. The model enters no blend, for two reasons (reports/fairness.md):
+
+- It was never a candidate. It was run as a fairness diagnostic and not entered in the blend selection, so its gain in a blend was not tested; the final blend was chosen without it.
+- A component that scores applicants on race, ethnicity, sex and age alone has no place in a model judged on fairness. The competition model keeps these fields among its 55 columns, to describe what lenders did; a separate component built only on them would add weight on group membership alone, the opposite of what the fair models do.
 
 ### 9.4 Fair models
 
@@ -532,7 +535,7 @@ Cost against gain (T15, T16):
 - The narrowing is clearest among applicants the lenders accepted. The TPR gap of Black applicants goes from -0.038 to -0.008 [-0.013, -0.002] on the Kaggle list and from -0.055 to -0.010 [-0.017, -0.005] on the clean list. The FPR gap of the reweighed Kaggle-list model, -0.008 [-0.027, 0.012], cannot be told from 0.
 - The price is calibration. The race-blind models predict, for Black applicants, more acceptances than lenders gave: +0.029 on the Kaggle list and +0.031 on the clean list, and +0.035 and +0.038 reweighed; for White applicants slightly fewer (-0.005 to -0.007). The competition model was within 0.005 for both (T12). With one cut-off for every group, a higher mean score for Black applicants means more of them pass it.
 - The other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay within their intervals. At the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate: a calibrated score can still widen a gap once one cut-off turns it into yes or no.
-- Ranking quality falls evenly across groups. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend, and the clean-list models 0.02 to 0.04 below it in most groups (0.038 for Asian applicants). Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
+- Ranking quality falls evenly across groups. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend, and the clean-list models 0.02 to 0.04 below it in most groups (0.038 for Asian applicants). The two reweighed models differ only by the 2 leak columns: from fair_full_reweigh to fair_reweigh, AUC falls by 0.021 to 0.037 in every group except American Indian or Alaska Native (0.008) and blank age (0.004) (reports/fairness.md). Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
 
 Removing the leaks while keeping the demographic fields widens the Black-White accept gap by 1.0 point [0.6, 1.5], and the TPR gap from -0.038 to -0.055 (T16). We thought the widening came from the 6,279 leak rows: there the Kaggle-list model reads the decision from the leak column, while the clean model has to score those rows from the other columns, the demographic fields included. If so, the gap should barely change on the rows without a leak value and widen on the leak rows. The test reads the same out-of-fold predictions on each subset, with each model's same-rate cut-off set on all rows, and a paired bootstrap over rows (1,000 resamples).
 
@@ -612,7 +615,7 @@ What the data cannot carry:
 What the validation cannot rule out:
 
 - Every choice was made on the same frozen folds. The finalists were re-checked on fresh splits, which measured the flattering for three of them: about 0.0002 for the LightGBM search, 0.00025 for the 50/50 blend, and none for the final blend (section 5.3, reports/models.md); seed 0, the seed of the search, adds about 0.0003 (section 6.3). Earlier choices (feature blocks, the ablations) were not re-checked on fresh splits.
-- The corrected SE is a heuristic for k-fold (section 5.3), and the bootstrap intervals of T1 and T10 cover test-row noise only, not the variation from training on other rows.
+- The corrected SE is a heuristic for k-fold (section 5.3), and the bootstrap intervals of T1 and T10 cover the sampling of rows only, not the variation from training on other rows.
 - Train and test look exchangeable (adversarial AUC 0.5015, section 3), but the private ranking scores 70% of test, a sample with its own noise, between the 50% and 100% rows of T6.
 - The ablations keep the settings tuned for the full feature list; none was re-tuned (section 7).
 
