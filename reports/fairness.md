@@ -20,7 +20,7 @@ Three lists are frozen, with the reasons in "reports/leakage.md". All use the tu
 | clean | configs/experiments/fair_clean.yaml | 53 | the 2 confirmed leaks | 0.89305 (run 20261109T170831Z_116f6267) | -0.02600 | 0.00191 (13.6 SE) |
 | strict | configs/experiments/fair_strict.yaml | 38 | also aus-1, LTV, property value, DTI, census, state | 0.82343 (run 20261109T170956Z_cd2c2a46) | -0.06962 | 0.00111 (62.8 SE) |
 
-The gap between full and clean is how much of the competition score rests on columns that record the decision: 0.026 of AUC, far beyond noise. The gap between clean and strict, 0.070, is what removing the columns under open verdicts costs. Strict removes more than the suspect signals (it also removes the loan-to-value and debt-to-income values themselves, the census columns, the state), so the share of that 0.070 due to the suspect signals is not measured. It does show that the clean model leans heavily on the columns that hold the partial signals, which is why the location-unknown verdict stays the main doubt.
+The gap between full and clean is how much of the competition score rests on columns that record the decision: 0.026 of AUC, far beyond noise. The gap between clean and strict, 0.070, is what removing the columns under open verdicts costs. Strict removes more than the suspect signals (it also removes the loan-to-value and debt-to-income values themselves, the census columns, the state), so the share of that 0.070 due to the suspect signals is not measured. It does show that the clean model leans heavily on the columns that hold the partial signals.
 
 ## Group diagnostics of the competition model
 

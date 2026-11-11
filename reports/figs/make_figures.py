@@ -273,9 +273,14 @@ def cv_lb() -> None:
     lo, hi = s[["cv", "lb"]].min().min() - 2 * sd - 0.001, s[["cv", "lb"]].max().max() + 2 * sd + 0.001
     ax.plot([lo, hi], [lo, hi], color=GREY, lw=1, ls="--")
     ax.text(hi - 0.0005, hi - 0.0012, "LB = CV", color=INK2, ha="right", fontsize=7.5)
-    ax.errorbar(s.cv, s.lb, yerr=2 * sd, fmt="o", ms=5, color=C1, ecolor=C1, elinewidth=1, capsize=0)
-    # Submissions 4 to 6 sit within 0.0015 of each other: labels go left, below and right.
-    offsets = {4: (-12, 2), 5: (5, -11), 6: (6, 2)}
+    # Fair models (race-blind, reweighed) are told apart by their config name.
+    fair = s.config.str.contains("fair_|no_demographics")
+    for mask, col, lab in [(~fair, C1, "competition models"), (fair, C2, "fair models")]:
+        ax.errorbar(s.cv[mask], s.lb[mask], yerr=2 * sd, fmt="o", ms=5, color=col, ecolor=col,
+                    elinewidth=1, capsize=0, label=f"{lab} ({', '.join(map(str, s.n[mask]))})")
+    ax.legend(loc="lower right", fontsize=7.5, frameon=False)
+    # Clusters (3, 7, 8), (4, 5, 6) and (9, 10) sit within 0.0015 of each other: labels are spread by hand.
+    offsets = {4: (-12, 2), 5: (5, -11), 6: (6, 2), 3: (6, -8), 7: (-3, 7), 8: (-12, -3), 9: (6, -1), 10: (-15, -4)}
     for r in s.itertuples():
         ax.annotate(str(r.n), (r.cv, r.lb), color=INK, fontsize=8, xytext=offsets.get(r.n, (6, -3)),
                     textcoords="offset points")
@@ -335,7 +340,7 @@ def rank_corr() -> None:
 # ---------- section 7: ablations ----------
 
 FULL = "20261003T084548Z_406e4210"
-ABLATIONS = [  # (row of T9 / T11, what changes, base run, candidate run)
+ABLATIONS = [  # (row of T9 / T12, what changes, base run, candidate run)
     ("A1", "drop the 17 demographic fields", FULL, "20261110T192232Z_20a010b4"),
     ("A2", "drop the 4 process fields", FULL, "20261110T192704Z_bc281e8f"),
     ("A3", "drop the 7 census columns", FULL, "20261110T192832Z_29f2ea4d"),
@@ -476,7 +481,7 @@ def slices() -> None:
 
 
 def worst_errors() -> None:
-    """T11 evidence. (a) The 200 worst false positives (denied, highest scores) and false negatives
+    """T11 (evidence for T12). (a) The 200 worst false positives (denied, highest scores) and false negatives
     (accepted, lowest scores) against the rows of the other class in the same score range, so a
     difference is something the model saw and still could not use. (b) For each candidate feature
     the reading suggested, the residual with it minus the residual without it, inside the region where

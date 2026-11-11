@@ -1,12 +1,10 @@
 # Predicting mortgage application outcomes from HMDA records
 
-Draft of 2026-11-09. Runs are cited by the last 8 characters of their run_id (for example run 1ff742f2); the full id, config, commit, per-fold AUCs and prediction files of every run are in reports/runs.csv. Tables are T1 to T19, figures F1 to F9; figures are in reports/figs/ and are rebuilt by "make figures" (reports/figs/make_figures.py), which also pastes the generated tables into this file. A line in square brackets marks a part still to write.
+Draft of 2026-11-11. Runs are cited by the last 8 characters of their run_id (for example run 1ff742f2); the full id, config, commit, per-fold AUCs and prediction files of every run are in reports/runs.csv. Tables are T1 to T20, figures F1 to F9; figures are in reports/figs/ and are rebuilt by "make figures" (reports/figs/make_figures.py), which also pastes the generated tables into this file. A line in square brackets marks a part still to write.
 
 ## 1. Summary
 
-[draft of 2026-11-11; the reproduction sentence waits for the CatBoost test]
-
-We predict whether a home purchase application in the HMDA records was originated or denied, from 56 columns that include no credit score, scored by ROC AUC (sections 2 and 3). Every choice was made on one frozen 5-fold split, a change was adopted only if its paired gain reached 2 corrected standard errors, and each finalist was re-checked on three fresh splits (section 5). The final model, a log-odds blend of LightGBM, CatBoost, ExtraTrees and XGBoost, reaches a CV AUC of 0.9205 (pooled out-of-fold 0.9204, 95% bootstrap interval [0.9176, 0.9232]) and 0.9216 on the public leaderboard (T1). Two columns are written because of the decision, and removing them costs 0.026 AUC: the competition score overstates what can be predicted when an application arrives (section 4, T9). Its LightGBM member leans most on the debt-to-income ratio (F8). The blend is calibrated in every slice examined, and the three features suggested by its worst errors added nothing (section 8, T11). The competition model reproduces the recorded gap in acceptance between Black and White applicants (12.9 points, T12, T16). A fair model built without the leak columns and the demographic fields, and reweighed by race, narrows it to 9.6 points and the gap in true positive rates from -0.037 to -0.010, at the price of calibration; removing the demographic fields and reweighing cost about 0.003 AUC, and the remaining columns still identify Black applicants at AUC 0.84 (section 9, T15, T13). [pending: one sentence on reproduction, after the CatBoost test: the logged CatBoost member did not rebuild exactly from a clean commit (section 10.2)]
+We predict whether a home purchase application in the HMDA records was originated or denied, from 56 columns that include no credit score, scored by ROC AUC (sections 2 and 3). Every choice was made on one frozen 5-fold split, a change was adopted only if its paired gain reached 2 corrected standard errors, and each finalist was re-checked on three fresh splits (section 5). The final model, a log-odds blend of LightGBM, CatBoost, ExtraTrees and XGBoost, reaches a CV AUC of 0.9205 (pooled out-of-fold 0.9204, 95% bootstrap interval [0.9176, 0.9232]) and 0.9216 on the public leaderboard (T1). Two columns are written because of the decision, and removing them costs 0.026 AUC: the competition score overstates what can be predicted when an application arrives (section 4, T9). Its LightGBM member leans most on the debt-to-income ratio (F8). The blend is calibrated in every slice examined, and the three features suggested by its worst errors added nothing (section 8, T12). The competition model reproduces the recorded gap in acceptance between Black and White applicants (12.9 points, T13, T16). A fair model built without the leak columns and the demographic fields, and reweighed by race, narrows it to 9.6 points and the gap in true positive rates from -0.037 to -0.010, at the price of calibration; removing the demographic fields and reweighing cost about 0.003 AUC, and the remaining columns still identify Black applicants at AUC 0.84 (section 9, T15, T14). The four members and the blend rebuild bit for bit from the code and the lockfile, once a CatBoost setting written into the shared configuration after the logged run is set back (section 10.2).
 
 T1. Headline numbers.
 
@@ -15,7 +13,7 @@ T1. Headline numbers.
 | final model | LightGBM 2/6, CatBoost 2/6, ExtraTrees 1/6, XGBoost 1/6, weighted mean of log-odds | run 1ff742f2 |
 | CV AUC, mean of 5 folds | 0.92054 | run 1ff742f2 |
 | pooled out-of-fold AUC, 95% stratified bootstrap CI (2,000 resamples) | 0.92043 [0.91764, 0.92318] | reports/tuning/ci_final.log |
-| gain over the LightGBM + CatBoost 50/50 blend on 3 fresh 5-fold splits | +0.00070, 7.6 corrected SE, 15 of 15 folds | reports/tuning/fresh_fresh_candidate.csv |
+| gain over the LightGBM + CatBoost 50/50 blend on 3 fresh 5-fold splits | +0.00070, 7.6 corrected SE, 15 of 15 folds (CatBoost member with max_ctr_complexity 1, section 10.2) | reports/tuning/fresh_fresh_candidate.csv |
 | public leaderboard (30% of test) | 0.92158 | submission 6, reports/submissions.md |
 | best single model, tuned LightGBM | 0.91905 | run 406e4210 |
 | same LightGBM without the 2 columns that record the decision | 0.89305 | run 116f6267 |
@@ -107,7 +105,7 @@ T4. Leakage verdicts and the three feature lists.
 
 - full (55 columns) is the competition model; clean (53) removes the 2 leaks and is the base of the fair model; strict (38) also removes the partial signals together with the columns they live in (aus-1, LTV, property value, DTI and their ratios, census, state). Strict is a sensitivity check, not a model: it removes real information along with the suspect signal.
 - The partial signals stay in clean because they also carry real information: manufactured homes sold without land often have no combined LTV whether approved or not (reports/leakage.md, verdict 5), and a tree cannot drop a missing value without dropping the column for every row.
-- Cost of each list for the tuned LightGBM: removing the 2 leaks costs 0.026 AUC, and the strict list a further 0.070 (T9, rows A9 and A10). Location unknown on manufactured homes is the main remaining doubt: it is near-deterministic (22 approvals in 1,507 rows) and stays in clean only because it cannot be separated from the census columns.
+- Cost of each list for the tuned LightGBM: removing the 2 leaks costs 0.026 AUC, and the strict list a further 0.070 (T9, rows A9 and A10). Location unknown on manufactured homes is near-deterministic (22 approvals in 1,507 rows, T4); it stays in clean because it cannot be removed without the census columns.
 
 ## 5. Metric and validation
 
@@ -137,13 +135,13 @@ Every run uses the same 5 folds: StratifiedKFold(5, shuffle=True, random_state=4
 
 The five fold models share 3/4 of their training rows, so the naive SE (std of fold AUCs / sqrt(5)) is too small. A change (a feature block, a setting, a model in a blend) is adopted if and only if its paired mean gain over the 5 folds is positive and at least 2 x the Nadeau-Bengio corrected SE, std of the per-fold gains x sqrt(1/k + 1/(k-1)), i.e. 1.5 x the naive SE at k = 5 (reports/validation.md). The rule was fixed before the first comparison and never changed. The formula was derived for repeated random splits, so for k-fold it is a heuristic. A paired stratified bootstrap CI on the pooled out-of-fold predictions is printed with every comparison; it covers the sampling of rows only, not the variation from training on other rows.
 
-Because a candidate chosen on the frozen folds is flattered by the choice, each finalist was re-checked on 3 fresh 5-fold splits (seeds 1 to 3, 15 paired folds) never used for any decision. Three choices were confirmed this way: the tuned LightGBM, +0.00194 at 4.2 SE (reports/tuning.md); the LightGBM + CatBoost blend, +0.00083 at 3.8 SE, 14 of 15 folds; the final 4-model blend, +0.00070 over it at 7.6 SE, 15 of 15 (reports/models.md).
+Because a candidate chosen on the frozen folds is flattered by the choice, each finalist was re-checked on 3 fresh 5-fold splits (seeds 1 to 3, 15 paired folds) never used for any decision. Three choices were confirmed this way: the tuned LightGBM, +0.00194 at 4.2 SE (reports/tuning.md); the LightGBM + CatBoost blend, +0.00083 over LightGBM at 3.8 SE, 14 of 15 folds; the final 4-model blend, +0.00070 over it at 7.6 SE, 15 of 15 (reports/models.md; this check ran with a different CatBoost setting from the submitted member, section 10.2).
 
 ### 5.4 Cross-validation against the leaderboard
 
-The public leaderboard was used only to check that CV transfers, never to choose. Over the 5 model submissions the public score was above CV by +0.0010 to +0.0025, and every CV gain moved the leaderboard the same way (F3, reports/submissions.md). On 1,000 draws of 13,500 out-of-fold rows of the final blend, one public score has an SD of 0.0036 (T6). A paired gap between two models is less noisy because both are scored on the same rows: 0.0006 between the final blend and the tuned LightGBM (T6), 0.0014 between the 50/50 blend and ExtraTrees (reports/models.md). The public leaderboard cannot resolve the gains of the last two submissions (+0.0004 each), so the final pair was chosen on CV and fresh splits (reports/submissions.md).
+The public leaderboard was used only to check that CV transfers, never to choose. Over the 9 model submissions the public score was above CV, by +0.0010 to +0.0025 for the 5 competition models (submissions 2 to 6) and by +0.0023 to +0.0036 for the 4 fair models (7 to 10), and every CV change moved the leaderboard the same way (F3, reports/submissions.md). On 1,000 draws of 13,500 out-of-fold rows of the final blend, one public score has an SD of 0.0036 (T6). A paired gap between two models is less noisy because both are scored on the same rows: 0.0006 between the final blend and the tuned LightGBM (T6), 0.0014 between the 50/50 blend and ExtraTrees (reports/models.md). The two final submissions (6 and 5) differ by 0.0004 on CV and by 0.0004 on the public leaderboard, which cannot resolve such a gap, so the final pair was chosen on CV and fresh splits (reports/submissions.md).
 
-F3. CV against public leaderboard for the 5 model submissions, with the line LB = CV. [reports/figs/f3_cv_lb.png]
+F3. CV against public leaderboard for the 9 model submissions, competition models in blue and fair models in orange, with the line LB = CV. [reports/figs/f3_cv_lb.png]
 
 T6. Leaderboard noise at 20, 30, 50 and 100% of test, simulated on the final out-of-fold predictions.
 
@@ -269,7 +267,7 @@ T10 and F7 cut the out-of-fold predictions of the final blend by 7 slicings fixe
 - Ranking falls with income, from 0.947 in the lowest quintile to 0.860 in the highest, while the denied share falls from 32% to 8% (T10).
 - States range from 0.879 (New York) to 0.937 (South Carolina); intervals overlap heavily, and no state stands apart from the others (F7).
 
-The three weak groups (exempt records, entity applicants, government loans) are where the worst-error inspection starts (T11).
+The three weak groups (exempt records, entity applicants, government loans) are where the worst-error inspection starts (section 8.3, T11).
 
 T10. Out-of-fold AUC and mean residual by slice, final blend, slices with n >= 1,000.
 
@@ -328,7 +326,7 @@ F7. Slice AUC with 95% bootstrap intervals. [reports/figs/f7_slices.png]
 
 ### 8.2 What the model uses
 
-Importance needs a model, and only predictions are logged, so the tuned LightGBM (the largest member of the final blend, weight 1/3) was refitted on folds 1 to 4 with its logged settings. The refit reproduces the logged fold-0 AUC exactly (0.912499, run 406e4210), so it is the fold model of that run. It is explained on 10,000 rows of fold 0 drawn with the class balance kept (AUC 0.9106 on those rows; reports/figs/f8_importance.csv). Permutation importance = AUC lost when a column is shuffled (mean of 5 shuffles). SHAP values are LightGBM's exact TreeSHAP contributions in log-odds; they add up to each row's prediction (checked to 1e-6).
+Importance needs a model, and only predictions are logged, so the tuned LightGBM (one of the two largest members of the final blend, weight 1/3 like CatBoost) was refitted on folds 1 to 4 with its logged settings. The refit reproduces the logged fold-0 AUC exactly (0.912499, run 406e4210), so it is the fold model of that run. It is explained on 10,000 rows of fold 0 drawn with the class balance kept (AUC 0.9106 on those rows; reports/figs/f8_importance.csv). Permutation importance = AUC lost when a column is shuffled (mean of 5 shuffles). SHAP values are LightGBM's exact TreeSHAP contributions in log-odds; they add up to each row's prediction (checked to 1e-6).
 
 - One column dominates: the DTI rank. Shuffling it costs 0.083 AUC, three times the next column (F8). It also has the largest mean |SHAP| (0.64): the highest DTI levels lower the log-odds by 3 to 5 (F9).
 - Next come the two leak columns (initially_payable_to_institution 0.029, preapproval 0.022) and aus-1 (0.019). preapproval = 1 adds about +4 to +5 to the log-odds and initially_payable_to_institution = 3 removes 6 to 8.5 (F9).
@@ -343,16 +341,16 @@ F9. SHAP values of the 15 columns with the largest mean |SHAP|, same rows; numer
 
 ### 8.3 Worst errors
 
-The 200 worst false positives (denied rows with the highest scores, 0.979 to 0.992) and the 200 worst false negatives (accepted rows with the lowest, 0.009 to 0.185) of the final blend were read by hand (reports/figs/t11_worst_rows.csv). Each group was then compared with the rows of the other class that received the same scores, so that a difference is something the model saw and still could not use (T11a, upper table).
+The 200 worst false positives (denied rows with the highest scores, 0.979 to 0.992) and the 200 worst false negatives (accepted rows with the lowest, 0.009 to 0.185) of the final blend were read by hand (reports/figs/t11_worst_rows.csv). Each group was then compared with the rows of the other class that received the same scores, so that a difference is something the model saw and still could not use (T11, upper table).
 
 - The worst false positives look like model applications: conventional first liens on site-built homes, owner-occupied, underwritten by DU or LP, moderate DTI, 360-month terms. Nothing in the columns tells them from the accepted rows with the same scores, apart from small shifts: fewer submitted directly to the lender (0.805 against 0.869) and more exempt records (0.040 against 0.017).
-- They also hold more single male applicants (0.275 against 0.161, z +4.4) and more applicants over 74 (0.050 against 0.019). These are protected attributes, so they are not candidate features; they go with the lower AUC for Male applicants in T12 (0.905 against 0.933 for Female) to section 9.
-- The worst false negatives sit where acceptance is rare: 58% manufactured homes, 80% with no automated underwriting, 45% with DTI above 60% (T11a). The blend is calibrated in those groups (aus-1 = 6: residual -0.002, blank LTV: +0.000, T10).
-- Checked and dropped (T11a, last table): the application channel, since every combination of submission and payable with 1,000 rows or more is calibrated within 2 SE; and a county accept rate fitted on the exempt rows only, which lowers their AUC (0.7694 against 0.7729 for the blend alone).
+- They also hold more single male applicants (0.275 against 0.161, z +4.4) and more applicants over 74 (0.050 against 0.019). These are protected attributes, so they are not candidate features; they go with the lower AUC for Male applicants in T13 (0.905 against 0.933 for Female) to section 9.
+- The worst false negatives sit where acceptance is rare: 58% manufactured homes, 80% with no automated underwriting, 45% with DTI above 60% (T11). The blend is calibrated in those groups (aus-1 = 6: residual -0.002, blank LTV: +0.000, T10).
+- Checked and dropped (T11, last table): the application channel, since every combination of submission and payable with 1,000 rows or more is calibrated within 2 SE; and a county accept rate fitted on the exempt rows only, which lowers their AUC (0.7694 against 0.7729 for the blend alone).
 
-Three candidates survive the residual screen (T11a, middle table). They were chosen after looking at the errors and screened with 9 tests in 3 overlapping regions, so only H1 clears a Bonferroni-corrected threshold (z beyond 2.8). The models were frozen on 2026-11-09, before this analysis, so the three are measured once as a block and reported; they cannot change the final model.
+Three candidates survive the residual screen (T11, middle table). They were chosen after looking at the errors and screened with 9 tests in 3 overlapping regions, so only H1 clears a Bonferroni-corrected threshold (z beyond 2.8). The models were frozen on 2026-11-09, before this analysis, so the three are measured once as a block and reported; they cannot change the final model.
 
-T11a. Worst errors against rows of the other class with the same scores; residual screen of the candidates; candidates dropped before the screen.
+T11. Worst errors against rows of the other class with the same scores; residual screen of the candidates; candidates dropped before the screen.
 
 <!-- begin t11_worst_errors -->
 | rows with | worst FP | accepted, same scores | z FP | worst FN | denied, same scores | z FN |
@@ -396,15 +394,15 @@ Dropped before the screen:
 | county accept rate on exempt rows | AUC on the 3,016 exempt rows: blend 0.7729, blend + rate 0.7694, rate alone 0.5393 |
 <!-- end t11_worst_errors -->
 
-T11. Wave-2 hypotheses, each a buildable feature, with the prediction written before the run.
+T12. Wave-2 hypotheses, each a buildable feature, with the prediction written before the run.
 
-| # | feature | definition | evidence (T11a) | why we thought a tree would miss it (tested by the block run) | predicted gain, tuned LightGBM | result |
+| # | feature | definition | evidence (T11) | why we thought a tree would miss it (tested by the block run) | predicted gain, tuned LightGBM | result |
 |---|---|---|---|---|---|---|
 | H1 | term_off_grid | loan_term not a multiple of 12 (1,258 train rows: 6, 9, 13, 18 months; 361 to 378 months) | worst FN 0.055 against 0.022 at the same scores; on manufactured homes the residual is +0.073 higher with it (z +3.6) | a multiple of 12 is not a threshold: a tree needs many splits on loan_term to isolate it | +0.0001 to +0.0004, under 2 SE (1.2% of rows) | see the block result below |
 | H2 | ltv_blank_value_present | combined LTV blank while property value is reported | residual +0.010 higher with it among scores > 0.95 (z +2.7), +0.008 in the low-score region (z +1.6) | needs a split on each of two NaN patterns in the same branch | +0.0000 to +0.0003, under 2 SE | see the block result below |
 | H3 | computed_ltv_above_100 | loan amount > property value | residual +0.008 higher with it among scores > 0.95 (z +1.9) and in the low-score region (z +0.9), but -0.003 on manufactured homes alone (z -0.2) | computed_ltv is in the model, so one split suffices: the weakest of the three | 0 to +0.0002, under 2 SE | see the block result below |
 
-- Block result: the three flags added together to the tuned LightGBM (58 columns, run ebb1bd30) change its CV by -0.00016 against run 406e4210 (-0.2 corrected SE, 2 of 5 folds up, paired bootstrap CI [-0.00060, +0.00061]). Rejected under the rule of section 5.3, and just below the predicted ranges (summed, +0.0001 to +0.0009), though well within noise of their lower end. The patterns of T11a are in the residuals of the blend, but adding them as flags did not raise the CV. The run was made once, after the freeze, and changes nothing in the final model.
+- Block result: the three flags added together to the tuned LightGBM (58 columns, run ebb1bd30) change its CV by -0.00016 against run 406e4210 (-0.2 corrected SE, 2 of 5 folds up, paired bootstrap CI [-0.00060, +0.00061]). Rejected under the rule of section 5.3, and just below the predicted ranges (summed, +0.0001 to +0.0009), though well within noise of their lower end. The patterns of T11 are in the residuals of the blend, but adding them as flags did not raise the CV. The run was made once, after the freeze, and changes nothing in the final model.
 
 ## 9. Fairness
 
@@ -412,7 +410,7 @@ Section 2.2 holds the framing: the target is the lender's decision, so everythin
 
 ### 9.1 Cost of removing the leaks
 
-Removing the two columns that record the decision costs 0.026 AUC (0.91905 to 0.89305, T9 row A9); removing also the partial signals and the columns they live in costs a further 0.070 (0.82343, row A10). Strict removes real information with the suspect signal, so its gap is an upper bound on what the open verdicts of section 4 could matter, not an estimate of it.
+Removing the two columns that record the decision costs 0.026 AUC (0.91905 to 0.89305, T9 row A9); removing also the partial signals and the columns they live in costs a further 0.070 (0.82343, row A10). Strict removes real information along with the suspect signals, so the share of the 0.070 due to those signals is not measured.
 
 ### 9.2 Group diagnostics of the competition model
 
@@ -420,7 +418,7 @@ Model: the final blend (run 1ff742f2). It sees the demographic fields and both l
 
 Conventions: groups are "derived_race", "derived_ethnicity", "derived_sex" and "applicant_age"; groups under 500 rows are not read; intervals are 95% bootstrap over rows (1,000 resamples) and ignore training uncertainty. "Same rate" is the cut-off 0.780, the score quantile that accepts the train accept rate (0.850) of rows, as lenders did; each model gets its own same-rate cut-off. Gaps are against the largest group with one declared value, a base for subtraction, not a norm. TPR = share of accepted rows the model accepts, FPR = share of denied rows it accepts.
 
-T12. Group diagnostics of the final blend, race, ethnicity and sex, groups with n >= 500 (reports/fairness.md; age and the cut-off 0.50 in the same file).
+T13. Group diagnostics of the final blend, race, ethnicity and sex, groups with n >= 500 (reports/fairness.md; age and the cut-off 0.50 in the same file).
 
 | field | group | n | observed accept rate | pred - obs | AUC | TPR gap, same rate | FPR gap, same rate |
 |---|---|---|---|---|---|---|---|
@@ -439,17 +437,17 @@ T12. Group diagnostics of the final blend, race, ethnicity and sex, groups with 
 | sex | Female | 23,462 | 0.805 | +0.000 | 0.933 [0.928, 0.938] | -0.007 [-0.011, -0.003] | -0.075 [-0.092, -0.058] |
 | sex | Sex Not Available | 8,300 | 0.844 | +0.004 | 0.913 [0.903, 0.923] | -0.002 [-0.008, 0.003] | -0.031 [-0.058, -0.006] |
 
-Reading (T12):
+Reading (T13):
 
 - The model reproduces the gaps in acceptance between groups. In every group read, the mean prediction is within 0.01 of the observed rate: 0.869 predicted against 0.868 observed for White applicants, 0.744 against 0.739 for Black or African American applicants. At the same-rate cut-off it accepts 0.868 and 0.739, the same 12.9-point gap as the recorded decisions. The model had the demographic fields as inputs, so this does not show how much of the gap passes through them; the fair models of section 9.4 remove them.
 - Against each reference, the TPR and FPR gaps mostly point the same way: lower for Black or African American applicants (-0.037 and -0.044), American Indian or Alaska Native (-0.059 and -0.119) and Hispanic or Latino applicants (-0.016 and -0.031); higher for Asian applicants (+0.014 and +0.096). For Female against Male the gap sits in the FPR (-0.075; TPR -0.007).
 - Ranking quality differs: AUC runs from 0.882 (Asian) to 0.939 (American Indian or Alaska Native), and Female (0.933) and Male (0.905) have intervals apart. A lower AUC means the model separates accepted from denied less well inside the group.
 - Without the 6,279 leak rows AUC falls in every group, by 0.006 to 0.027, most for Asian applicants (0.882 to 0.855): the leaks do not flatter all groups equally.
-- The table holds 72 intervals against a reference; about 3 or 4 would exclude 0 by chance. The four attributes share rows, so these are not separate findings, and nothing here compares similar applicants.
+- T13 shows 22 intervals against a reference; with age and the cut-off 0.50, the group tables of reports/fairness.md hold 72 (18 groups, two gaps, two cut-offs), of which about 3 or 4 would exclude 0 by chance. The four attributes share rows, so these are not separate findings, and nothing here compares similar applicants.
 
 ### 9.3 Demographics alone, and proxies
 
-T13. How much of the decision the declared demographics predict (upper table), and how well the other columns predict declared race (lower table).
+T14. How much of the decision the declared demographics predict (upper table), and how well the other columns predict declared race (lower table).
 
 | model | target | CV AUC | run |
 |---|---|---|---|
@@ -464,12 +462,12 @@ T13. How much of the decision the declared demographics predict (upper table), a
 
 Proxy check (src/proxy_check.py, reports/tuning/proxy_check.csv): a LightGBM with the competition settings predicts one race group against all others, mean of the 5 fold AUCs on the frozen folds, [lowest, highest] fold in brackets; groups with at least 5,000 rows. The 38 columns are those of ablation A1 (all 55 minus the 17 demographic fields); geography is the 6 tract columns, the MSA median family income and the state. AUC here is the chance that a random applicant of the group scores above a random applicant outside it; 0.5 means the columns say nothing about the group.
 
-- Removing the declared race fields does not remove race from the inputs. The columns left identify Black or African American applicants at AUC 0.840 and Asian applicants at 0.847 (T13). In concrete terms: among the 10% of rows with the highest score from the 38 columns, 39% are Black applicants, against 9% in the whole data, and those rows hold 45% of all Black applicants; for Asian applicants, 38% against 8%, and 50% (reports/fairness.md).
+- Removing the declared race fields does not remove race from the inputs. The columns left identify Black or African American applicants at AUC 0.840 and Asian applicants at 0.847 (T14). In concrete terms: among the 10% of rows with the highest score from the 38 columns, 39% are Black applicants, against 9% in the whole data, and those rows hold 45% of all Black applicants; for Asian applicants, 38% against 8%, and 50% (reports/fairness.md).
 - Most of it comes through geography: the 8 geographic columns alone reach 0.796 and 0.800. They include tract_minority_population_percent, the share of minority residents in the applicant's tract, which describes the area, not the applicant. The 30 other columns add about 0.04.
 - "Race Not Available" is the least predictable group and depends least on geography: 0.587 from geography, 0.672 from all 38 columns.
-- What this check does not measure: how much the competition model relies on these columns as a stand-in for race. Geography also predicts the decision itself: a LightGBM on the geography and census columns alone reaches AUC 0.673 for accepted (run df45cba9, section 6.2). So the same columns are both a proxy for race and a predictor of the decision, and the check cannot separate the two. The settings are those tuned for the accept / deny target, not retuned for predicting race.
+- What this check does not measure: how much the competition model relies on these columns as a stand-in for race. Geography also predicts the decision itself: a LightGBM on the geography and census columns alone reaches AUC 0.673 for accepted (run df45cba9, section 6.2). So the same columns are both a proxy for race and a predictor of the decision, and the check cannot separate the two. Whether removing them narrows the fair model's gap is tested in section 9.4. The settings are those tuned for the accept / deny target, not retuned for predicting race.
 
-The demographics-only model (T13, upper table): a LightGBM on the 17 demographic fields alone, with the tuned settings, orders the recorded decisions at CV AUC 0.635, against 0.673 for the geography and census columns alone and 0.867 for the finance columns (section 6.2); its out-of-fold rank correlation with the tuned LightGBM is 0.364 (reports/models.md). Declared race, ethnicity, sex and age thus order the decisions better than chance with no information on the loan, the income or the property. This is an association with the lenders' decisions, not a measure of their merit, and it does not say how the competition model uses these fields. The model enters no blend, for two reasons (reports/fairness.md):
+The demographics-only model (T14, upper table): a LightGBM on the 17 demographic fields alone, with the tuned settings, orders the recorded decisions at CV AUC 0.635, against 0.673 for the geography and census columns alone and 0.867 for the finance columns (section 6.2); its out-of-fold rank correlation with the tuned LightGBM is 0.364 (reports/models.md). Declared race, ethnicity, sex and age thus order the decisions better than chance with no information on the loan, the income or the property. This is an association with the lenders' decisions, not a measure of their merit, and it does not say how the competition model uses these fields. The model enters no blend, for two reasons (reports/fairness.md):
 
 - It was never a candidate. It was run as a fairness diagnostic and not entered in the blend selection, so its gain in a blend was not tested; the final blend was chosen without it.
 - A component that scores applicants on race, ethnicity, sex and age alone has no place in a model judged on fairness. The competition model keeps these fields among its 55 columns, to describe what lenders did; a separate component built only on them would add weight on group membership alone, the opposite of what the fair models do.
@@ -484,7 +482,7 @@ Six LightGBM models with the tuned settings, on the frozen folds, so that one th
 
 The fair model put forward is the clean list, race-blind, reweighed (config fair_reweigh). Its Kaggle-list twin (fair_full_reweigh) measures what the same two steps cost on the leaderboard.
 
-T15. Cost of the fair models. CV changes are paired against the step before, with the corrected SE of section 5.3; public leaderboard scores are submissions 4 and 6 to 10 (reports/submissions.md), none of them among the two final submissions.
+T15. Cost of the fair models. CV changes are paired against the step before, with the corrected SE of section 5.3; public leaderboard scores are submissions 4 and 6 to 10 (reports/submissions.md); submission 6 is the main final submission, the others are not among the final two.
 
 | model | config | columns | run | CV AUC | vs the step before | public LB (submission) |
 |---|---|---|---|---|---|---|
@@ -533,7 +531,7 @@ Cost against gain (T15, T16):
 
 - The two fairness steps narrow the gap between Black and White applicants by about a quarter, for about 0.003 AUC. The recorded decisions and the competition model accept Black applicants 12.9 points less often. Race-blind, the gap falls to 10.4 points on the Kaggle list (10.8 on the clean list); reweighed, to 9.8 (9.6). Most of the narrowing comes from removing the fields; reweighing adds 0.6 to 1.2 points (paired intervals in reports/fairness.md).
 - The narrowing is clearest among applicants the lenders accepted. The TPR gap of Black applicants goes from -0.038 to -0.008 [-0.013, -0.002] on the Kaggle list and from -0.055 to -0.010 [-0.017, -0.005] on the clean list. The FPR gap of the reweighed Kaggle-list model, -0.008 [-0.027, 0.012], cannot be told from 0.
-- The price is calibration. The race-blind models predict, for Black applicants, more acceptances than lenders gave: +0.029 on the Kaggle list and +0.031 on the clean list, and +0.035 and +0.038 reweighed; for White applicants slightly fewer (-0.005 to -0.007). The competition model was within 0.005 for both (T12). With one cut-off for every group, a higher mean score for Black applicants means more of them pass it.
+- The price is calibration. The race-blind models predict, for Black applicants, more acceptances than lenders gave: +0.029 on the Kaggle list and +0.031 on the clean list, and +0.035 and +0.038 reweighed; for White applicants slightly fewer (-0.005 to -0.007). The competition model was within 0.005 for both (T13). With one cut-off for every group, a higher mean score for Black applicants means more of them pass it.
 - The other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay within their intervals. At the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate: a calibrated score can still widen a gap once one cut-off turns it into yes or no.
 - Ranking quality falls evenly across groups. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend, and the clean-list models 0.02 to 0.04 below it in most groups (0.038 for Asian applicants). The two reweighed models differ only by the 2 leak columns: from fair_full_reweigh to fair_reweigh, AUC falls by 0.021 to 0.037 in every group except American Indian or Alaska Native (0.008) and blank age (0.004) (reports/fairness.md). Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
 
@@ -548,6 +546,8 @@ T17. Black-White accept gap, Kaggle list against clean list, both with the demog
 | leak rows only | 3,979 / 526 | -0.179 | -0.125 | +0.054 [0.013, 0.093] |
 
 The hypothesis was wrong: the widening is on the rows without a leak value, and on the leak rows the gap narrows. The two groups have the same share of leak rows (6.0% and 5.9%), so the mix of rows does not account for it either. The leak-free fair model still ends with a gap no wider than its Kaggle-list twin (9.6 against 9.8 points, T16).
+
+We thought that part of the gap left by the fair model comes through geography: the 8 geography columns identify Black applicants at AUC 0.796 on their own (T14). If so, fair_reweigh without them (config fair_reweigh_no_geo, 28 columns, run 04069927) should have a narrower accept gap. The rule, fixed before the run: the hypothesis holds if the accept gap narrows with a paired 95% bootstrap interval above 0 (the same White and Black rows drawn for both models, each read at its own same-rate cut-off, 1,000 resamples). The hypothesis was wrong. The accept gap does not move (-0.096 to -0.095, change +0.000 [-0.003, 0.003]), nor do the TPR gap (-0.010 to -0.011, change -0.001 [-0.004, 0.003]) and the FPR gap (-0.023 to -0.022, change +0.002 [-0.006, 0.009]); the calibration gap of Black applicants widens slightly, from +0.038 to +0.040 (change +0.002 [0.001, 0.004]). Removing the geography columns costs 0.0039 of CV AUC (0.88985 to 0.88599, 7.5 corrected SE): they help predict the decision, but the gap stays where it was without them (reports/fairness.md).
 
 Limits: all of this is on the training rows, out-of-fold; the intervals cover the sampling of rows, not the training of the models, and are not corrected for the many comparisons (where there is no real gap, about 1 interval in 20 still excludes 0). Reweighing was run once, on race only, with no tuning.
 
@@ -571,6 +571,8 @@ T18. Where the models sit, at each model's same-rate cut-off (reports/fairness.m
 | fair_full_reweigh | Black or African American | 0.739 | 0.774 | 0.765 | 0.947 | 0.250 | 0.914 |
 | fair_reweigh | White | 0.868 | 0.861 | 0.861 | 0.945 | 0.311 | 0.952 |
 | fair_reweigh | Black or African American | 0.739 | 0.776 | 0.766 | 0.935 | 0.288 | 0.902 |
+
+Differences quoted in the text are computed before rounding, so they can differ by 0.001 from the rounded cells.
 
 T19. Calibration inside score bands (the five quintiles of each model's score over all rows): mean prediction / recorded accept rate, by group (reports/fairness.md).
 
@@ -607,14 +609,14 @@ The "observed" fields. When an applicant applying in person does not give race, 
 
 What the data cannot carry:
 
-- No credit score, no interest rate, no applicant history (section 3). The worst false positives cannot be told from accepted rows with the same scores on any column the data has (section 8.3).
+- No credit score, no interest rate, no applicant history (section 3). The worst false positives differ from accepted rows with the same scores only by small shifts in a few columns (section 8.3).
 - A selected sample: home purchase loans, originated against denied (section 2.2). Nothing here carries over to refinancing, to withdrawn or incomplete files, or to applicants who never applied.
 - The collection year is not stated. Code meanings were read from the current filing guide and Regulation C commentary (reports/refs/hmda_dictionary.md); a code whose meaning changed between years would be misread.
 - The competition model uses two columns written because of the decision. Its score overstates what can be predicted when an application arrives by 0.026 AUC (T9, row A9), and three partial signals stay even in the clean list (section 4).
 
 What the validation cannot rule out:
 
-- Every choice was made on the same frozen folds. The finalists were re-checked on fresh splits, which measured the flattering for three of them: about 0.0002 for the LightGBM search, 0.00025 for the 50/50 blend, and none for the final blend (section 5.3, reports/models.md); seed 0, the seed of the search, adds about 0.0003 (section 6.3). Earlier choices (feature blocks, the ablations) were not re-checked on fresh splits.
+- Every choice was made on the same frozen folds. The finalists were re-checked on fresh splits, which measured the flattering for three of them: about 0.0002 for the LightGBM search, 0.00025 for the 50/50 blend, and none for the final blend, measured with a different CatBoost setting (sections 5.3 and 10.2); seed 0, the seed of the search, adds about 0.0003 (section 6.3). Earlier choices (feature blocks, the ablations) were not re-checked on fresh splits.
 - The corrected SE is a heuristic for k-fold (section 5.3), and the bootstrap intervals of T1 and T10 cover the sampling of rows only, not the variation from training on other rows.
 - Train and test look exchangeable (adversarial AUC 0.5015, section 3), but the private ranking scores 70% of test, a sample with its own noise, between the 50% and 100% rows of T6.
 - The ablations keep the settings tuned for the full feature list; none was re-tuned (section 7).
@@ -635,15 +637,15 @@ Hardware. One laptop: Intel Core i7-10610U, 8 logical CPUs, 30 GB RAM, no GPU. E
 
 Data and folds. The raw files are not distributed; their SHA256 sums are in configs/data_checksums.txt and "make check-data" verifies them. The 5 folds are built once by "make folds" into data/processed/folds.parquet; the code refuses another fold seed, and every run in the final model carries the same fold hash (3762a22f..., reports/runs.csv).
 
-T14. The runs of the final model (reports/runs.csv).
+T20. The runs of the final model (reports/runs.csv).
 
-| member | config | run | commit | uncommitted changes | wall time | CV AUC | re-run from clean commit d782fce |
+| member | config | run | commit | uncommitted changes | wall time | CV AUC | re-run (commit): result |
 |---|---|---|---|---|---|---|---|
-| LightGBM, tuned | configs/experiments/lgbm_optuna_best.yaml | 406e4210 | 500b562 | yes | 2 min | 0.91905 | cc720ddf: identical fold AUCs and predictions |
-| CatBoost, raw county / MSA | configs/experiments/catboost_county.yaml | d96c8be4 | 79f2bb7 | no | 2 h 4 min | 0.91859 | [pending] |
-| ExtraTrees, tuned | configs/experiments/extratrees_optuna_best.yaml | 7bc88a0b | 868b301 | yes | 7 min | 0.91484 | f308315c: identical fold AUCs, predictions within 1e-15 |
-| XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 05b22e57 | c6d4581 | yes | 3 min | 0.91848 | 104e3dd7: identical fold AUCs and predictions |
-| final blend, 2/6, 2/6, 1/6, 1/6 log-odds | configs/blends/lgbm_cat_et_xgb.yaml | 1ff742f2 | c6d4581 | yes | under 1 s | 0.92054 | [pending, depends on CatBoost] |
+| LightGBM, tuned | configs/experiments/lgbm_optuna_best.yaml | 406e4210 | 500b562 | yes | 2 min | 0.91905 | cc720ddf (d782fce): identical fold AUCs and predictions |
+| CatBoost, raw county / MSA | configs/experiments/catboost_county.yaml; rebuilt with catboost_county_ctr4.yaml | d96c8be4 | 79f2bb7 | no | 2 h 4 min | 0.91859 | 0810e0b4 (2431665): identical fold AUCs and predictions |
+| ExtraTrees, tuned | configs/experiments/extratrees_optuna_best.yaml | 7bc88a0b | 868b301 | yes | 7 min | 0.91484 | f308315c (d782fce): identical fold AUCs, predictions within 1e-15 |
+| XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 05b22e57 | c6d4581 | yes | 3 min | 0.91848 | 104e3dd7 (d782fce): identical fold AUCs and predictions |
+| final blend, 2/6, 2/6, 1/6, 1/6 log-odds | configs/blends/lgbm_cat_et_xgb.yaml | 1ff742f2 | c6d4581 | yes | under 1 s | 0.92054 | 653a027d (476dc93), with the CatBoost of 0810e0b4: identical fold AUCs and predictions |
 
 Rebuilding the final model, the submission and the figures (about 2.5 hours, CatBoost being most of it):
 
@@ -651,7 +653,7 @@ Rebuilding the final model, the submission and the figures (about 2.5 hours, Cat
     make check-data
     make folds
     make cv EXP=configs/experiments/lgbm_optuna_best.yaml
-    make cv EXP=configs/experiments/catboost_county.yaml
+    make cv EXP=configs/experiments/catboost_county_ctr4.yaml
     make cv EXP=configs/experiments/extratrees_optuna_best.yaml
     make cv EXP=configs/experiments/xgb_optuna_best.yaml
     (put the 4 new run ids in configs/blends/lgbm_cat_et_xgb.yaml)
@@ -664,9 +666,11 @@ Each fold model is trained on the other 4 folds and the test prediction is the m
 What is and is not guaranteed:
 
 - Settings are exact: runs.csv stores the full merged configuration of every run, with its hash.
-- Code: three of the four members were logged with uncommitted changes (T14), so the log alone does not pin their code. All four were therefore re-run on 2026-11-10 from clean commit d782fce, with the same configurations and folds (reports/models.md).
+- Code: three of the four members were logged with uncommitted changes (T20), so the log alone does not pin their code. All four were therefore re-run with the same configurations and folds: LightGBM, ExtraTrees and XGBoost on 2026-11-10 from clean commit d782fce, CatBoost on 2026-11-11 (reports/models.md).
 - LightGBM, ExtraTrees and XGBoost reproduce: the same AUC on every fold, and the same out-of-fold and test predictions (bit for bit for LightGBM and XGBoost, within 1e-15 for ExtraTrees). Their published scores are rebuilt exactly from commit d782fce and uv.lock.
-- CatBoost: [pending: the result of the re-run and of the test of its cause]
+- CatBoost reproduces once one setting is set back. Its first re-run (a8b526e0) scored 0.91738 against 0.91859, lower on 5 of 5 folds. We thought one setting explained the whole difference. On 2026-10-31 five CatBoost settings were written into the shared base configuration, with the values CatBoost reported for a 30-tree test fit. CatBoost resolves the default of max_ctr_complexity, the number of categorical columns it may combine, from the number of trees requested: 1 at 30 trees, 4 at 999 trees or more (checked on this data, reports/models.md). Our runs request 5,000 trees, so every CatBoost run since 2026-10-31 used 1 where the logged member used 4. Test: the same configuration with max_ctr_complexity 4 and nothing else changed (catboost_county_ctr4.yaml, run 0810e0b4) gives the same 5 fold AUCs to 8 decimals and identical out-of-fold and test predictions. It held. The log marks uncommitted changes for this run because its configuration file was committed only afterwards (commit 660a2b6).
+- The final blend rebuilt with that member (run 653a027d) has the same fold AUCs (0.92054) and the same out-of-fold and test predictions as run 1ff742f2; the submission 6 file differs from its test predictions by at most 1e-16, the rounding of the CSV. So the four members and the submitted blend are rebuilt exactly from the code and uv.lock.
+- What ran with max_ctr_complexity 1: the fresh-split check of the final blend (2026-11-01), in both the reference and the candidate blend, so its +0.00070 (T1, section 5.3) confirms the recipe with that setting, not the exact CatBoost member submitted. The CatBoost search (section 6.3) tried 1 and 2; its winner (2) was compared in the full CV with run d96c8be4, which used 4. Ablation A4b compares two runs that both used 4, and the fresh-split check of the 50/50 blend finished on 2026-10-19, before the change.
 
 ### 10.3 What deployment would require
 
