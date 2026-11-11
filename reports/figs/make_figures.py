@@ -339,6 +339,7 @@ ABLATIONS = [  # (row of T9 / T11, what changes, base run, candidate run)
     ("A1", "drop the 17 demographic fields", FULL, "20261110T192232Z_20a010b4"),
     ("A2", "drop the 4 process fields", FULL, "20261110T192704Z_bc281e8f"),
     ("A3", "drop the 7 census columns", FULL, "20261110T192832Z_29f2ea4d"),
+    ("A4c", "drop county rate, L1 logistic", "20261018T172507Z_6c8c7142", "20261110T212542Z_1dc8e77b"),
     ("A5", "raw typed columns only", FULL, "20261110T193003Z_fcc2e23f"),
     ("H1-H3", "add the 3 worst-error flags", FULL, "20261110T200644Z_ebb1bd30"),
     ("A4a", "add county rate, LightGBM", "20261002T141818Z_f7f2dc68", "20261002T143948Z_1114e40c"),

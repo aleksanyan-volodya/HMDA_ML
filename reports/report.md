@@ -1,10 +1,12 @@
 # Predicting mortgage application outcomes from HMDA records
 
-Draft of 2026-11-09. Runs are cited by the last 8 characters of their run_id (for example run 1ff742f2); the full id, config, commit, per-fold AUCs and prediction files of every run are in reports/runs.csv. Tables are T1 to T14, figures F1 to F9; figures are in reports/figs/ and are rebuilt by "make figures" (reports/figs/make_figures.py), which also pastes the generated tables into this file. A line in square brackets marks a part still to write.
+Draft of 2026-11-09. Runs are cited by the last 8 characters of their run_id (for example run 1ff742f2); the full id, config, commit, per-fold AUCs and prediction files of every run are in reports/runs.csv. Tables are T1 to T19, figures F1 to F9; figures are in reports/figs/ and are rebuilt by "make figures" (reports/figs/make_figures.py), which also pastes the generated tables into this file. A line in square brackets marks a part still to write.
 
 ## 1. Summary
 
-[pending: abstract, written last]
+[draft of 2026-11-11; the reproduction sentence waits for the CatBoost test]
+
+We predict whether a home purchase application in the HMDA records was originated or denied, from 56 columns that include no credit score, scored by ROC AUC (sections 2 and 3). Every choice was made on one frozen 5-fold split, a change was adopted only if its paired gain reached 2 corrected standard errors, and each finalist was re-checked on three fresh splits (section 5). The final model, a log-odds blend of LightGBM, CatBoost, ExtraTrees and XGBoost, reaches a CV AUC of 0.9205 (pooled out-of-fold 0.9204, 95% bootstrap interval [0.9176, 0.9232]) and 0.9216 on the public leaderboard (T1). Two columns are written because of the decision, and removing them costs 0.026 AUC: the competition score overstates what can be predicted when an application arrives (section 4, T9). Its LightGBM member leans most on the debt-to-income ratio (F8). The blend is calibrated in every slice examined, and the three features suggested by its worst errors added nothing (section 8, T11). The competition model reproduces the recorded gap in acceptance between Black and White applicants (12.9 points, T12, T16). A fair model built without the leak columns and the demographic fields, and reweighed by race, narrows it to 9.6 points and the gap in true positive rates from -0.037 to -0.010, at the price of calibration; removing the demographic fields and reweighing cost about 0.003 AUC, and the remaining columns still identify Black applicants at AUC 0.84 (section 9, T15, T13). [pending: one sentence on reproduction, after the CatBoost test: the logged CatBoost member did not rebuild exactly from a clean commit (section 10.2)]
 
 T1. Headline numbers.
 
@@ -234,7 +236,7 @@ T9. Pre-registered ablations.
 | A3 | no census: drop the 6 tract columns and the MSA median income | -0.004, range [-0.008, -0.002] | -0.00132, 1 of 5 folds up: outside, a smaller loss | -2.0 | 29f2ea4d |
 | A4a | no target encoding, LightGBM | measured before registration | the final LightGBM uses none; adding the county rate gave +0.00028 | 0.6 | 1114e40c |
 | A4b | no target encoding, CatBoost (raw county and MSA ids removed) | measured before registration | -0.00103 | -3.6 | 6deb776a vs d96c8be4 |
-| A4c | no target encoding, L1 logistic regression (county rate removed) | -0.002, range [-0.005, 0] | [running, night of 2026-11-10] | | |
+| A4c | no target encoding, L1 logistic regression (county rate removed) | -0.002, range [-0.005, 0] | -0.00008, 2 of 5 folds up: inside the range | -0.9 | 1dc8e77b vs 6c8c7142 |
 | A5 | raw columns only: the 56 typed columns, no cleaning or ratios, county and MSA ids kept | -0.014, range [-0.020, -0.010] | -0.01207, 0 of 5 folds up: inside the range | -8.8 | fcc2e23f |
 | A6a | single model vs blend, frozen folds | measured before registration (50/50 blend) | +0.00108 (50/50), +0.00149 (final blend) | 2.2, 3.1 | 918eb62b, 1ff742f2 |
 | A6b | 50/50 blend vs LightGBM on 3 fresh splits | +0.0010, range [+0.0005, +0.0015] | +0.00083, 14 of 15 folds | 3.8 | reports/models.md |
@@ -243,11 +245,12 @@ T9. Pre-registered ablations.
 | A9 | clean: the 2 leaks removed | not predicted | -0.02600, 0 of 5 folds up | -13.6 | 116f6267 |
 | A10 | strict: also the partial leaks and their columns (vs clean) | not predicted | -0.06962, 0 of 5 folds up | -62.8 | cd2c2a46 |
 
-Of the 6 open predictions measured so far, 3 fell inside their range (A1, A5, A6b) and 2 outside (A2, A3); A4c is still running.
+Of the 6 open predictions, 4 fell inside their range (A1, A4c, A5, A6b) and 2 outside (A2, A3).
 
 - A1: removing the 17 demographic fields costs 0.0027 (bootstrap CI [-0.0035, -0.0017]), inside the predicted range. Shuffling the same fields in the trained model costs more, 0.009 (section 8.2): shuffling and retraining measure different things.
 - A2 missed by a wide margin: -0.034 against at most -0.025. The range was set before the leak verdicts, and 2 of the 4 fields turned out to be the confirmed leaks (A9: -0.026). We thought the other two (aus-1, submission_of_application) added the rest. Test: removing them from the clean list costs -0.00784 (-15.4 SE, paired bootstrap CI [-0.0092, -0.0065], run bc281e8f against 116f6267). It held: 0.026 + 0.008 is the 0.034 of A2.
 - A3 missed the other way: the census columns cost 0.0013 (CI [-0.0020, -0.0003]), under the predicted 0.002 to 0.008.
+- A4c: removing the county rate from the L1 logistic regression changes its CV by -0.00008 (paired bootstrap CI [-0.00019, +0.00002]), inside the predicted range at its upper end; the chosen penalty is the same with and without the rate (C = 0.3 in every fold, reports/models.md).
 - A5: cleaning, ratios and dropping the raw county and MSA ids are worth 0.012 together (CI [-0.0133, -0.0105]), inside the range; the same steps added up to 0.013 one after the other with the starting settings (T7).
 - A6b fell inside its predicted range.
 
@@ -405,7 +408,7 @@ T11. Wave-2 hypotheses, each a buildable feature, with the prediction written be
 
 ## 9. Fairness
 
-Section 2.2 holds the framing: the target is the lender's decision, so everything here describes agreement with past decisions, not their merit.
+Section 2.2 holds the framing: the target is the lender's decision, so everything here describes agreement with past decisions, not their merit. All numbers are out-of-fold on the 105,000 training rows, from notebooks/04_fairness.ipynb, which trains nothing, and reports/fairness.md.
 
 ### 9.1 Cost of removing the leaks
 
@@ -413,35 +416,35 @@ Removing the two columns that record the decision costs 0.026 AUC (0.91905 to 0.
 
 ### 9.2 Group diagnostics of the competition model
 
-Model: the LightGBM + CatBoost 50/50 blend (run 918eb62b), out-of-fold on the 105,000 training rows (notebooks/04_fairness.ipynb, reports/fairness.md). It sees the demographic fields and both leaks, so these numbers describe the competition model, not a fair one; they are the baseline for it. [pending: redo on the final blend and on the clean model]
+Model: the final blend (run 1ff742f2). It sees the demographic fields and both leaks, so these numbers describe the competition model, not a fair one; they are the baseline for the fair models of section 9.4.
 
-Conventions: groups are "derived_race", "derived_ethnicity", "derived_sex" and "applicant_age"; groups under 500 rows are not read; intervals are 95% bootstrap over rows (1,000 resamples) and ignore training uncertainty. "Same-rate" is the cut-off 0.779, which accepts 85% of rows as lenders did; gaps are against the largest group with one declared value. TPR = share of accepted rows the model accepts, FPR = share of denied rows it accepts.
+Conventions: groups are "derived_race", "derived_ethnicity", "derived_sex" and "applicant_age"; groups under 500 rows are not read; intervals are 95% bootstrap over rows (1,000 resamples) and ignore training uncertainty. "Same rate" is the cut-off 0.780, the score quantile that accepts the train accept rate (0.850) of rows, as lenders did; each model gets its own same-rate cut-off. Gaps are against the largest group with one declared value, a base for subtraction, not a norm. TPR = share of accepted rows the model accepts, FPR = share of denied rows it accepts.
 
-T12. Group diagnostics, race, ethnicity and sex, groups with n >= 500 (reports/fairness.md; age in the same file).
+T12. Group diagnostics of the final blend, race, ethnicity and sex, groups with n >= 500 (reports/fairness.md; age and the cut-off 0.50 in the same file).
 
-| field | group | n | observed accept rate | pred - obs | AUC | TPR gap, same-rate | FPR gap, same-rate |
+| field | group | n | observed accept rate | pred - obs | AUC | TPR gap, same rate | FPR gap, same rate |
 |---|---|---|---|---|---|---|---|
 | race | White (reference) | 66,107 | 0.868 | +0.001 | 0.921 [0.917, 0.924] | | |
-| race | Race Not Available | 17,872 | 0.828 | +0.002 | 0.922 [0.915, 0.928] | -0.011 [-0.015, -0.007] | -0.035 [-0.053, -0.018] |
-| race | Black or African American | 8,991 | 0.739 | +0.004 | 0.909 [0.901, 0.917] | -0.038 [-0.045, -0.031] | -0.041 [-0.060, -0.021] |
-| race | Asian | 8,009 | 0.889 | +0.004 | 0.880 [0.865, 0.894] | +0.014 [0.010, 0.017] | +0.097 [0.063, 0.129] |
-| race | Joint | 2,716 | 0.872 | -0.000 | 0.909 [0.887, 0.932] | +0.005 [-0.003, 0.012] | -0.021 [-0.066, 0.027] |
-| race | American Indian or Alaska Native | 810 | 0.727 | -0.009 | 0.939 [0.917, 0.960] | -0.063 [-0.086, -0.039] | -0.119 [-0.165, -0.067] |
-| ethnicity | Not Hispanic or Latino (reference) | 70,469 | 0.865 | +0.001 | 0.920 [0.916, 0.923] | | |
-| ethnicity | Ethnicity Not Available | 16,232 | 0.833 | +0.001 | 0.923 [0.917, 0.930] | -0.013 [-0.016, -0.009] | -0.042 [-0.060, -0.024] |
-| ethnicity | Hispanic or Latino | 15,102 | 0.793 | +0.003 | 0.909 [0.902, 0.916] | -0.016 [-0.021, -0.012] | -0.035 [-0.052, -0.018] |
-| ethnicity | Joint | 3,170 | 0.868 | +0.007 | 0.920 [0.903, 0.937] | +0.003 [-0.005, 0.009] | +0.011 [-0.033, 0.053] |
+| race | Race Not Available | 17,872 | 0.828 | +0.003 | 0.923 [0.916, 0.929] | -0.011 [-0.016, -0.008] | -0.035 [-0.052, -0.018] |
+| race | Black or African American | 8,991 | 0.739 | +0.005 | 0.909 [0.901, 0.917] | -0.037 [-0.044, -0.030] | -0.044 [-0.062, -0.025] |
+| race | Asian | 8,009 | 0.889 | +0.004 | 0.882 [0.867, 0.896] | +0.014 [0.010, 0.018] | +0.096 [0.061, 0.127] |
+| race | Joint | 2,716 | 0.872 | -0.001 | 0.911 [0.889, 0.933] | +0.005 [-0.003, 0.012] | -0.019 [-0.064, 0.029] |
+| race | American Indian or Alaska Native | 810 | 0.727 | -0.008 | 0.939 [0.917, 0.960] | -0.059 [-0.083, -0.036] | -0.119 [-0.164, -0.068] |
+| ethnicity | Not Hispanic or Latino (reference) | 70,469 | 0.865 | +0.001 | 0.920 [0.916, 0.924] | | |
+| ethnicity | Ethnicity Not Available | 16,232 | 0.833 | +0.001 | 0.924 [0.917, 0.931] | -0.013 [-0.017, -0.009] | -0.041 [-0.060, -0.024] |
+| ethnicity | Hispanic or Latino | 15,102 | 0.793 | +0.004 | 0.910 [0.902, 0.917] | -0.016 [-0.020, -0.011] | -0.031 [-0.048, -0.013] |
+| ethnicity | Joint | 3,170 | 0.868 | +0.006 | 0.921 [0.903, 0.937] | +0.003 [-0.004, 0.010] | +0.005 [-0.038, 0.046] |
 | sex | Male (reference) | 34,507 | 0.845 | +0.003 | 0.905 [0.900, 0.910] | | |
 | sex | Joint | 38,731 | 0.883 | +0.001 | 0.922 [0.917, 0.927] | +0.014 [0.011, 0.017] | -0.009 [-0.026, 0.009] |
-| sex | Female | 23,462 | 0.805 | +0.000 | 0.933 [0.928, 0.937] | -0.007 [-0.011, -0.003] | -0.073 [-0.090, -0.056] |
-| sex | Sex Not Available | 8,300 | 0.844 | +0.003 | 0.912 [0.901, 0.922] | -0.002 [-0.007, 0.003] | -0.026 [-0.052, -0.001] |
+| sex | Female | 23,462 | 0.805 | +0.000 | 0.933 [0.928, 0.938] | -0.007 [-0.011, -0.003] | -0.075 [-0.092, -0.058] |
+| sex | Sex Not Available | 8,300 | 0.844 | +0.004 | 0.913 [0.903, 0.923] | -0.002 [-0.008, 0.003] | -0.031 [-0.058, -0.006] |
 
 Reading (T12):
 
-- The model reproduces the gaps in acceptance between groups. In every group read, the mean prediction is within 0.01 of the observed rate, so it inherits them: 0.868 observed for White and 0.739 for Black or African American applicants. At the same-rate cut-off it accepts 0.867 and 0.739, the same 13-point gap as the recorded decisions (reports/fairness.md). The model had the demographic fields as inputs, so this does not show how much of the gap passes through them; the model without them answers that.
-- Against each reference, TPR and FPR gaps mostly point the same way: for Black or African American applicants both are lower (-0.038 and -0.041), for Asian applicants both higher (+0.014 and +0.097). For Female against Male the gap sits in the FPR (-0.073).
-- Ranking quality differs: AUC runs from 0.880 (Asian) to 0.939 (American Indian or Alaska Native), and Female (0.933) and Male (0.905) have intervals apart. A lower AUC means the model separates accepted from denied less well inside the group.
-- Without the 6,279 leak rows AUC falls in every group, by 0.006 to 0.027, most for Asian applicants (0.880 to 0.853): the leaks do not flatter all groups equally (reports/fairness.md).
+- The model reproduces the gaps in acceptance between groups. In every group read, the mean prediction is within 0.01 of the observed rate: 0.869 predicted against 0.868 observed for White applicants, 0.744 against 0.739 for Black or African American applicants. At the same-rate cut-off it accepts 0.868 and 0.739, the same 12.9-point gap as the recorded decisions. The model had the demographic fields as inputs, so this does not show how much of the gap passes through them; the fair models of section 9.4 remove them.
+- Against each reference, the TPR and FPR gaps mostly point the same way: lower for Black or African American applicants (-0.037 and -0.044), American Indian or Alaska Native (-0.059 and -0.119) and Hispanic or Latino applicants (-0.016 and -0.031); higher for Asian applicants (+0.014 and +0.096). For Female against Male the gap sits in the FPR (-0.075; TPR -0.007).
+- Ranking quality differs: AUC runs from 0.882 (Asian) to 0.939 (American Indian or Alaska Native), and Female (0.933) and Male (0.905) have intervals apart. A lower AUC means the model separates accepted from denied less well inside the group.
+- Without the 6,279 leak rows AUC falls in every group, by 0.006 to 0.027, most for Asian applicants (0.882 to 0.855): the leaks do not flatter all groups equally.
 - The table holds 72 intervals against a reference; about 3 or 4 would exclude 0 by chance. The four attributes share rows, so these are not separate findings, and nothing here compares similar applicants.
 
 ### 9.3 Demographics alone, and proxies
@@ -459,19 +462,141 @@ T13. How much of the decision the declared demographics predict (upper table), a
 | Black or African American | 8,991 | 0.840 [0.833, 0.849] | 0.796 [0.790, 0.800] |
 | Asian | 8,009 | 0.847 [0.840, 0.851] | 0.800 [0.792, 0.805] |
 
-Proxy check (src/proxy_check.py, reports/tuning/proxy_check.csv): a LightGBM predicts one race group against all others, mean of the 5 fold AUCs on the frozen folds, [lowest, highest] fold in brackets; groups with at least 5,000 rows. The 38 columns are those of ablation A1 (all 55 minus the 17 demographic fields); geography is the 6 tract columns, the MSA median family income and the state.
+Proxy check (src/proxy_check.py, reports/tuning/proxy_check.csv): a LightGBM with the competition settings predicts one race group against all others, mean of the 5 fold AUCs on the frozen folds, [lowest, highest] fold in brackets; groups with at least 5,000 rows. The 38 columns are those of ablation A1 (all 55 minus the 17 demographic fields); geography is the 6 tract columns, the MSA median family income and the state. AUC here is the chance that a random applicant of the group scores above a random applicant outside it; 0.5 means the columns say nothing about the group.
 
-- Removing the declared race fields does not remove race from the inputs. The columns left identify Black or African American applicants at AUC 0.840 and Asian applicants at 0.847 (T13).
-- Most of it comes through geography: the 8 geographic columns alone reach 0.796 and 0.800. They include tract_minority_population_percent, the share of minority residents in the applicant's tract, which describes the area, not the applicant.
-- "Race Not Available" is the least predictable group (0.672 from all 38 columns).
+- Removing the declared race fields does not remove race from the inputs. The columns left identify Black or African American applicants at AUC 0.840 and Asian applicants at 0.847 (T13). In concrete terms: among the 10% of rows with the highest score from the 38 columns, 39% are Black applicants, against 9% in the whole data, and those rows hold 45% of all Black applicants; for Asian applicants, 38% against 8%, and 50% (reports/fairness.md).
+- Most of it comes through geography: the 8 geographic columns alone reach 0.796 and 0.800. They include tract_minority_population_percent, the share of minority residents in the applicant's tract, which describes the area, not the applicant. The 30 other columns add about 0.04.
+- "Race Not Available" is the least predictable group and depends least on geography: 0.587 from geography, 0.672 from all 38 columns.
+- What this check does not measure: how much the competition model relies on these columns as a stand-in for race. Geography also carries what a lender may legitimately use, such as local prices, so the same columns are both a proxy and a predictor, and the check cannot separate the two.
 
-The demographics-only model was kept out of every blend (reports/models.md). [pending, from reports/fairness.md: the written justification of that decision, and what the proxy check means for the race-blind model]
+The demographics-only model was kept out of every blend (reports/models.md). [pending, from reports/fairness.md: the written justification of that decision]
 
-### 9.4 Fair model
+### 9.4 Fair models
 
-[pending: the clean model without demographics (config fair_unaware) and the reweighed variant (config fair_reweigh), their AUC cost against run 116f6267, and the same group table]
+Six LightGBM models with the tuned settings, on the frozen folds, so that one thing changes at a time (reports/fairness.md, "Fair models"):
 
-[pending: which fairness criteria apply here and which are incompatible; the "observed" fields]
+- Two feature lists. The Kaggle list keeps everything, leaks included: it is what the leaderboard scores. The clean list removes the 2 confirmed leaks: it is the one a lender could use before deciding.
+- Three treatments on each list: with the 17 demographic fields; race-blind, without them; race-blind with reweighing.
+- Reweighing (Kamiran and Calders, 2012): in the training part of each fold, each row gets the weight P(g) P(y) / P(g, y), with g = "derived_race" and y = accepted, so that in the weighted training data race and the label are independent (weights 0.3 to 1.6). Race sets the weights and is not a feature; scoring is unweighted.
+
+The fair model put forward is the clean list, race-blind, reweighed (config fair_reweigh). Its Kaggle-list twin (fair_full_reweigh) measures what the same two steps cost on the leaderboard.
+
+T15. Cost of the fair models. CV changes are paired against the step before, with the corrected SE of section 5.3; public leaderboard scores are submissions 4 and 6 to 10 (reports/submissions.md), none of them among the two final submissions.
+
+| model | config | columns | run | CV AUC | vs the step before | public LB (submission) |
+|---|---|---|---|---|---|---|
+| final blend (competition model) | blends/lgbm_cat_et_xgb.yaml | | 1ff742f2 | 0.92054 | | 0.92158 (6) |
+| Kaggle list, with the demographic fields | fair_full | 55 | 406e4210 | 0.91905 | | 0.92100 (4, same config) |
+| Kaggle list, race-blind | ablate_no_demographics | 38 | 20a010b4 | 0.91636 | -0.00270 (-5.2 SE) | 0.91869 (7) |
+| Kaggle list, race-blind + reweighing | fair_full_reweigh | 38 | 6990a174 | 0.91560 | -0.00075 (-0.9 SE) | 0.91855 (8) |
+| clean list, with the demographic fields | fair_clean | 53 | 116f6267 | 0.89305 | -0.02600 (-13.6 SE), against fair_full | not submitted |
+| clean list, race-blind | fair_unaware | 36 | 8e9bf39c | 0.89060 | -0.00245 (-3.1 SE) | 0.89408 (9) |
+| clean list, race-blind + reweighing | fair_reweigh | 36 | 9ddab9a2 | 0.88985 | -0.00075 (-2.4 SE) | 0.89342 (10) |
+
+- Race-blind costs 0.0027 of CV AUC on the Kaggle list and 0.0025 on the clean list. On the public leaderboard it costs 0.0023 (submission 4 to 7), about 1.6 times the 0.0014 SD of a paired gap measured between two submitted models (reports/models.md): the same size as on CV, so the cost carries over to unseen rows.
+- Reweighing on top costs 0.0008 on both lists: not resolved on the Kaggle list (0.9 SE), 2.4 SE on the clean list; on the leaderboard 0.0001 and 0.0007, inside the noise.
+- The leaks cost 0.026, seven to eight times more than both fairness steps together.
+
+T16. Accept, TPR and FPR gaps for the three largest pairs, other group minus reference, at each model's same-rate cut-off, 95% bootstrap intervals. The "recorded decisions" row is the gap a perfectly faithful model would reproduce.
+
+| pair | model | accept gap | TPR gap | FPR gap |
+|---|---|---|---|---|
+| Black or African American vs White | recorded decisions | -0.129 [-0.138, -0.120] | | |
+| Black or African American vs White | final blend | -0.129 [-0.139, -0.119] | -0.037 [-0.044, -0.030] | -0.044 [-0.062, -0.025] |
+| Black or African American vs White | Kaggle list, with demographics | -0.129 [-0.139, -0.119] | -0.038 [-0.045, -0.031] | -0.042 [-0.060, -0.023] |
+| Black or African American vs White | Kaggle list, race-blind | -0.104 [-0.113, -0.095] | -0.013 [-0.019, -0.007] | -0.017 [-0.037, 0.003] |
+| Black or African American vs White | Kaggle list, race-blind + reweighing | -0.098 [-0.107, -0.088] | -0.008 [-0.013, -0.002] | -0.008 [-0.027, 0.012] |
+| Black or African American vs White | clean list, with demographics | -0.139 [-0.148, -0.130] | -0.055 [-0.062, -0.047] | -0.065 [-0.084, -0.043] |
+| Black or African American vs White | clean list, race-blind | -0.108 [-0.117, -0.099] | -0.024 [-0.031, -0.018] | -0.032 [-0.053, -0.011] |
+| Black or African American vs White | clean list, race-blind + reweighing | -0.096 [-0.104, -0.087] | -0.010 [-0.017, -0.005] | -0.023 [-0.044, -0.002] |
+| Hispanic or Latino vs Not Hispanic or Latino | recorded decisions | -0.072 [-0.079, -0.065] | | |
+| Hispanic or Latino vs Not Hispanic or Latino | final blend | -0.069 [-0.075, -0.062] | -0.016 [-0.020, -0.011] | -0.031 [-0.048, -0.013] |
+| Hispanic or Latino vs Not Hispanic or Latino | Kaggle list, with demographics | -0.069 [-0.076, -0.063] | -0.015 [-0.020, -0.011] | -0.035 [-0.051, -0.017] |
+| Hispanic or Latino vs Not Hispanic or Latino | Kaggle list, race-blind | -0.065 [-0.072, -0.058] | -0.012 [-0.017, -0.008] | -0.026 [-0.044, -0.009] |
+| Hispanic or Latino vs Not Hispanic or Latino | Kaggle list, race-blind + reweighing | -0.064 [-0.071, -0.057] | -0.011 [-0.016, -0.007] | -0.025 [-0.042, -0.007] |
+| Hispanic or Latino vs Not Hispanic or Latino | clean list, with demographics | -0.071 [-0.078, -0.065] | -0.020 [-0.025, -0.014] | -0.050 [-0.068, -0.031] |
+| Hispanic or Latino vs Not Hispanic or Latino | clean list, race-blind | -0.068 [-0.076, -0.062] | -0.017 [-0.022, -0.012] | -0.047 [-0.066, -0.029] |
+| Hispanic or Latino vs Not Hispanic or Latino | clean list, race-blind + reweighing | -0.067 [-0.074, -0.060] | -0.016 [-0.022, -0.011] | -0.044 [-0.062, -0.025] |
+| Female vs Male | recorded decisions | -0.040 [-0.047, -0.034] | | |
+| Female vs Male | final blend | -0.047 [-0.053, -0.041] | -0.007 [-0.011, -0.003] | -0.075 [-0.092, -0.058] |
+| Female vs Male | Kaggle list, with demographics | -0.048 [-0.054, -0.042] | -0.008 [-0.013, -0.004] | -0.073 [-0.090, -0.056] |
+| Female vs Male | Kaggle list, race-blind | -0.048 [-0.054, -0.042] | -0.008 [-0.012, -0.004] | -0.075 [-0.093, -0.059] |
+| Female vs Male | Kaggle list, race-blind + reweighing | -0.048 [-0.054, -0.041] | -0.008 [-0.012, -0.004] | -0.074 [-0.092, -0.058] |
+| Female vs Male | clean list, with demographics | -0.048 [-0.055, -0.042] | -0.010 [-0.014, -0.005] | -0.082 [-0.100, -0.066] |
+| Female vs Male | clean list, race-blind | -0.048 [-0.054, -0.041] | -0.009 [-0.014, -0.005] | -0.082 [-0.101, -0.064] |
+| Female vs Male | clean list, race-blind + reweighing | -0.047 [-0.053, -0.040] | -0.008 [-0.013, -0.004] | -0.082 [-0.100, -0.064] |
+
+Cost against gain (T15, T16):
+
+- The two fairness steps narrow the gap between Black and White applicants by about a quarter, for about 0.003 AUC. The recorded decisions and the competition model accept Black applicants 12.9 points less often. Race-blind, the gap falls to 10.4 points on the Kaggle list (10.8 on the clean list); reweighed, to 9.8 (9.6). Most of the narrowing comes from removing the fields; reweighing adds 0.6 to 1.2 points (paired intervals in reports/fairness.md).
+- The narrowing is clearest among applicants the lenders accepted. The TPR gap of Black applicants goes from -0.038 to -0.008 [-0.013, -0.002] on the Kaggle list and from -0.055 to -0.010 [-0.017, -0.005] on the clean list. The FPR gap of the reweighed Kaggle-list model, -0.008 [-0.027, 0.012], cannot be told from 0.
+- The price is calibration. The race-blind models predict, for Black applicants, more acceptances than lenders gave: +0.029 on the Kaggle list and +0.031 on the clean list, and +0.035 and +0.038 reweighed; for White applicants slightly fewer (-0.005 to -0.007). The competition model was within 0.005 for both (T12). With one cut-off for every group, a higher mean score for Black applicants means more of them pass it.
+- The other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay within their intervals. At the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate: a calibrated score can still widen a gap once one cut-off turns it into yes or no.
+- Ranking quality falls evenly across groups. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend, and the clean-list models 0.02 to 0.04 below it in most groups (0.038 for Asian applicants). Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
+
+Removing the leaks while keeping the demographic fields widens the Black-White accept gap by 1.0 point [0.6, 1.5], and the TPR gap from -0.038 to -0.055 (T16). We thought the widening came from the 6,279 leak rows: there the Kaggle-list model reads the decision from the leak column, while the clean model has to score those rows from the other columns, the demographic fields included. If so, the gap should barely change on the rows without a leak value and widen on the leak rows. The test reads the same out-of-fold predictions on each subset, with each model's same-rate cut-off set on all rows, and a paired bootstrap over rows (1,000 resamples).
+
+T17. Black-White accept gap, Kaggle list against clean list, both with the demographic fields, by subset of rows (reports/fairness.md).
+
+| rows | White / Black rows | accept gap, Kaggle list | accept gap, clean list | change [95%] |
+|---|---|---|---|---|
+| all | 66,107 / 8,991 | -0.129 | -0.139 | -0.010 [-0.015, -0.006] |
+| without a leak value | 62,128 / 8,465 | -0.126 | -0.140 | -0.014 [-0.018, -0.010] |
+| leak rows only | 3,979 / 526 | -0.179 | -0.125 | +0.054 [0.013, 0.093] |
+
+The hypothesis was wrong: the widening is on the rows without a leak value, and on the leak rows the gap narrows. The two groups have the same share of leak rows (6.0% and 5.9%), so the mix of rows does not account for it either. The leak-free fair model still ends with a gap no wider than its Kaggle-list twin (9.6 against 9.8 points, T16).
+
+Limits: all of this is on the training rows, out-of-fold; the intervals cover the sampling of rows, not the training of the models, and are not corrected for the many comparisons (where there is no real gap, about 1 interval in 20 still excludes 0). Reweighing was run once, on race only, with no tuning.
+
+### 9.5 Which fairness criterion, and why
+
+With accepted as the positive class and one cut-off for everyone, there are three common ways to ask whether a model treats two groups alike (independence, separation and sufficiency, in the vocabulary of Barocas, Hardt and Narayanan):
+
+- Equal accept rates (demographic parity): the model accepts the same share of each group.
+- Equal error rates (equalized odds): among applicants the lenders accepted, the model accepts the same share in each group (TPR), and among applicants the lenders denied, too (FPR). Equal opportunity asks for the TPR only (Hardt, Price and Srebro, 2016).
+- Calibration within groups: a given score means the same accept rate in every group.
+
+Here they cannot all hold. The recorded decisions accept 86.8% of White and 73.9% of Black applicants. At any cut-off and for any group, FPR = p / (1 - p) x (1 - PPV) / PPV x TPR, where p is the group's recorded accept rate and PPV the share of the model's acceptances that lenders also accepted (Chouldechova, 2017). It is an identity, and it holds exactly for every model and group of T18 (checked in notebooks/04_fairness.ipynb). With our two base rates, equal TPR and equal PPV would force the FPR of Black applicants to 0.43 times that of White applicants: equal error rates and equal PPV, the cut-off form of calibration, cannot hold together. And since the model's accept rate in a group is p x TPR + (1 - p) x FPR, equal TPR and FPR would still leave Black applicants accepted 8 to 9 points less often (0.129 x (TPR - FPR) with the White rates of T18): equal error rates and equal accept rates cannot hold together either. A choice has to be made.
+
+T18. Where the models sit, at each model's same-rate cut-off (reports/fairness.md).
+
+| model | group | recorded accept rate | mean prediction | model accepts | TPR | FPR | PPV |
+|---|---|---|---|---|---|---|---|
+| final blend | White | 0.868 | 0.869 | 0.868 | 0.959 | 0.264 | 0.960 |
+| final blend | Black or African American | 0.739 | 0.744 | 0.739 | 0.922 | 0.220 | 0.922 |
+| fair_full_reweigh | White | 0.868 | 0.862 | 0.862 | 0.954 | 0.258 | 0.960 |
+| fair_full_reweigh | Black or African American | 0.739 | 0.774 | 0.765 | 0.947 | 0.250 | 0.914 |
+| fair_reweigh | White | 0.868 | 0.861 | 0.861 | 0.945 | 0.311 | 0.952 |
+| fair_reweigh | Black or African American | 0.739 | 0.776 | 0.766 | 0.935 | 0.288 | 0.902 |
+
+T19. Calibration inside score bands (the five quintiles of each model's score over all rows): mean prediction / recorded accept rate, by group (reports/fairness.md).
+
+| model | score band | White n | White | Black n | Black |
+|---|---|---|---|---|---|
+| final blend | 1: 0.00 to 0.88 | 11,479 | 0.415 / 0.402 | 3,379 | 0.425 / 0.408 |
+| final blend | 2: 0.88 to 0.95 | 10,975 | 0.924 / 0.922 | 3,671 | 0.921 / 0.923 |
+| final blend | 3: 0.95 to 0.97 | 12,654 | 0.959 / 0.960 | 1,438 | 0.956 / 0.958 |
+| final blend | 4: 0.97 to 0.98 | 14,079 | 0.974 / 0.977 | 185 | 0.971 / 0.978 |
+| final blend | 5: 0.98 to 1.00 | 16,920 | 0.986 / 0.990 | 318 | 0.996 / 0.997 |
+| fair_reweigh | 1: 0.00 to 0.87 | 12,409 | 0.469 / 0.477 | 2,680 | 0.388 / 0.331 |
+| fair_reweigh | 2: 0.87 to 0.94 | 12,890 | 0.911 / 0.919 | 2,257 | 0.911 / 0.866 |
+| fair_reweigh | 3: 0.94 to 0.96 | 13,037 | 0.947 / 0.956 | 1,914 | 0.947 / 0.920 |
+| fair_reweigh | 4: 0.96 to 0.97 | 13,388 | 0.964 / 0.970 | 1,372 | 0.964 / 0.947 |
+| fair_reweigh | 5: 0.97 to 0.99 | 14,383 | 0.978 / 0.985 | 768 | 0.977 / 0.962 |
+
+- The competition model is calibrated: in every band its mean prediction is within 0.017 of the recorded rate, for both groups (T19). Every other gap stays: it accepts Black applicants 12.9 points less often, with a TPR lower by 0.037, an FPR lower by 0.044 and a PPV lower by 0.038 (T18).
+- The fair model moves toward equal error rates: TPR gap -0.010, FPR gap -0.023, and it accepts Black applicants 9.6 points less often, not far above the 8.2 points that fully equal error rates would still leave for this model (T18). The price is calibration: for Black applicants its mean prediction is 0.776 against 0.739 recorded (+0.038), and inside every score band the recorded rate of Black applicants is below the prediction, by 0.015 to 0.057, while for White applicants it is 0.006 to 0.009 above (T19). At a score between 0.87 and 0.94, lenders accepted 91.9% of the White and 86.6% of the Black applicants the model scored there (binomial SE about 0.007 for the Black rate).
+- The PPV gap widens from -0.038 to -0.051. This is the identity at work: with the base rates unchanged, narrowing the TPR gap moves the difference into PPV.
+
+Our choice. For the fair model, equal opportunity is the main criterion: the TPR gap at the same-rate cut-off, with its interval; the FPR gap and the accept gap are reported beside it, and the calibration gap as its price. For the competition model the criterion is calibration. The two models serve different purposes, so they are judged differently. Three reasons:
+
+- Why not calibration for the fair model. The label is what a lender decided, not whether the applicant repaid. A model calibrated to it reproduces each group's recorded accept rate, including whatever part of the 12.9-point gap does not come from risk; holding the fair model to calibration would hold it to the very decisions under review. Calibration is the right test for the competition model because it makes that model's group tables a faithful description of what lenders did; it does not say whether what they did was fair.
+- Why the TPR rather than the FPR. 1 - TPR is the share of applicants the lenders accepted that the model would turn down: the error that costs an applicant a loan. Equal opportunity asks that this error not depend on the group. The FPR concerns applicants the lenders denied whom the model would accept, a question of the lender's risk more than of the applicant's harm.
+- Why not equal accept rates. The data has no credit score, no interest rate and no repayment, so it cannot say how much of the gap is a difference in risk and how much a difference in treatment. Equal accept rates would remove the whole gap, which amounts to assuming that none of it is risk. Equal opportunity does not need that split.
+
+What the choice does not escape. The TPR is measured against the lenders' decisions: "accepted by the lender" stands in for "should get the loan", so if the lenders' acceptances treated groups unequally, an equal TPR relative to them carries that over. Every criterion that can be computed on this data has the same limit, since all are defined against the recorded decision. The TPR also depends on the cut-off: the competition sets none, and at 0.50 the gaps differ from those at the same-rate cut-off (reports/fairness.md). And equal opportunity is measured on race, and the fair model was reweighed on race only; the ethnicity, sex and age gaps were measured but not targeted.
+
+The "observed" fields. When an applicant applying in person does not give race, ethnicity or sex, the lender records them from visual observation or surname, and "applicant_race_observed", "applicant_ethnicity_observed" and "applicant_sex_observed" say whether that happened. On those rows the group is the lender's perception, not the applicant's answer. Race was recorded by observation for 1,320 rows (1.3%): 122 of the 8,991 Black applicants (1.4%) and 1,091 of the 66,107 White applicants (1.7%), too few to change a group table; the accept rate is 0.849 to 0.864 whatever the value of these fields (reports/fairness.md). They are among the 17 demographic fields the race-blind models leave out.
 
 ## 10. Limitations and reproducibility
 
@@ -495,7 +620,9 @@ What the interpretation cannot claim:
 
 - Importance and SHAP values describe one member of the blend (the tuned LightGBM, weight 1/3), one fold model, on 10,000 rows (section 8.2). Correlated columns share credit, and the values are attributions for that model, not effects of the columns.
 - The worst-error hypotheses were chosen after looking at the errors (section 8.3) and measured once, after the freeze.
-- Every group difference in section 9 is an association between declared attributes and recorded decisions. With no credit score, rate or history, the data cannot separate a difference in risk from a difference in treatment, so nothing here shows discrimination or its absence.
+- Every group difference in section 9 is an association between declared attributes and recorded decisions. With no credit score, rate or history, the data cannot separate a difference in risk from a difference in treatment: we do not conclude discrimination where a gap appears, nor its absence where none does.
+- Every fairness criterion that can be computed here is defined against the recorded decision. An equal TPR relative to the lenders carries over whatever unequal treatment their acceptances contain (section 9.5).
+- The fair-model results rest on one reweighing run, on race only, with no tuning; their intervals cover the sampling of rows, not the training of the models, and are not corrected for the many comparisons (section 9.4).
 
 ### 10.2 Reproducibility
 
@@ -507,13 +634,13 @@ Data and folds. The raw files are not distributed; their SHA256 sums are in conf
 
 T14. The runs of the final model (reports/runs.csv).
 
-| member | config | run | commit | uncommitted changes | wall time | CV AUC |
-|---|---|---|---|---|---|---|
-| LightGBM, tuned | configs/experiments/lgbm_optuna_best.yaml | 406e4210 | 500b562 | yes | 2 min | 0.91905 |
-| CatBoost, raw county / MSA | configs/experiments/catboost_county.yaml | d96c8be4 | 79f2bb7 | no | 2 h 4 min | 0.91859 |
-| ExtraTrees, tuned | configs/experiments/extratrees_optuna_best.yaml | 7bc88a0b | 868b301 | yes | 7 min | 0.91484 |
-| XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 05b22e57 | c6d4581 | yes | 3 min | 0.91848 |
-| final blend, 2/6, 2/6, 1/6, 1/6 log-odds | configs/blends/lgbm_cat_et_xgb.yaml | 1ff742f2 | c6d4581 | yes | under 1 s | 0.92054 |
+| member | config | run | commit | uncommitted changes | wall time | CV AUC | re-run from clean commit d782fce |
+|---|---|---|---|---|---|---|---|
+| LightGBM, tuned | configs/experiments/lgbm_optuna_best.yaml | 406e4210 | 500b562 | yes | 2 min | 0.91905 | cc720ddf: identical fold AUCs and predictions |
+| CatBoost, raw county / MSA | configs/experiments/catboost_county.yaml | d96c8be4 | 79f2bb7 | no | 2 h 4 min | 0.91859 | [pending] |
+| ExtraTrees, tuned | configs/experiments/extratrees_optuna_best.yaml | 7bc88a0b | 868b301 | yes | 7 min | 0.91484 | f308315c: identical fold AUCs, predictions within 1e-15 |
+| XGBoost, tuned | configs/experiments/xgb_optuna_best.yaml | 05b22e57 | c6d4581 | yes | 3 min | 0.91848 | 104e3dd7: identical fold AUCs and predictions |
+| final blend, 2/6, 2/6, 1/6, 1/6 log-odds | configs/blends/lgbm_cat_et_xgb.yaml | 1ff742f2 | c6d4581 | yes | under 1 s | 0.92054 | [pending, depends on CatBoost] |
 
 Rebuilding the final model, the submission and the figures (about 2.5 hours, CatBoost being most of it):
 
@@ -534,5 +661,10 @@ Each fold model is trained on the other 4 folds and the test prediction is the m
 What is and is not guaranteed:
 
 - Settings are exact: runs.csv stores the full merged configuration of every run, with its hash.
-- Code is exact for the CatBoost member only. The other runs were logged with uncommitted changes (T14), so their code is the named commit plus edits that the log does not hold.
-- Reproduction to the logged scores has been checked for LightGBM only: a repeated run gives the same AUC on every fold (reports/tuning.md), and the refit of section 8.2 reproduces the logged fold-0 AUC to 1e-6. CatBoost, XGBoost and ExtraTrees were not re-run. [pending: re-run the 4 members from a clean commit and compare with T14]
+- Code: three of the four members were logged with uncommitted changes (T14), so the log alone does not pin their code. All four were therefore re-run on 2026-11-10 from clean commit d782fce, with the same configurations and folds (reports/models.md).
+- LightGBM, ExtraTrees and XGBoost reproduce: the same AUC on every fold, and the same out-of-fold and test predictions (bit for bit for LightGBM and XGBoost, within 1e-15 for ExtraTrees). Their published scores are rebuilt exactly from commit d782fce and uv.lock.
+- CatBoost: [pending: the result of the re-run and of the test of its cause]
+
+### 10.3 What deployment would require
+
+A model put to use would score applications before any decision exists. It would need the clean list by construction; a target closer to what a lender should predict than past approvals (repayment, where it can be observed); and validation on applications later than those it was trained on, which a challenge with no stated year and exchangeable train and test rows cannot provide. It would also need the group checks of section 9 repeated on the lender's own applicants and over time, and a legal review under fair-lending law (the Equal Credit Opportunity Act and the Fair Housing Act), including whether race may be used at all to set training weights, as reweighing does, and how to give each denied applicant the specific reasons the law requires, which a score alone does not provide (reports/fairness.md).

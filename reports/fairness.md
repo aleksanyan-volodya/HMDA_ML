@@ -136,9 +136,9 @@ Conventions:
 
 The model reproduces the differences between groups in acceptance rates. In every group read here, the mean prediction is within 0.01 of the observed rate, so it inherits the gaps: observed 0.868 for White and 0.739 for Black or African American applicants, predicted 0.869 and 0.744. At the same-rate cut-off it accepts 0.868 and 0.739, the same 13-point gap as the recorded decisions. The model had these fields as inputs, so this does not show how much of the gap comes through them. The fair models below remove them.
 
-Against each reference group, the same-rate gaps mostly point the same way in TPR and FPR. For Black or African American applicants, TPR is lower by 0.037 [-0.044, -0.030] and FPR by 0.044 [-0.062, -0.025]; for American Indian or Alaska Native by 0.059 and 0.119; for Hispanic or Latino by 0.016 and 0.031. Asian applicants go the other way, +0.014 and +0.096. So in those groups the model accepts both accepted and denied rows less often (more often for Asian applicants), which is what a shift of the whole score looks like, not an error in one direction only. For Female against Male the gap is mostly in FPR: -0.007 and -0.075. At 0.50 the TPRs are all above 0.96, so the gaps sit in the FPR.
+Against each reference group, the same-rate gaps mostly point the same way in TPR and FPR. For Black or African American applicants, TPR is lower by 0.037 [-0.044, -0.030] and FPR by 0.044 [-0.062, -0.025]; for American Indian or Alaska Native by 0.059 and 0.119; for Hispanic or Latino by 0.016 and 0.031. Asian applicants go the other way, +0.014 and +0.096. So in those groups the model accepts both accepted and denied rows less often (more often for Asian applicants). For Female against Male the gap is mostly in FPR: -0.007 and -0.075. At 0.50 the TPRs are all above 0.96, so the gaps sit in the FPR.
 
-Ranking quality differs between groups too. AUC runs from 0.882 for Asian applicants [0.867, 0.896] to 0.939 for American Indian or Alaska Native applicants [0.917, 0.960]; Female is at 0.933 and Male at 0.905, with intervals apart. A lower AUC means the model separates accepted from denied less well inside that group. It does not say why: these groups also differ in the mix of loans and in the number of denials (888 for Asian applicants).
+Ranking quality differs between groups too. AUC runs from 0.882 for Asian applicants [0.867, 0.896] to 0.939 for American Indian or Alaska Native applicants [0.917, 0.960]; Female is at 0.933 and Male at 0.905, with intervals apart. A lower AUC means the model separates accepted from denied less well inside that group.
 
 Without the leak rows, AUC falls in every group, by 0.006 to 0.027. It falls most for Asian applicants, from 0.882 to 0.855, so the leaks do not flatter all groups equally. The models trained without those columns, below, confirm it: Asian applicants stay the group the model ranks least well.
 
@@ -366,6 +366,16 @@ The gap does not close further because race is still in the remaining columns: f
 
 Removing the leaks while keeping the demographic fields widens the Black-White gap by 1.0 point [0.6, 1.5] and the TPR gap from -0.038 to -0.055. The leak-free fair model still ends with a gap no wider than the Kaggle-list one (9.6 against 9.8 points).
 
+We thought the widening came from the 6,279 leak rows: there the Kaggle-list model reads the decision from the leak column, so race plays no part in its score, while the clean model must score those rows from the other columns, the demographic fields included. If so, the gap should barely change on the rows without a leak value and widen on the leak rows. The test reads the same out-of-fold predictions on each subset, with each model's same-rate cut-off set on all rows, and a paired bootstrap over rows (1,000 resamples).
+
+| rows | White / Black rows | accept gap, Kaggle list | accept gap, clean list | change [95%] |
+|---|---|---|---|---|
+| all | 66,107 / 8,991 | -0.129 | -0.139 | -0.010 [-0.015, -0.006] |
+| without a leak value | 62,128 / 8,465 | -0.126 | -0.140 | -0.014 [-0.018, -0.010] |
+| leak rows only | 3,979 / 526 | -0.179 | -0.125 | +0.054 [0.013, 0.093] |
+
+The hypothesis is wrong. The widening is on the rows without a leak value; on the leak rows the gap narrows. The two groups have the same share of leak rows (6.0% and 5.9%), so the mix of rows does not explain it either.
+
 Other pairs barely move. The Hispanic gap narrows by 0.5 point at most and the Female gap not at all, and their TPR and FPR gaps stay where they were. Reweighing targets race only, so this was expected for its step. For the race-blind step it means that removing the sex and ethnicity fields does not change these gaps. The age gaps are also unchanged within their intervals. The Female gap is worth one more remark: at the same-rate cut-off every model accepts women 4.7 to 4.8 points less often than men, against 4.0 points in the recorded decisions, while its mean prediction for women is within 0.002 of the observed rate. A calibrated score can still widen a gap once a single cut-off turns it into yes or no.
 
 Ranking quality falls evenly. In every group, the race-blind Kaggle-list models are at most 0.007 below the competition blend. The clean-list models are 0.02 to 0.04 below it in most groups, the price of the leaks (0.038 for Asian applicants), and Asian applicants remain the group ranked least well (0.844 for fair_reweigh).
@@ -380,7 +390,7 @@ AUC here means: the chance that a random applicant of the group gets a higher sc
 
 | group | rows | AUC from the 38 columns | AUC from the 8 geography columns |
 |---|---|---|---|
-| White | 66,107 | 0.740 (folds 0.735 to 0.743) | 0.695 (0.689 to 0.700) |
+| White | 66,107 | 0.740 (folds 0.735 to 0.743) | 0.695 (0.689 to 0.699) |
 | Race Not Available | 17,872 | 0.672 (0.669 to 0.675) | 0.587 (0.581 to 0.592) |
 | Black or African American | 8,991 | 0.840 (0.833 to 0.849) | 0.796 (0.790 to 0.800) |
 | Asian | 8,009 | 0.847 (0.840 to 0.851) | 0.800 (0.792 to 0.805) |
@@ -395,3 +405,93 @@ Reading:
 - This fits the fair models: removing the demographic fields closes only about a fifth of the gap between Black and White applicants.
 
 What this does not say. It measures what the columns reveal about race, not how much the competition model relies on that, and not why. Geography also carries information a lender may legitimately use, such as local prices and markets, so the same columns are both a proxy and a predictor; this check cannot separate the two. The settings were tuned for the accept / deny target, not for this task, so these AUCs are, if anything, a lower bound on what the columns reveal.
+
+## Which fairness criterion, and why
+
+### Three criteria
+
+With accepted as the positive class and a single cut-off for everyone, there are three common ways to ask whether a model treats two groups alike (in the vocabulary of Barocas, Hardt and Narayanan: independence, separation, sufficiency):
+
+- Equal accept rates (demographic parity): the model accepts the same share of each group.
+- Equal error rates (equalized odds): among applicants the lenders accepted, the model accepts the same share in each group (TPR); among applicants the lenders denied, too (FPR). Equal opportunity asks for the TPR only (Hardt, Price and Srebro, 2016).
+- Calibration within groups: a given score means the same accept rate in every group, so that a score of 0.9 is accepted 9 times in 10 whoever the applicant is.
+
+### Here they cannot all hold
+
+The recorded decisions accept 86.8% of White applicants and 73.9% of Black applicants. When base rates differ and the model is not perfect, the three criteria conflict. Two facts make it concrete.
+
+First, at any cut-off and for any group, FPR = p / (1 - p) x (1 - PPV) / PPV x TPR, where p is the group's recorded accept rate and PPV the share of the model's acceptances that lenders also accepted (Chouldechova, 2017). It is an identity, and it holds exactly for every model and group below. With our two base rates, equal TPR and equal PPV would force the FPR of Black applicants to 0.43 times that of White applicants. Equal error rates and equal PPV, which is the cut-off form of calibration, cannot hold together (Kleinberg, Mullainathan and Raghavan, 2016, show the same for calibrated scores in general).
+
+Second, the model's accept rate in a group is p x TPR + (1 - p) x FPR. If Black applicants had the same TPR and FPR as White applicants, the model would still accept 8 to 9 points fewer of them (0.129 x (TPR - FPR), with the White rates of the models below). Equal error rates and equal accept rates cannot hold together either.
+
+So a choice has to be made. Any model we build sits somewhere between these criteria, and the tables below show where ours sit.
+
+### Where our models sit
+
+At each model's same-rate cut-off (code in the last part of "notebooks/04_fairness.ipynb"):
+
+| model | group | recorded accept rate | mean prediction | model accepts | TPR | FPR | PPV |
+|---|---|---|---|---|---|---|---|
+| final blend | White | 0.868 | 0.869 | 0.868 | 0.959 | 0.264 | 0.960 |
+| final blend | Black or African American | 0.739 | 0.744 | 0.739 | 0.922 | 0.220 | 0.922 |
+| fair_full_reweigh | White | 0.868 | 0.862 | 0.862 | 0.954 | 0.258 | 0.960 |
+| fair_full_reweigh | Black or African American | 0.739 | 0.774 | 0.765 | 0.947 | 0.250 | 0.914 |
+| fair_reweigh | White | 0.868 | 0.861 | 0.861 | 0.945 | 0.311 | 0.952 |
+| fair_reweigh | Black or African American | 0.739 | 0.776 | 0.766 | 0.935 | 0.288 | 0.902 |
+
+Calibration inside score bands (the five quintiles of each model's score over all rows): mean prediction against the recorded accept rate, by group.
+
+| model | score band | White n | White: mean prediction / recorded | Black n | Black: mean prediction / recorded |
+|---|---|---|---|---|---|
+| final blend | 1: 0.00 to 0.88 | 11479 | 0.415 / 0.402 | 3379 | 0.425 / 0.408 |
+| final blend | 2: 0.88 to 0.95 | 10975 | 0.924 / 0.922 | 3671 | 0.921 / 0.923 |
+| final blend | 3: 0.95 to 0.97 | 12654 | 0.959 / 0.960 | 1438 | 0.956 / 0.958 |
+| final blend | 4: 0.97 to 0.98 | 14079 | 0.974 / 0.977 | 185 | 0.971 / 0.978 |
+| final blend | 5: 0.98 to 1.00 | 16920 | 0.986 / 0.990 | 318 | 0.996 / 0.997 |
+| fair_reweigh | 1: 0.00 to 0.87 | 12409 | 0.469 / 0.477 | 2680 | 0.388 / 0.331 |
+| fair_reweigh | 2: 0.87 to 0.94 | 12890 | 0.911 / 0.919 | 2257 | 0.911 / 0.866 |
+| fair_reweigh | 3: 0.94 to 0.96 | 13037 | 0.947 / 0.956 | 1914 | 0.947 / 0.920 |
+| fair_reweigh | 4: 0.96 to 0.97 | 13388 | 0.964 / 0.970 | 1372 | 0.964 / 0.947 |
+| fair_reweigh | 5: 0.97 to 0.99 | 14383 | 0.978 / 0.985 | 768 | 0.977 / 0.962 |
+
+The competition model is calibrated: in every band, its mean prediction is within 0.017 of the recorded rate, for both groups. A score means the same thing whoever the applicant is. The price is that every other gap stays: it accepts Black applicants 12.9 points less often, with a TPR lower by 0.037, an FPR lower by 0.044 and a PPV lower by 0.038.
+
+The fair model moves toward equal error rates. Its TPR gap is -0.010 and its FPR gap -0.023, and it accepts Black applicants 9.6 points less often, not far above the 8.2 points that fully equal error rates would still leave for this model. The price is calibration:
+
+- For Black applicants its mean prediction is 0.776, against 0.739 in the recorded decisions: +0.038. For White applicants it is 0.861 against 0.868. The race-blind model without reweighing is at +0.031 (Kaggle list +0.029).
+- Inside the score bands, the recorded rate of Black applicants is below the model's prediction in every band, by 0.015 to 0.057, while for White applicants it is 0.006 to 0.009 above. At a score between 0.87 and 0.94, lenders accepted 91.9% of the White applicants and 86.6% of the Black applicants the model scored there (binomial standard error about 0.007 for the Black rate). The fair model gives both the same score; the recorded decisions do not treat them the same.
+- The PPV gap widens, from -0.038 to -0.051: among the applicants the fair model accepts, a smaller share of Black applicants were accepted by the lenders. This is the identity at work. With the base rates unchanged, narrowing the TPR gap moves the difference into PPV.
+
+### Our choice
+
+For the fair model we take equal opportunity as the main criterion: the TPR gap between groups at the same-rate cut-off, with its interval. We also report the FPR gap and the accept-rate gap, and we report the calibration gap as the price. For the competition model the right criterion is calibration. The two models serve different purposes, so they are judged differently.
+
+Why not calibration for the fair model. The label is what a lender decided, not whether the applicant repaid. A model calibrated to it reproduces each group's recorded accept rate, including whatever part of the 12.9-point gap does not come from risk. Holding the fair model to calibration would hold it to the very decisions under review. Calibration is the right test for the competition model: it is what makes that model's group tables a faithful description of what lenders did. It does not tell us whether what they did was fair.
+
+Why the TPR rather than the FPR. 1 - TPR is the share of applicants the lenders accepted that the model would turn down: the error that costs an applicant a loan. Equal opportunity asks that this error not depend on the group. The FPR concerns applicants the lenders denied whom the model would accept; making it equal is a question of the lender's risk more than of the applicant's harm.
+
+Why not equal accept rates as the main criterion. The data has no credit score, no interest rate and no repayment, so it cannot say how much of the gap between groups is a difference in risk and how much a difference in treatment. Equal accept rates would remove the whole gap, which amounts to assuming that none of it is risk. Equal opportunity does not need that split: it only asks that applicants the lenders accepted be accepted alike.
+
+What this choice does not escape. Our TPR is measured against the lenders' decisions: "accepted by the lender" stands in for "should get the loan". If the lenders' acceptances themselves treated groups unequally, an equal TPR relative to them carries that over. Every criterion that can be computed on this data has the same limit, because all of them are defined against the recorded decision. The TPR also depends on the cut-off: the competition has none, and at 0.50 the gaps differ from those at the same-rate cut-off. Finally, equal opportunity here is measured on race, and the fair model was reweighed on race only; the ethnicity, sex and age gaps were measured but not targeted.
+
+### The "observed" fields
+
+When an applicant applying in person does not give their race, ethnicity or sex, the lender must record them from visual observation or surname. The fields "applicant_race_observed", "applicant_ethnicity_observed" and "applicant_sex_observed" say whether that happened (1 = recorded on that basis, 2 = not, 3 = not applicable). For a group audit this matters: on those rows the group is the lender's perception, not the applicant's answer.
+
+| field | value | rows | accepted |
+|---|---|---|---|
+| applicant_race_observed | 1 | 1320 | 0.855 |
+| applicant_race_observed | 2 | 97421 | 0.849 |
+| applicant_race_observed | 3 | 6259 | 0.863 |
+| applicant_ethnicity_observed | 1 | 1305 | 0.856 |
+| applicant_ethnicity_observed | 2 | 97455 | 0.849 |
+| applicant_ethnicity_observed | 3 | 6240 | 0.864 |
+| applicant_sex_observed | 1 | 1306 | 0.861 |
+| applicant_sex_observed | 2 | 97401 | 0.849 |
+| applicant_sex_observed | 3 | 6293 | 0.863 |
+
+Race was recorded by observation for 1,320 rows (1.3%): 122 of the 8,991 Black applicants (1.4%) and 1,091 of the 66,107 White applicants (1.7%). That is too few to change any group table. The accept rate is 0.849 to 0.864 whatever the value. The three fields are among the 17 demographic fields that the race-blind models leave out.
+
+## What deployment would require
+
+A model put to use would score applications before any decision exists. So it would need the clean list by construction, a target closer to what a lender should predict than past approvals (repayment, where it can be observed), and validation on applications later than those it was trained on, which a challenge with no stated year and exchangeable train and test rows cannot provide. It would also need the group checks of this report repeated on the lender's own applicants and over time, and a legal review under fair-lending law (the Equal Credit Opportunity Act and the Fair Housing Act), including whether race may be used at all to set training weights, as reweighing does, and how to give each denied applicant the specific reasons the law requires, which a score alone does not provide.
