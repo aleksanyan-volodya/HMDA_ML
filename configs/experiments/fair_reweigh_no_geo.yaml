@@ -1,0 +1,32 @@
+# Test of a hypothesis, written before the run (2026-11-11, reports/fairness.md, fair models):
+# fair_reweigh.yaml without the 8 geography columns (features.BLOCKS["geography"]: state_code, the
+# area's median family income, the 6 census tract columns); 28 columns.
+# Hypothesis: part of the Black-White gap left by fair_reweigh (accept gap -0.096, TPR gap -0.010)
+# comes through geography, which identifies Black applicants with AUC 0.796 on its own (proxy check).
+# Held if the accept gap narrows against fair_reweigh (run 9ddab9a2) with a paired 95% bootstrap
+# interval above 0; rejected otherwise. The AUC cost is read with make compare BASE=9ddab9a2.
+# Result (2026-11-11, run 20261111T111505Z_04069927): rejected. Accept gap change +0.000 [-0.003, 0.003];
+# CV AUC 0.88599, -0.00387 against fair_reweigh (7.5 corrected SE).
+model: lgbm
+reweigh: derived_race
+features:
+- census_zero_to_nan
+- tract_income_zero_to_nan
+- housing_age_negative_to_nan
+- multifamily_levels
+- drop_derived_duplicates
+- dti_order
+- age_order
+- computed_ltv
+- property_to_income
+- drop_county_msa_ids
+- drop_process_artefacts
+- drop_demographics
+- drop_geography
+lgbm_params:
+  num_leaves: 113
+  min_data_in_leaf: 5
+  feature_fraction: 0.5748992881034819
+  bagging_fraction: 0.9485362062338821
+  path_smooth: 14.649295564192302
+  max_cat_to_onehot: 64

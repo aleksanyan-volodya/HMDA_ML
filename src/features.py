@@ -327,6 +327,7 @@ for _name, _keep in BLOCKS.items():
     TRANSFORMS[f"only_{_name}"] = (None, sorted(_ALL - set(_keep)), [])
 # Fair model, unawareness (fair_unaware.yaml): the 17 demographic fields out; must come after age_order.
 TRANSFORMS["drop_demographics"] = (None, BLOCKS["demographics"], [])
+TRANSFORMS["drop_geography"] = (None, BLOCKS["geography"], [])
 # Pre-registered ablations A2 and A3 (report T9), lists as registered on 2026-10-18
 TRANSFORMS["drop_process_fields"] = (None, ["preapproval", "submission_of_application",
                                             "initially_payable_to_institution", "aus-1"], [])

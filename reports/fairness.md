@@ -20,7 +20,7 @@ Three lists are frozen, with the reasons in "reports/leakage.md". All use the tu
 | clean | configs/experiments/fair_clean.yaml | 53 | the 2 confirmed leaks | 0.89305 (run 20261109T170831Z_116f6267) | -0.02600 | 0.00191 (13.6 SE) |
 | strict | configs/experiments/fair_strict.yaml | 38 | also aus-1, LTV, property value, DTI, census, state | 0.82343 (run 20261109T170956Z_cd2c2a46) | -0.06962 | 0.00111 (62.8 SE) |
 
-The gap between full and clean is how much of the competition score rests on columns that record the decision: 0.026 of AUC, far beyond noise. The gap between clean and strict is how much the open verdicts could matter. Strict removes real information along with the suspect signals (the loan-to-value and debt-to-income values themselves, the census columns, the state), so its gap of 0.070 is an upper bound on that, not an estimate of it. It does show that the clean model leans heavily on the columns that hold the partial signals, which is why the location-unknown verdict stays the main doubt.
+The gap between full and clean is how much of the competition score rests on columns that record the decision: 0.026 of AUC, far beyond noise. The gap between clean and strict, 0.070, is what removing the columns under open verdicts costs. Strict removes more than the suspect signals (it also removes the loan-to-value and debt-to-income values themselves, the census columns, the state), so the share of that 0.070 due to the suspect signals is not measured. It does show that the clean model leans heavily on the columns that hold the partial signals, which is why the location-unknown verdict stays the main doubt.
 
 ## Group diagnostics of the competition model
 
@@ -361,6 +361,18 @@ The two fairness steps narrow the gap between Black and White applicants by abou
 The narrowing is clearest among applicants the lenders accepted. The TPR gap of Black applicants goes from -0.038 to -0.008 [-0.013, -0.002] on the Kaggle list and from -0.055 to -0.010 [-0.017, -0.005] on the clean list: an accepted Black applicant is now almost as likely as an accepted White applicant to be accepted by the model. The FPR gap of the reweighed Kaggle-list model, -0.008 [-0.027, 0.012], can no longer be told from 0.
 
 It is bought with calibration. The race-blind models predict for Black applicants about 3 points more acceptances than lenders gave (+0.029 on the Kaggle list, +0.031 on the clean list), 3.5 to 4 points when reweighed (+0.035, +0.038), and slightly fewer for White applicants (-0.005 to -0.007). The competition model was within 0.005 for both. This is how the gap narrows: one cut-off applied to scores that are now higher than the recorded rate for Black applicants and lower for White applicants. Whether that is a cost or the point depends on which notion of fairness is chosen; the section on the choice of metric takes it up.
+
+We thought that part of the gap left by the fair model comes through geography: the 8 geography columns (state, the area's median family income, the 6 census tract columns) identify Black applicants with AUC 0.796 on their own (proxy check below). If so, fair_reweigh without those 8 columns (config fair_reweigh_no_geo, 28 columns) should have a narrower accept gap. The rule, fixed before the run: the hypothesis holds if the accept gap narrows with a paired 95% bootstrap interval above 0. Each model is read at its own same-rate cut-off, and the bootstrap draws the same White and Black rows for both (1,000 resamples).
+
+| Black minus White | fair_reweigh | fair_reweigh_no_geo | change [95%] |
+|---|---|---|---|
+| accept gap | -0.096 | -0.095 | +0.000 [-0.003, 0.003] |
+| TPR gap | -0.010 | -0.011 | -0.001 [-0.004, 0.003] |
+| FPR gap | -0.023 | -0.022 | +0.002 [-0.006, 0.009] |
+| pred - obs, Black | +0.038 | +0.040 | +0.002 [0.001, 0.004] |
+| pred - obs, White | -0.007 | -0.009 | -0.002 [-0.002, -0.001] |
+
+The hypothesis is wrong. Without the geography columns the accept gap does not change (+0.0002 before rounding), nor do the TPR and FPR gaps; the calibration gap of Black applicants widens slightly, from +0.038 to +0.040. Removing them costs 0.0039 of CV AUC (0.88985 to 0.88599, 7.5 corrected SE, run 20261111T111505Z_04069927): geography helps predict the decision, but removing it leaves the gap where it was.
 
 Removing the leaks while keeping the demographic fields widens the Black-White gap by 1.0 point [0.6, 1.5] and the TPR gap from -0.038 to -0.055. The leak-free fair model still ends with a gap no wider than the Kaggle-list one (9.6 against 9.8 points).
 
