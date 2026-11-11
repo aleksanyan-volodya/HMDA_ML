@@ -80,13 +80,17 @@ catboost_params:
   learning_rate: 0.05          # same step size as the LightGBM, so tree counts are comparable
   depth: 6                     # CatBoost grows symmetric trees: depth 6 = 64 leaves, close to LightGBM's 63
   l2_leaf_reg: 3.0             # library default
-  # The next five are the values CatBoost uses on this data when they are left out (read with
-  # get_all_params, 2026-10-31), written out so that tuning can change them.
+  # The next five were written out on 2026-10-31 so that tuning can change them, read with get_all_params
+  # on a short fit. Four of them are the values CatBoost uses here when left out. max_ctr_complexity is
+  # NOT: its default depends on the number of trees requested (1 at 30 trees, 4 at 999 or more,
+  # checked 2026-11-11), and our runs request 5,000. Runs logged before 2026-10-31 (no value written)
+  # used 4. Kept at 1 so that every run since then still reproduces; catboost_county_ctr4.yaml
+  # reproduces the logged CatBoost of the final blend (d96c8be4).
   rsm: 1.0                     # share of columns tried at each split
   one_hot_max_size: 2          # categories with at most this many levels are one-hot, the others target-encoded
   subsample: 0.8               # share of rows per tree (bootstrap_type MVS, the default on CPU)
   random_strength: 1.0         # noise added to split scores
-  max_ctr_complexity: 1        # 1 = categories are not combined with each other
+  max_ctr_complexity: 1        # 1 = categories are not combined with each other; NOT the default here (4), see above
   allow_writing_files: false   # no catboost_info/ folder in the repo
   logging_level: Silent        # no per-iteration output (the CV prints its own summary)
 catboost_fit:
