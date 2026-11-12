@@ -65,7 +65,8 @@ the report quotes, but is not part of the final model.
 | src/features.py | pipeline: the named feature transforms and column lists (sections 3, 6.1) |
 | src/target_encoding.py | pipeline: out-of-fold county and tract accept rates (section 6.1, ablation A4) |
 | src/folds.py | pipeline: the frozen folds (section 5.2) |
-| src/cv.py | pipeline: the models and the cross-validation loop (sections 5, 6.2) |
+| src/cv.py | pipeline: the cross-validation loop, logging of the run (section 5) |
+| src/models.py | pipeline: the models, one class per "model:" value (section 6.2) |
 | src/runlog.py | pipeline: logging of every run |
 | src/blend.py | pipeline: fixed-weight blends of logged runs (section 6.4) |
 | src/submit.py | pipeline: Kaggle submission file |

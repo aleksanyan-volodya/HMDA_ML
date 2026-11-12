@@ -19,10 +19,10 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from config import load_config
-from cv import LGBMModel
 from data import load
 from features import BLOCKS, build
 from folds import load_folds
+from models import LGBMModel
 
 ROOT = Path(__file__).resolve().parents[1]
 MIN_ROWS = 5000   # White, Race Not Available, Black, Asian; the next group (Joint, 2,716) gives ~540 per fold

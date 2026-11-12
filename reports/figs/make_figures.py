@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from compare import _run, fold_diff, weighted_auc  # noqa: E402
 from config import load_config  # noqa: E402
-from cv import LGBMModel  # noqa: E402
+from models import LGBMModel  # noqa: E402
 from data import CODED, FEATURES, TARGET, load  # noqa: E402
 from features import BLOCKS, LTV_EDGES, LTV_LEVELS, build  # noqa: E402
 from folds import load_folds  # noqa: E402
