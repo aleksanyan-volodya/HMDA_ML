@@ -60,6 +60,7 @@ if __name__ == "__main__":
 
     table = pd.DataFrame(rows)
     table.to_csv(ROOT / "reports" / "tuning" / "proxy_check.csv", index=False)
+    (ROOT / "oof").mkdir(exist_ok=True)   # not tracked by git: missing in a fresh clone
     pd.concat(scores).to_parquet(ROOT / "oof" / "proxy_race.parquet", index=False)
     print(f"\ncolumns from {experiment} ({len(features)}, no demographic field); one group vs all others")
     print(table.round(4).to_string(index=False))

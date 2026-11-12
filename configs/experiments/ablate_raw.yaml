@@ -1,5 +1,5 @@
 # Ablation A5 (report T9): the 56 typed columns of src/data.py, no cleaning, ratios or orderings;
-# county and MSA ids kept. Same tuned LightGBM settings as fair_full.yaml.
+# county and MSA ids kept. Same tuned LightGBM settings as lgbm_optuna_best.yaml.
 model: lgbm
 features: []
 lgbm_params:

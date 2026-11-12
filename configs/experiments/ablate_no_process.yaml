@@ -1,4 +1,4 @@
-# Ablation A2 (report T9): fair_full.yaml without the 4 process fields registered on 2026-10-18
+# Ablation A2 (report T9): lgbm_optuna_best.yaml without the 4 process fields registered on 2026-10-18
 # (preapproval, submission_of_application, initially_payable_to_institution, aus-1); 51 columns.
 model: lgbm
 features:

@@ -1,4 +1,4 @@
-# Clean feature list (reports/leakage.md): fair_full.yaml without the 2 confirmed leaks; 53 columns.
+# Clean feature list (reports/leakage.md): lgbm_optuna_best.yaml without the 2 confirmed leaks; 53 columns.
 # Same parameters, not retuned: the ablation must change one thing only.
 model: lgbm
 features:

@@ -36,6 +36,8 @@ def log_run(cfg: dict, experiment: str, features: list[str], folds_hash: str,
 
     oof_path = ROOT / "oof" / f"{run_id}.parquet"
     pred_path = ROOT / "preds" / f"{run_id}.parquet"
+    for folder in (oof_path.parent, pred_path.parent):   # not tracked by git: missing in a fresh clone
+        folder.mkdir(exist_ok=True)
     oof_df.to_parquet(oof_path, index=False)
     test_df.to_parquet(pred_path, index=False)
 

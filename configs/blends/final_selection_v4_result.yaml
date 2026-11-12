@@ -1,5 +1,0 @@
-# Chosen by configs/blends/final_selection_v4.yaml (forward selection, equal weights, logit).
-# Selected-folds AUC 0.91905; nested estimate 0.91905.
-runs:
-- 20261003T084548Z_406e4210
-method: logit

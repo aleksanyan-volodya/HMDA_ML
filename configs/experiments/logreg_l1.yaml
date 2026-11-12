@@ -1,4 +1,4 @@
-# TODO 7.22, L1 (lasso) logistic regression: logreg.yaml with a pure L1 penalty, C chosen by the same
+# TODO 7.22, L1 (lasso) logistic regression: the L2 logistic regression (run 83e8fb23) with a pure L1 penalty, C chosen by the same
 # inner CV. Compared with the L2 run 20261013T154151Z_83e8fb23; the columns it sets to 0 are written
 # to reports/coefs/<run_id>.csv.
 model: logreg

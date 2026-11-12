@@ -69,7 +69,7 @@ logreg:
                                                  # penalty acts multiplicatively). Chosen by inner CV; a best
                                                  # value at either end stops the run (the grid must be widened)
   l1_ratio_grid: [0.0]         # share of L1 in the penalty, chosen with C by the inner CV. 0 = pure L2 (lbfgs,
-                               # the logreg.yaml run); 1 = pure L1 (lasso); between = elastic net. > 0 uses saga
+                               # run 83e8fb23); 1 = pure L1 (lasso); between = elastic net. > 0 uses saga
   spline_knots: 5             # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
   max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
 

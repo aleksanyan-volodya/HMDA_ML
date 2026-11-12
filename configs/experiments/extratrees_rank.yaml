@@ -1,4 +1,4 @@
-# ExtraTrees with numeric columns as ranks (fitted on the training fold). Compared with extratrees.yaml:
+# ExtraTrees with numeric columns as ranks (fitted on the training fold). Compared with the ExtraTrees on raw numerics (run a5cb6cb2):
 # random split thresholds are drawn uniformly on the value range, which wastes them on skewed columns.
 model: extratrees
 features:

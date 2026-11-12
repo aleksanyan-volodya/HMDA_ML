@@ -1,3 +1,0 @@
-# Seed averaging (TODO 11.2): the tuned LightGBM with seeds 0-4, equal weights, mean of log-odds.
-runs: [20261003T084548Z_406e4210, 20261014T121106Z_b0f15259, 20261014T121310Z_2680831b, 20261014T121444Z_3f885697, 20261014T121801Z_073a828b]
-method: logit

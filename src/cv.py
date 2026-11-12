@@ -1,7 +1,7 @@
 """Cross-validation runner: one experiment config in, per-fold AUC + OOF (out of fold) and test predictions out.
 
 Usage:
-    uv run python src/cv.py configs/experiments/constant.yaml
+    uv run python src/cv.py configs/experiments/lgbm_optuna_best.yaml
 """
 import argparse
 import time

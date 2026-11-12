@@ -1,4 +1,4 @@
-# Ablation A3 (report T9): fair_full.yaml without the 6 tract columns and the MSA median family income; 48 columns.
+# Ablation A3 (report T9): lgbm_optuna_best.yaml without the 6 tract columns and the MSA median family income; 48 columns.
 model: lgbm
 features:
 - census_zero_to_nan
