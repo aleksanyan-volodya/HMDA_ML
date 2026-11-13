@@ -1,4 +1,4 @@
-# TODO 7.24 variant, one change on top of the 30-epoch schedule of mlp_e30.yaml (reference: that run).
+# MLP variant, one change on top of the 30-epoch schedule of mlp_e30.yaml (reference: that run).
 # Raw county and MSA ids removed. County's embedding is 60,000 of 377,196 parameters for 84,000 rows; raw ids
 # hurt LightGBM (-0.009) and helped CatBoost, so the data cannot say which way a net goes.
 model: mlp

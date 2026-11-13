@@ -1,6 +1,6 @@
-# TODO 7.24, last MLP run, for the report: mlp_combo.yaml with the schedule doubled. mlp_combo chose epochs 24 to 30 of
+# Last MLP run, for the report: mlp_combo (run 33a6dc74) with the schedule doubled. mlp_combo chose epochs 24 to 30 of
 # 30, its inner AUC still at its peak when the schedule ended, so it may have been stopped by the budget.
-# Reference: mlp_combo.yaml (run 20261031T115412Z_33a6dc74).
+# Reference: run 20261031T115412Z_33a6dc74 (its full config is in results/runs.csv).
 model: mlp
 features:
   # block 0, cleaning (adopted)

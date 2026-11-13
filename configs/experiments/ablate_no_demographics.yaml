@@ -1,4 +1,4 @@
-# Ablation A1 / TODO 12.2 (report T9): lgbm_optuna_best.yaml (55 columns) without the 17 demographic fields; 38 columns.
+# Ablation A1 (report T9): lgbm_optuna_best.yaml (55 columns) without the 17 demographic fields; 38 columns.
 # Same tuned LightGBM settings, not retuned: one change only. Also the unaware fair model on the Kaggle list.
 model: lgbm
 features:

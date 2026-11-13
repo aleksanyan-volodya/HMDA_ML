@@ -1,5 +1,5 @@
-# TODO 11.5 / 11.9: stacking on every model logged so far except the seeds of LightGBM (same model) and the older
-# versions. The demographics expert stays out ([N12]: its use must be decided in writing in 12.8).
+# Stacking on every model logged so far except the seeds of LightGBM (same model) and the older versions.
+# The demographics-only model stays out: a fairness diagnostic (report section 9.3), never a blend input.
 base: 20261003T084548Z_406e4210                      # LightGBM, tuned
 candidates:
   catboost_county: 20261014T085450Z_d96c8be4         # CatBoost + raw county / MSA, untuned

@@ -1,4 +1,4 @@
-# TODO 7.25: fresh-split check of the hill-climbing blend against the adopted 50/50 blend, same 15 folds, same rule.
+# Fresh-split check (report T1) of the hill-climbing blend against the adopted 50/50 blend, same 15 folds, same rule.
 # Quick members first, so a failure shows before the 2 hours of CatBoost in each split.
 members:
   lgbm: configs/experiments/lgbm_optuna_best.yaml

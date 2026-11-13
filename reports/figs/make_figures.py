@@ -22,7 +22,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import rankdata, spearmanr
+from scipy.stats import rankdata
 from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score, roc_curve
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -461,7 +461,7 @@ def slices() -> None:
 
     # F7: forest plot of the read levels, grouped by slice.
     f = t[t.read & t.AUC.notna()]
-    labels, ys, y0 = [], [], 0
+    labels, y0 = [], 0
     fig_h = 0.17 * (len(f) + 2 * f.slice.nunique()) + 1
     fig, ax = plt.subplots(figsize=(6.6, fig_h))
     for sname, part in f.groupby("slice", sort=False):

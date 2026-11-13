@@ -1,4 +1,4 @@
-# TODO 7.15: state and census tract fields only. Contains tract_minority_population_percent, a race proxy.
+# Expert model: state and census tract fields only. Contains tract_minority_population_percent, a race proxy.
 # Tuned LightGBM settings, not retuned for the block; the tree count is chosen by the nested inner CV as usual.
 model: lgbm
 features:

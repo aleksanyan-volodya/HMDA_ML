@@ -1,7 +1,6 @@
-# Final blend selection, third pass (2026-10-31): as final_selection_v2.yaml with the tuned XGBoost (reports/tuning.md).
-# Second pass: as final_selection.yaml, with the tuned ExtraTrees
-# (TODO 7.19) instead of the untuned one and the L1 logistic regression (TODO 7.22, passed the rule
-# over L2) instead of the L2 one. Equal weights, log-odds.
+# Final blend selection, third pass (2026-10-31): every candidate model as logged, with the tuned XGBoost
+# (reports/tuning.md), the tuned ExtraTrees and the L1 logistic regression (which passed the rule over L2)
+# in place of their earlier versions. Equal weights, log-odds.
 base: 20261003T084548Z_406e4210                      # LightGBM, tuned (seed 0)
 candidates:
   catboost_county: 20261014T085450Z_d96c8be4         # CatBoost + raw county / MSA, untuned

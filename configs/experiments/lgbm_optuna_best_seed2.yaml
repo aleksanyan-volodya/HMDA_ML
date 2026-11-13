@@ -1,4 +1,4 @@
-# Tuned LightGBM (lgbm_optuna_best.yaml) with seed 2 instead of 0, for seed averaging (TODO 11.2).
+# Tuned LightGBM (lgbm_optuna_best.yaml) with seed 2 instead of 0, for seed averaging.
 # The seed drives row / column sampling (bagging_fraction, feature_fraction); nothing else differs.
 model: lgbm
 features:

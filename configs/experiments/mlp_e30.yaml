@@ -1,4 +1,4 @@
-# TODO 7.24 variant: the new reference for the other variants, first run with the 30-epoch schedule.
+# MLP variant: the new reference for the other variants, first run with the 30-epoch schedule.
 # Shorter schedule. The first run's best epochs were 10 to 16 of 60 and it stopped with the learning rate
 # still at ~60%, so the low-rate end of the cosine was never reached.
 model: mlp

@@ -1,4 +1,4 @@
-# Report T11 hypotheses H1-H3 from the worst errors (TODO 9.2, notebook 03), one block on the tuned
+# Report T11 hypotheses H1-H3 from the worst errors (notebook 03), one block on the tuned
 # LightGBM (lgbm_optuna_best.yaml, run 406e4210), 55 + 3 = 58 columns. Report only, not a blend candidate.
 model: lgbm
 features:

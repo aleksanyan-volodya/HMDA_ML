@@ -1,4 +1,4 @@
-# TODO 7.19: joint search over the ExtraTrees settings, on the ranked-numerics ExtraTrees (CV 0.90185,
+# Joint search over the ExtraTrees settings, on the ranked-numerics ExtraTrees (CV 0.90185,
 # run 20261014T135428Z_542eac1f). Everything not listed stays at the experiment's values.
 experiment: configs/experiments/extratrees_rank.yaml
 study_name: extratrees_optuna

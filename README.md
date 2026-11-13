@@ -125,17 +125,21 @@ the report quotes, but is not part of the final model.
 | src/leakage_scan.py | evidence for section 4: levels with an accept rate below 2% or above 98% |
 | src/proxy_check.py | evidence for section 9.3: how well the kept columns predict race |
 | reports/figs/make_figures.py | evidence: figures F1 to F9 and tables T2, T3, T5, T6, T10, T11, from logged runs |
-| notebooks/01_eda.ipynb, 02_eda_multivariate.ipynb | evidence for section 3 and the feature plan of section 6.1 |
-| notebooks/03_error_analysis.ipynb | evidence for section 8.3 |
-| notebooks/04_fairness.ipynb | evidence for section 9 |
+| notebooks/01_eda.ipynb | evidence for section 3; needs the data only |
+| notebooks/02_eda_multivariate.ipynb | evidence for section 3 and the feature plan of section 6.1; needs the data and the folds (make folds) |
+| notebooks/03_error_analysis.ipynb | evidence for section 8.3; reads the tables written by make figures |
+| notebooks/04_fairness.ipynb | evidence for section 9; reads the out-of-fold predictions of the logged final blend (run 1ff742f2) and fair-model runs, and the output of src/proxy_check.py |
 | tests/ | "make test": target-encoding noise test and train / test feature-path test (needs the data); "make smoke": folds and make final on 2,000 rows in a temporary copy (~1.5 min) |
 | configs/base.yaml | every setting and its default, with the reason for each value |
 | configs/experiments/ | one file per CV experiment the report cites: the 4 final members, the feature steps (T7), models (T8), ablations (T9), fair models (section 9) |
 | configs/blends/ | lgbm_cat_et_xgb.yaml (final blend); the other files are the blend checks of section 6.4 and the fresh-split check of T1 |
 | configs/sweeps/ | the searches of section 6.3 |
 
+The notebooks are stored without outputs. Run them with notebooks/ as the working directory and the
+project environment as kernel (.venv, created by make setup; it includes ipykernel, not Jupyter itself).
+
 Configs of runs the report does not cite were removed; the full config of every run stays in
-results/runs.csv, and the files are on branch volodya.
+results/runs.csv, and the removed files stay in the git history (git log --all -- <file>).
 
 ## Where results live
 

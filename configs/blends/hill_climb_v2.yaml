@@ -1,4 +1,4 @@
-# TODO 11.4, second pass: weights for LightGBM, CatBoost, the tuned XGBoost and the tuned ExtraTrees chosen by hill climbing on the
+# Hill climbing, second pass: weights for LightGBM, CatBoost, the tuned XGBoost and the tuned ExtraTrees chosen by hill climbing on the
 # fold AUC, scored nested and compared with the current blend (LightGBM + CatBoost county, 50/50 log-odds).
 base: 20261003T084548Z_406e4210                      # LightGBM, tuned
 candidates:

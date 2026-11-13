@@ -1,13 +1,12 @@
 # Settings shared by every experiment.
 
-# Seed for the CV split. Every CV score we compare is computed on the split it
-# produces, so we just fix it here (actually changing it is refused unless
-# the run is started with --allow-fold-change bahahhahahahhahahahaha).
-# The value 42 is arbitrary and carries no meaning... Well, maybe it does, but we don't care.
+# Seed for the CV split. Every CV score we compare is computed on the split it produces, so it is
+# fixed here; src/folds.py refuses to rebuild the folds with another value unless run with
+# --allow-fold-change. The value 42 is arbitrary.
 fold_seed: 42
 
-# Number of CV folds. 5 just because it's a commun thing to do and I don't see any reason to use other thing.
-# 10 folds would train on 90% (slightly less pessimistic) at 2x the compute.
+# Number of CV folds. 5 is the usual choice; 10 folds would train on 90% of the rows (slightly less
+# pessimistic) at 2x the compute.
 n_folds: 5
 
 # Seeds for model randomness like bagging, feature subsampling.
@@ -63,7 +62,7 @@ lgbm_fit:
                                # not improved for 200 trees
                                # at lr 0.05 that is a long plateau
 
-# Logistic regression (model: logreg, src/cv.py LogRegModel).
+# Logistic regression (model: logreg, src/models.py LogRegModel).
 logreg:
   C_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]   # inverse penalty strength, one value per decade (the
                                                  # penalty acts multiplicatively). Chosen by inner CV; a best
@@ -73,7 +72,7 @@ logreg:
   spline_knots: 5             # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
   max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
 
-# CatBoost (model: catboost, src/cv.py CatBoostModel). Starting values of TODO 7.6, not tuned.
+# CatBoost (model: catboost, src/models.py CatBoostModel). Starting values, not tuned.
 catboost_params:
   loss_function: Logloss
   eval_metric: AUC             # the competition metric, used to pick the tree count
@@ -98,7 +97,7 @@ catboost_fit:
   early_stopping_rounds: 200   # same patience as LightGBM
   single_fit: false            # true = one fit, no refit: for the search only (tune_optuna.py trial_overrides)
 
-# XGBoost (model: xgb, src/cv.py XGBModel). Starting values of TODO 7.7, not tuned.
+# XGBoost (model: xgb, src/models.py XGBModel). Starting values, not tuned.
 xgb_params:
   objective: "binary:logistic"
   eval_metric: auc             # the competition metric, used to pick the tree count
@@ -115,7 +114,7 @@ xgb_fit:
   max_rounds: 5000             # upper cap; hitting it stops the run
   early_stopping_rounds: 200   # same patience as LightGBM and CatBoost
 
-# ExtraTrees (model: extratrees, src/cv.py ExtraTreesModel). Nothing searched; checked once on a
+# ExtraTrees (model: extratrees, src/models.py ExtraTreesModel). Nothing searched; checked once on a
 # 30k-row sample of fold 0 (leaf 1 / 5 / 20 x 200 / 500 trees): leaf 1 best, 200 = 500 trees.
 extratrees_params:
   n_estimators: 300            # more trees only reduce averaging noise; 200 and 500 scored the same

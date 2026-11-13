@@ -1,4 +1,4 @@
-# TODO 7.14: the money fields, ratios and credit score types only.
+# Expert model: the money fields, ratios and credit score types only.
 # Tuned LightGBM settings, not retuned for the block; the tree count is chosen by the nested inner CV as usual.
 model: lgbm
 features:

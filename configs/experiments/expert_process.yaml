@@ -1,4 +1,4 @@
-# TODO 7.23: how the application was made and the product's terms, including the two confirmed process artefacts.
+# Expert model: how the application was made and the product's terms, including the two confirmed process artefacts.
 # Tuned LightGBM settings, not retuned for the block; the tree count is chosen by the nested inner CV as usual.
 model: lgbm
 features:

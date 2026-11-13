@@ -1,4 +1,4 @@
-# TODO 7.16: declared demographics only. A fairness diagnostic for 12.8, NOT a blend candidate ([N12]).
+# Expert model: declared demographics only. A fairness diagnostic (report section 9.3), NOT a blend candidate.
 # Tuned LightGBM settings, not retuned for the block; the tree count is chosen by the nested inner CV as usual.
 model: lgbm
 features:
