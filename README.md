@@ -95,7 +95,7 @@ the runs named by id in reports/figs/make_figures.py, so it needs those runs' fi
 Every command runs through "uv run --locked", which stops instead of changing uv.lock.
 "make help" lists the other targets: make compare (paired gain of one run over another, with the
 decision rule), make ci (bootstrap interval), make fresh / fresh-blend / fresh-blends (re-check on
-new fold splits), make tune and make optuna (setting searches), make test.
+new fold splits), make tune and make optuna (setting searches), make test and make smoke.
 
 ## Files
 
@@ -128,7 +128,7 @@ the report quotes, but is not part of the final model.
 | notebooks/01_eda.ipynb, 02_eda_multivariate.ipynb | evidence for section 3 and the feature plan of section 6.1 |
 | notebooks/03_error_analysis.ipynb | evidence for section 8.3 |
 | notebooks/04_fairness.ipynb | evidence for section 9 |
-| tests/ | "make test": tests of the pipeline code |
+| tests/ | "make test": target-encoding noise test and train / test feature-path test (needs the data); "make smoke": folds and make final on 2,000 rows in a temporary copy (~1.5 min) |
 | configs/base.yaml | every setting and its default, with the reason for each value |
 | configs/experiments/ | one file per CV experiment the report cites: the 4 final members, the feature steps (T7), models (T8), ablations (T9), fair models (section 9) |
 | configs/blends/ | lgbm_cat_et_xgb.yaml (final blend); the other files are the blend checks of section 6.4 and the fresh-split check of T1 |
