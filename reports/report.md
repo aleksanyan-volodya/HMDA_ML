@@ -1,6 +1,7 @@
 # Predicting mortgage application outcomes from HMDA records
 
-Draft of 2026-11-11. Runs are cited by the last 8 characters of their run_id (for example run 1ff742f2); the full id, config, commit, per-fold AUCs and prediction files of every run are in reports/runs.csv. Tables are T1 to T20, figures F1 to F9; figures are in reports/figs/ and are rebuilt by "make figures" (reports/figs/make_figures.py), which also pastes the generated tables into this file. A line in square brackets marks a part still to write.
+Runs are cited by the last 8 characters of their run_id; the full id, config, commit, per-fold AUCs of every run are in results/runs.csv. Files cited under reports/tuning/ and reports/figs/ are generated locally by the commands of the README and are not tracked.
+
 
 ## 1. Summary
 
@@ -631,13 +632,13 @@ What the interpretation cannot claim:
 
 ### 10.2 Reproducibility
 
-Environment. uv.lock pins every library, and every Makefile command runs through "uv run --locked", which refuses to run if the lock and the environment disagree. Versions: Python 3.13.12, numpy 2.5.3, pandas 3.0.6, scikit-learn 1.9.1, LightGBM 4.7.0 (recorded with each run in reports/runs.csv), CatBoost 1.2.10, XGBoost 3.4.1, PyTorch 2.15.0 CPU (MLP only), Optuna 5.0.0, matplotlib 3.11.2 (read from the locked environment on 2026-11-10; runs.csv does not record these).
+Environment. uv.lock pins every library, and every Makefile command runs through "uv run --locked", which refuses to run if the lock and the environment disagree. Versions: Python 3.13.12, numpy 2.5.3, pandas 3.0.6, scikit-learn 1.9.1, LightGBM 4.7.0 (recorded with each run in results/runs.csv), CatBoost 1.2.10, XGBoost 3.4.1, PyTorch 2.15.0 CPU (MLP only), Optuna 5.0.0, matplotlib 3.11.2 (read from the locked environment on 2026-11-10; runs.csv does not record these).
 
 Hardware. One laptop: Intel Core i7-10610U, 8 logical CPUs, 30 GB RAM, no GPU. Every model ran on the CPU.
 
-Data and folds. The raw files are not distributed; their SHA256 sums are in configs/data_checksums.txt and "make check-data" verifies them. The 5 folds are built once by "make folds" into data/processed/folds.parquet; the code refuses another fold seed, and every run in the final model carries the same fold hash (3762a22f..., reports/runs.csv).
+Data and folds. The raw files are not distributed; their SHA256 sums are in configs/data_checksums.txt and "make check-data" verifies them. The 5 folds are built once by "make folds" into data/processed/folds.parquet; the code refuses another fold seed, and every run in the final model carries the same fold hash (3762a22f..., results/runs.csv).
 
-T20. The runs of the final model (reports/runs.csv).
+T20. The runs of the final model (results/runs.csv).
 
 | member | config | run | commit | uncommitted changes | wall time | CV AUC | re-run (commit): result |
 |---|---|---|---|---|---|---|---|
