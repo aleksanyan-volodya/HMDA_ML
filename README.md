@@ -68,24 +68,29 @@ CPU (8 logical CPUs, no GPU), CatBoost being most of it.
     make setup
     make check-data
     make folds
+    make final        # both submissions: submissions/<run_id>.csv, one file per blend
+
+"make final" runs these steps, which can also be run one by one:
+
     make cv EXP=configs/experiments/lgbm_optuna_best.yaml
     make cv EXP=configs/experiments/catboost_county_ctr4.yaml
     make cv EXP=configs/experiments/extratrees_optuna_best.yaml
     make cv EXP=configs/experiments/xgb_optuna_best.yaml
-    (put the 4 new run ids, printed at the end of each run, in configs/blends/lgbm_cat_et_xgb.yaml,
-     and the LightGBM and CatBoost ones in configs/blends/lgbm_catboost_logit.yaml)
     make blend BLEND=configs/blends/lgbm_cat_et_xgb.yaml
-    make submit RUN_ID=<this blend's run id>      # submission 6
+    make submit RUN_ID=<run id printed by the blend>      # submission 6
     make blend BLEND=configs/blends/lgbm_catboost_logit.yaml
-    make submit RUN_ID=<this blend's run id>      # submission 5
-    make figures
+    make submit RUN_ID=<run id printed by the blend>      # submission 5
+
+A blend file names its members by experiment file; the blend uses the latest logged run of
+each, and refuses a run whose config differs from what the file gives now. The blend run logs
+the member run ids it used.
 
 The CatBoost config is catboost_county_ctr4.yaml: the same model as the logged CatBoost member
 (catboost_county.yaml, run d96c8be4) with max_ctr_complexity 4 written out; its re-run 0810e0b4
 gave identical predictions (report section 10.2).
 
-"make figures" reads the predictions of the runs named by id in reports/figs/make_figures.py,
-so it needs those runs' files in oof/.
+"make figures" rebuilds the report's figures and generated tables. It reads the predictions of
+the runs named by id in reports/figs/make_figures.py, so it needs those runs' files in oof/.
 
 Every command runs through "uv run --locked", which stops instead of changing uv.lock.
 "make help" lists the other targets: make compare (paired gain of one run over another, with the

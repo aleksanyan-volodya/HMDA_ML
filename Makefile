@@ -5,7 +5,10 @@
 RUN := uv run --locked
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check-data folds cv tune optuna fresh fresh-blend fresh-blends blend compare ci submit test figures
+.PHONY: help setup check-data folds final cv tune optuna fresh fresh-blend fresh-blends blend compare ci submit test figures
+
+# The run id of the last run logged, i.e. the blend just run (first column of the last line of the log).
+LAST_RUN = $$(tail -n 1 results/runs.csv | cut -d, -f1)
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -18,6 +21,16 @@ check-data:  ## Verify data/raw files against configs/data_checksums.txt
 
 folds:  ## Build the frozen CV folds (refuses to change an existing split)
 	$(RUN) python src/folds.py
+
+final:  ## Rebuild both selected submissions (6 and 5): 4 CV runs, 2 blends, 2 files in submissions/ (~2.5 h)
+	$(MAKE) cv EXP=configs/experiments/lgbm_optuna_best.yaml
+	$(MAKE) cv EXP=configs/experiments/catboost_county_ctr4.yaml
+	$(MAKE) cv EXP=configs/experiments/extratrees_optuna_best.yaml
+	$(MAKE) cv EXP=configs/experiments/xgb_optuna_best.yaml
+	$(MAKE) blend BLEND=configs/blends/lgbm_cat_et_xgb.yaml
+	$(MAKE) submit RUN_ID=$(LAST_RUN)
+	$(MAKE) blend BLEND=configs/blends/lgbm_catboost_logit.yaml
+	$(MAKE) submit RUN_ID=$(LAST_RUN)
 
 cv:  ## Run and log one experiment: make cv EXP=configs/experiments/<name>.yaml
 	@test -n "$(EXP)" || { echo "usage: make cv EXP=configs/experiments/<name>.yaml"; exit 1; }

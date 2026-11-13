@@ -1,13 +1,15 @@
-# Weights from hill climbing (configs/blends/hill_climb_v2.yaml): 2/6, 2/6, 1/6, 1/6, the same in 4 of the 5 nested
-# climbs. Log-odds. Final model (adopted 2026-11-01): run 20261031T220901Z_1ff742f2, CV 0.92054; confirmed on
-# fresh splits (+0.00070 over the 50/50 blend, 7.6 SE, 15 of 15 folds; reports/models.md); Kaggle submission 6,
-# public LB 0.92158, main final submission (reports/submissions.md).
-# CatBoost member: run 0810e0b4 since 2026-11-11, the clean-commit rebuild of d96c8be4 (the member the blend
-# run 1ff742f2 and submission 6 used) with max_ctr_complexity 4 written out; OOF and test predictions identical.
-runs:
-  - 20261003T084548Z_406e4210    # LightGBM, tuned
-  - 20261111T100056Z_0810e0b4    # CatBoost + raw county / MSA, untuned (catboost_county_ctr4.yaml)
-  - 20261019T060754Z_7bc88a0b    # ExtraTrees, Optuna best
-  - 20261031T215118Z_05b22e57    # XGBoost, Optuna best
+# Final model, Kaggle submission 6: weights from hill climbing (configs/blends/hill_climb_v2.yaml): 2/6, 2/6,
+# 1/6, 1/6, the same in 4 of the 5 nested climbs. Log-odds. Adopted 2026-11-01: run 20261031T220901Z_1ff742f2,
+# CV 0.92054; confirmed on fresh splits (+0.00070 over the 50/50 blend, 7.6 SE, 15 of 15 folds;
+# reports/models.md); public LB 0.92158 (reports/submissions.md).
+# Members are given by experiment file: blend.py uses the latest logged run of each (make cv first).
+# Runs of the logged blend 1ff742f2: 406e4210, d96c8be4, 7bc88a0b, 05b22e57. The CatBoost member is now
+# catboost_county_ctr4.yaml, the rebuild of d96c8be4 with max_ctr_complexity 4 written out (run 0810e0b4,
+# identical predictions; blend rebuilt from it: run 653a027d, identical predictions). Order and weights unchanged.
+members:
+  - configs/experiments/lgbm_optuna_best.yaml         # LightGBM, tuned
+  - configs/experiments/catboost_county_ctr4.yaml     # CatBoost + raw county / MSA, untuned
+  - configs/experiments/extratrees_optuna_best.yaml   # ExtraTrees, Optuna best
+  - configs/experiments/xgb_optuna_best.yaml          # XGBoost, Optuna best
 weights: [2, 2, 1, 1]
 method: logit

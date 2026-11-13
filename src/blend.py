@@ -5,9 +5,12 @@ Usage:
     uv run python src/blend.py configs/blends/<name>.yaml
 
 Blend file:
-    runs: [<run_id>, ...]          members, all on the same folds
+    members: [<experiment.yaml>, ...]   members, each = the latest logged run of that experiment
+    runs: [<run_id>, ...]               or: members given by run id
     method: rank | logit
-    weights: [w1, ...]             optional, default equal
+    weights: [w1, ...]                  optional, default equal
+All members must use the same folds. A member given by experiment must have a logged run whose
+config is the one that file builds now (so "make cv" on each member comes first).
 
     rank : weighted mean of each member's percentile rank (rank-based, ignores calibration)
     logit: weighted mean of each member's log-odds, mapped back to a probability. A fixed linear
@@ -27,10 +30,24 @@ import yaml
 from sklearn.metrics import roc_auc_score
 
 from compare import _run
-from runlog import log_run
+from config import config_hash, load_config
+from runlog import RUNS, log_run
 
 ROOT = Path(__file__).resolve().parents[1]
 EPS = 1e-12   # keeps log-odds finite for predictions of exactly 0 or 1
+
+
+def latest_run(experiment: str) -> str:
+    """Run id of the latest logged run of an experiment file, refused if its config differs from
+    what the file builds now (the run would not be the model the file describes)."""
+    runs = pd.read_csv(RUNS)
+    done = runs[runs.experiment.map(lambda e: Path(e).as_posix()) == Path(experiment).as_posix()]
+    if done.empty:
+        raise SystemExit(f"no logged run of {experiment}: run make cv EXP={experiment} first")
+    last = done.iloc[-1]
+    if last.config_hash != config_hash(load_config(ROOT / experiment)):
+        raise SystemExit(f"latest run of {experiment} ({last.run_id}) used another config: run make cv EXP={experiment}")
+    return last.run_id
 
 
 def combine(preds: list[np.ndarray], weights: np.ndarray, method: str) -> np.ndarray:
@@ -48,7 +65,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     spec = yaml.safe_load(Path(args.blend).read_text())
     t0 = time.perf_counter()
-    members = [_run(r) for r in spec["runs"]]
+    run_ids = spec["runs"] if "runs" in spec else [latest_run(e) for e in spec["members"]]
+    members = [_run(r) for r in run_ids]
     if len({m.folds_hash for m in members}) != 1:
         raise SystemExit("members use different folds: they cannot be blended")
     weights = np.array(spec.get("weights") or [1.0] * len(members), dtype=float)
@@ -63,8 +81,8 @@ if __name__ == "__main__":
     test = tests[0][["id"]].assign(pred=combine([t.pred.to_numpy() for t in tests], weights, spec["method"]))
     fold_auc = [float(roc_auc_score(oof.accepted[oof.fold == k], oof.pred[oof.fold == k])) for k in sorted(oof.fold.unique())]
 
-    cfg = {"model": "blend", "method": spec["method"], "runs": spec["runs"], "weights": weights.round(6).tolist()}
-    run_id = log_run(cfg, args.blend, [f"run:{r}" for r in spec["runs"]], members[0].folds_hash,
+    cfg = {"model": "blend", "method": spec["method"], "runs": run_ids, "weights": weights.round(6).tolist()}
+    run_id = log_run(cfg, args.blend, [f"run:{r}" for r in run_ids], members[0].folds_hash,
                      fold_auc, time.perf_counter() - t0, oof, test)
     print("members:", ", ".join(f"{m.run_id} ({m.mean_auc:.5f})" for m in members))
     print(f"fold AUC: {np.round(fold_auc, 6).tolist()}\nmean {np.mean(fold_auc):.6f}\nlogged run {run_id}")
