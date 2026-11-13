@@ -14,8 +14,9 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 
+from runlog import RUNS   # the run log, defined in one place
+
 ROOT = Path(__file__).resolve().parents[1]
-RUNS = ROOT / "reports" / "runs.csv"
 N_BOOT = 1000   # resamples: Monte-Carlo error of a 95% percentile bound is small next to the CI width
 BOOT_SEED = 0   # arbitrary, fixed so the printed CI is reproducible
 

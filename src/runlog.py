@@ -1,6 +1,6 @@
 """Add records of every CV run.
 
-One row per run in reports/runs.csv, plus the run's predictions:
+One row per run in results/runs.csv, plus the run's predictions:
     oof/<run_id>.parquet    id, fold, accepted, pred   (105,000 rows)
     preds/<run_id>.parquet  id, pred                   (45,000 rows)
 """
@@ -17,7 +17,7 @@ import pandas as pd
 from config import config_hash
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNS = ROOT / "reports" / "runs.csv"
+RUNS = ROOT / "results" / "runs.csv"
 CODE_PATHS = ["src", "configs", "pyproject.toml", "uv.lock"]
 LIBS = ["numpy", "pandas", "scikit-learn", "lightgbm", "pyarrow"]
 

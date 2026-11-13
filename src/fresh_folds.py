@@ -15,7 +15,7 @@ Blends file (weights in log-odds, normalised):
 With --blends the out-of-fold predictions of each member are saved in oof/fresh/, one file per experiment,
 config and split: a run that stops resumes there, and a later blend only runs what changed.
 
-Nothing is logged in reports/runs.csv (other folds), and data/processed/folds.parquet is untouched.
+Nothing is logged in results/runs.csv (other folds), and data/processed/folds.parquet is untouched.
 """
 import argparse
 from pathlib import Path
@@ -109,7 +109,7 @@ def compare_two(args: argparse.Namespace) -> tuple[list, list, list, str]:
         rows.append({"seed": seed, "reference": ref_auc.mean(), "candidate": cand_auc.mean(),
                      "gain": d.mean(), "folds up": int((d > 0).sum())})
         per_fold += [{"seed": seed, "fold": k, "reference_auc": a, "candidate_auc": b} for k, (a, b) in enumerate(zip(ref_auc, cand_auc))]
-    # Saved so the result can be read and cited later (these runs are not in reports/runs.csv).
+    # Saved so the result can be read and cited later (these runs are not in results/runs.csv).
     cand_name = Path(args.candidate).stem if args.candidate else f"blend_{Path(args.reference).stem}_{Path(args.blend_with).stem}"
     return diffs, rows, per_fold, f"fresh_{cand_name}_vs_{Path(args.reference).stem}.csv"
 

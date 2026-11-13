@@ -33,7 +33,7 @@ def reweigh_weights(group: pd.Series, y: pd.Series) -> np.ndarray:
 def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = None,
            only_folds: list[int] | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
     """folds: (id, fold) to use instead of the frozen folds. Only for checks on fresh splits
-    (src/fresh_folds.py); such runs are not comparable with reports/runs.csv and are not logged.
+    (src/fresh_folds.py); such runs are not comparable with results/runs.csv and are not logged.
     coefs: if given, each fold model's coefficient table (linear models only) is appended to it.
     only_folds: score these outer folds only, for a cheap search (tune_optuna.py). The predictions returned
     are then incomplete and test predictions are skipped: such a run must not be logged."""

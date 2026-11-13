@@ -3,7 +3,7 @@
     uv run --locked python reports/figs/make_figures.py               # every step
     uv run --locked python reports/figs/make_figures.py slices shap   # some steps
 
-Reads data/raw, oof/<run_id>.parquet, reports/runs.csv and reports/submissions.md, writes
+Reads data/raw, oof/<run_id>.parquet, results/runs.csv and reports/submissions.md, writes
 reports/figs/, and pastes each generated table into reports/report.md between its
 "<!-- begin name -->" and "<!-- end name -->" markers. Trains nothing, except the "shap" step:
 one LightGBM fit with the tuned settings on folds 1-4 (about a minute), because importance

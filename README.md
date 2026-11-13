@@ -19,7 +19,7 @@ leaderboard (report T1).
                                with its settings (tree count, penalty, epochs) chosen by an inner CV on
                                the fit part only, out-of-fold prediction on the held-out fold;
                                test prediction = mean of the 5 fold models (no refit on all rows)
-      -> src/runlog.py         one row in reports/runs.csv, oof/<run_id>.parquet, preds/<run_id>.parquet
+      -> src/runlog.py         one row in results/runs.csv, oof/<run_id>.parquet, preds/<run_id>.parquet
       -> src/blend.py          weighted mean of the log-odds of logged runs, logged as a new run
       -> src/submit.py         submissions/<run_id>.csv, checked against data/sample_submission.csv
 
@@ -29,11 +29,25 @@ any other key). A run id is the UTC start time plus the first 8 characters of th
 full merged config, for example 20261031T220901Z_1ff742f2; the report cites runs by those last
 8 characters.
 
+## Data
+
+The data is not in the repository. Download it from the competition page,
+https://www.kaggle.com/competitions/demandes-de-pret-immobilier-aux-etats-unis (Data tab),
+or with the Kaggle command-line tool (not part of this environment) and an API token:
+
+    kaggle competitions download -c demandes-de-pret-immobilier-aux-etats-unis
+
+Unzip it, put train.csv and test.csv in data/raw/ and sample_submission.csv in data/, then:
+
+    make check-data    # SHA256 of the 3 files against configs/data_checksums.txt
+    make folds         # the 5 frozen folds -> data/processed/folds.parquet
+
+The folds are rebuilt from the data and the seed in configs/base.yaml (42): the same split as
+every logged run (its hash, 3762a22f..., is the folds_hash column of results/runs.csv).
+
 ## Rebuilding the final model (report section 10.2)
 
-The raw data is not distributed: put train.csv and test.csv in data/raw/ (data/sample_submission.csv
-and the folds are in the repository). "make check-data" verifies the files against
-configs/data_checksums.txt. About 2.5 hours on a laptop CPU (8 logical CPUs, no GPU), CatBoost being most of it.
+About 2.5 hours on a laptop CPU (8 logical CPUs, no GPU), CatBoost being most of it.
 
     make setup
     make check-data
@@ -46,6 +60,9 @@ configs/data_checksums.txt. About 2.5 hours on a laptop CPU (8 logical CPUs, no 
     make blend BLEND=configs/blends/lgbm_cat_et_xgb.yaml
     make submit RUN_ID=<the blend's run id>
     make figures
+
+"make figures" reads the predictions of the runs named by id in reports/figs/make_figures.py,
+so it needs those runs' files in oof/.
 
 Every command runs through "uv run --locked", which stops instead of changing uv.lock.
 "make help" lists the other targets: make compare (paired gain of one run over another, with the
@@ -90,18 +107,24 @@ the report quotes, but is not part of the final model.
 | configs/sweeps/ | the searches of section 6.3 |
 
 Configs of runs the report does not cite were removed; the full config of every run stays in
-reports/runs.csv, and the files are on branch volodya.
+results/runs.csv, and the files are on branch volodya.
 
 ## Where results live
 
 - reports/report.md: the report. The notes it cites for details: reports/validation.md (folds,
   rule), feature_plan.md, leakage.md, models.md, tuning.md, fairness.md, submissions.md,
   refs/hmda_dictionary.md (code meanings).
-- reports/runs.csv: one row per logged run, with its full merged config, commit, per-fold AUCs
-  and the paths of its predictions. Every run id in the report is a row here.
+- results/runs.csv: one row per logged run, with its full merged config, commit, per-fold AUCs
+  and the paths of its predictions. Every run id in the report is a row here. It is the only
+  output kept in the repository.
+
+Everything below is generated, not tracked, and rebuilt by a command:
+
 - oof/<run_id>.parquet and preds/<run_id>.parquet: out-of-fold and test predictions of each run
-  (not tracked: rebuilt from the config in runs.csv).
-- reports/tuning/: trial tables of the searches, fresh-split results, proxy check.
-- reports/coefs/: coefficients of the logistic regression fold models.
-- reports/figs/: figures and generated tables.
-- submissions/: the files submitted to Kaggle, named by run id (list and scores in reports/submissions.md).
+  (make cv, make blend).
+- submissions/<run_id>.csv: Kaggle submission files (make submit); the list of submissions and
+  their scores is in reports/submissions.md.
+- reports/tuning/: trial tables of the searches (make tune, make optuna), fresh-split results
+  (make fresh, fresh-blend, fresh-blends), proxy check (src/proxy_check.py).
+- reports/coefs/: coefficients of the logistic regression fold models (make cv on a logreg config).
+- reports/figs/: figures and generated tables (make figures).

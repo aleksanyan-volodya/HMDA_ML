@@ -18,15 +18,18 @@ env/
 .DS_Store
 Thumbs.db
 
-# Data
-data/raw
+# Data: downloaded from Kaggle (see README); the folds are rebuilt by "make folds"
+data/
 
-# Per-run predictions: large, and regenerable from commit + config in reports/runs.csv
+# Generated outputs, rebuilt by the commands in the README. The run log results/runs.csv
+# stays tracked: it links every run id cited in the report to its full config.
 oof/
 preds/
-
-# Optuna study databases (binary). The readable record is reports/tuning/<study>.csv
-reports/tuning/*.db
+submissions/
+reports/tuning/
+reports/coefs/
+reports/figs/*
+!reports/figs/make_figures.py
 
 # CatBoost's cv() writes training logs here even with allow_writing_files: false
 catboost_info/
@@ -39,4 +42,3 @@ build/
 htmlcov/
 
 TODO_Volodya.md
-reports/tuning/*.log

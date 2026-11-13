@@ -59,8 +59,9 @@ if __name__ == "__main__":
             scores.append(pd.DataFrame({"id": train["id"], "group": group, "columns": name, "pred": pred}))
 
     table = pd.DataFrame(rows)
+    for folder in (ROOT / "reports" / "tuning", ROOT / "oof"):   # not tracked by git: missing in a fresh clone
+        folder.mkdir(exist_ok=True)
     table.to_csv(ROOT / "reports" / "tuning" / "proxy_check.csv", index=False)
-    (ROOT / "oof").mkdir(exist_ok=True)   # not tracked by git: missing in a fresh clone
     pd.concat(scores).to_parquet(ROOT / "oof" / "proxy_race.parquet", index=False)
     print(f"\ncolumns from {experiment} ({len(features)}, no demographic field); one group vs all others")
     print(table.round(4).to_string(index=False))

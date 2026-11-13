@@ -5,7 +5,7 @@ Usage:
 
 - The first trial is the experiment unchanged, so the search ends at the reference or better.
 - Trials are stored in reports/tuning/<study_name>.db: stop with Ctrl-C and relaunch to resume.
-- Trials are NOT logged in reports/runs.csv. At the end the best settings are written to
+- Trials are NOT logged in results/runs.csv. At the end the best settings are written to
   configs/experiments/<study_name>_best.yaml, to be run and compared like any experiment.
 - The best of many trials on the same folds is optimistic: it must still pass "make compare"
   and the fresh-folds check before being adopted.

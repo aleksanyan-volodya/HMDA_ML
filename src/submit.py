@@ -37,6 +37,7 @@ def make_submission(run_id: str) -> Path:
     validate(sub, sample)
 
     out = ROOT / "submissions" / f"{run_id}.csv"
+    out.parent.mkdir(exist_ok=True)   # not tracked by git: missing in a fresh clone
     # Full float precision: rounding would create ties, and ties can only lower AUC.
     sub.to_csv(out, index=False)
     validate(pd.read_csv(out), sample)

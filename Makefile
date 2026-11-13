@@ -47,11 +47,11 @@ blend:  ## Blend logged runs into a new logged run: make blend BLEND=configs/ble
 	@test -n "$(BLEND)" || { echo "usage: make blend BLEND=configs/blends/<name>.yaml"; exit 1; }
 	$(RUN) python src/blend.py $(BLEND)
 
-# NEW defaults to the last run logged in reports/runs.csv (first column of the last line).
-NEW ?= $(shell tail -n 1 reports/runs.csv | cut -d, -f1)
+# NEW defaults to the last run logged in results/runs.csv (first column of the last line).
+NEW ?= $(shell tail -n 1 results/runs.csv | cut -d, -f1)
 
 compare:  ## Paired gain over a reference run: make compare BASE=<run_id> [NEW=<run_id>, default: latest run]
-	@test -n "$(BASE)" -a -n "$(NEW)" || { echo "usage: make compare BASE=<run_id> [NEW=<run_id>] (see reports/runs.csv)"; exit 1; }
+	@test -n "$(BASE)" -a -n "$(NEW)" || { echo "usage: make compare BASE=<run_id> [NEW=<run_id>] (see results/runs.csv)"; exit 1; }
 	$(RUN) python src/compare.py $(BASE) $(NEW)
 
 ci:  ## 95% bootstrap CI on the pooled OOF AUC: make ci RUNS="<run_id> [<run_id> ...]"
@@ -59,7 +59,7 @@ ci:  ## 95% bootstrap CI on the pooled OOF AUC: make ci RUNS="<run_id> [<run_id>
 	$(RUN) python src/bootstrap_ci.py $(RUNS)
 
 submit:  ## Build a validated submission: make submit RUN_ID=<run_id>
-	@test -n "$(RUN_ID)" || { echo "usage: make submit RUN_ID=<run_id> (see reports/runs.csv)"; exit 1; }
+	@test -n "$(RUN_ID)" || { echo "usage: make submit RUN_ID=<run_id> (see results/runs.csv)"; exit 1; }
 	$(RUN) python src/submit.py $(RUN_ID)
 
 test:  ## Run the test suite

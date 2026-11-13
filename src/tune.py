@@ -1,5 +1,5 @@
 """Run a one-at-a-time sweep: each run changes ONE setting of an experiment, and is logged
-like any other run (reports/runs.csv, oof/, preds/).
+like any other run (results/runs.csv, oof/, preds/).
 
 Usage:
     uv run python src/tune.py configs/sweeps/<name>.yaml            # run (skips variants already logged)
