@@ -12,7 +12,6 @@ Reads data/raw/train.csv; writes data/processed/folds.parquet. Pipeline. Report:
 import argparse
 import hashlib
 import sys
-from pathlib import Path
 
 import pandas as pd
 import pyarrow as pa
@@ -20,10 +19,8 @@ import pyarrow.parquet as pq
 from sklearn.model_selection import StratifiedKFold
 
 from config import load_config
-from data import TARGET, load
+from data import FOLDS, TARGET, load   # FOLDS: path set by the data directory in src/data.py
 
-ROOT = Path(__file__).resolve().parents[1]
-FOLDS = ROOT / "data" / "processed" / "folds.parquet"
 
 
 def folds_hash(folds: pd.DataFrame) -> str:
@@ -72,4 +69,4 @@ if __name__ == "__main__":
     parser.add_argument("--allow-fold-change", action="store_true")
     args = parser.parse_args()
     folds = build(load_config(), allow_change=args.allow_fold_change)
-    print(f"wrote {FOLDS.relative_to(ROOT)}  rows={len(folds)}  hash={folds_hash(folds)}")
+    print(f"wrote {FOLDS}  rows={len(folds)}  hash={folds_hash(folds)}")

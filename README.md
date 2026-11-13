@@ -1,5 +1,8 @@
 # HMDA mortgage outcomes: prediction and fairness
 
+The final code is on branch main. This README is the entry point: what the project does, where
+the data goes, and the commands that rebuild the two selected submissions.
+
 Kaggle task: predict whether a home purchase application in the HMDA records was originated
 (accepted = 1) or denied, scored by ROC AUC. The project also measures how the model treats
 demographic groups and builds a fair model. The write-up is reports/report.md; this file says
@@ -37,7 +40,12 @@ or with the Kaggle command-line tool (not part of this environment) and an API t
 
     kaggle competitions download -c demandes-de-pret-immobilier-aux-etats-unis
 
-Unzip it, put train.csv and test.csv in data/raw/ and sample_submission.csv in data/, then:
+Unzip it, put train.csv and test.csv in data/raw/ and sample_submission.csv in data/.
+
+To keep the data in another folder, change one line: line 16 of src/data.py,
+DATA_DIR = ROOT / "data". That folder must hold raw/train.csv, raw/test.csv and
+sample_submission.csv; every script takes the data paths from there, and make folds writes
+processed/folds.parquet into it. Then:
 
     make check-data    # SHA256 of the 3 files against configs/data_checksums.txt
     make folds         # the 5 frozen folds -> data/processed/folds.parquet
@@ -45,9 +53,17 @@ Unzip it, put train.csv and test.csv in data/raw/ and sample_submission.csv in d
 The folds are rebuilt from the data and the seed in configs/base.yaml (42): the same split as
 every logged run (its hash, 3762a22f..., is the folds_hash column of results/runs.csv).
 
-## Rebuilding the final model (report section 10.2)
+## Reproducing the two selected submissions (report section 10.2)
 
-About 2.5 hours on a laptop CPU (8 logical CPUs, no GPU), CatBoost being most of it.
+| Kaggle submission | model | config | logged run | CV AUC | public LB |
+|---|---|---|---|---|---|
+| 6 | LightGBM 2/6, CatBoost 2/6, ExtraTrees 1/6, XGBoost 1/6, log-odds | configs/blends/lgbm_cat_et_xgb.yaml | 1ff742f2 | 0.92054 | 0.92158 |
+| 5 | LightGBM 1/2, CatBoost 1/2, log-odds | configs/blends/lgbm_catboost_logit.yaml | 918eb62b | 0.92014 | 0.9212 |
+
+Training and prediction: each member is trained by "make cv" (5 fold models; the test prediction
+is their mean), then each blend combines its members' predictions and "make submit" writes the
+submission file. Both blends share the LightGBM and CatBoost runs. About 2.5 hours on a laptop
+CPU (8 logical CPUs, no GPU), CatBoost being most of it.
 
     make setup
     make check-data
@@ -56,10 +72,17 @@ About 2.5 hours on a laptop CPU (8 logical CPUs, no GPU), CatBoost being most of
     make cv EXP=configs/experiments/catboost_county_ctr4.yaml
     make cv EXP=configs/experiments/extratrees_optuna_best.yaml
     make cv EXP=configs/experiments/xgb_optuna_best.yaml
-    (put the 4 new run ids, printed at the end of each run, in configs/blends/lgbm_cat_et_xgb.yaml)
+    (put the 4 new run ids, printed at the end of each run, in configs/blends/lgbm_cat_et_xgb.yaml,
+     and the LightGBM and CatBoost ones in configs/blends/lgbm_catboost_logit.yaml)
     make blend BLEND=configs/blends/lgbm_cat_et_xgb.yaml
-    make submit RUN_ID=<the blend's run id>
+    make submit RUN_ID=<this blend's run id>      # submission 6
+    make blend BLEND=configs/blends/lgbm_catboost_logit.yaml
+    make submit RUN_ID=<this blend's run id>      # submission 5
     make figures
+
+The CatBoost config is catboost_county_ctr4.yaml: the same model as the logged CatBoost member
+(catboost_county.yaml, run d96c8be4) with max_ctr_complexity 4 written out; its re-run 0810e0b4
+gave identical predictions (report section 10.2).
 
 "make figures" reads the predictions of the runs named by id in reports/figs/make_figures.py,
 so it needs those runs' files in oof/.
@@ -78,7 +101,7 @@ the report quotes, but is not part of the final model.
 |---|---|
 | src/config.py | pipeline: base.yaml + experiment file -> merged config |
 | src/check_data.py | pipeline: SHA256 check of the raw files (section 10.2) |
-| src/data.py | pipeline: typed loading of the CSVs (section 3) |
+| src/data.py | pipeline: typed loading of the CSVs; DATA_DIR (line 16) sets the data folder (section 3) |
 | src/features.py | pipeline: the named feature transforms and column lists (sections 3, 6.1) |
 | src/target_encoding.py | pipeline code path: out-of-fold county and tract accept rates (section 6.1, ablation A4); the final model uses none |
 | src/folds.py | pipeline: the frozen folds (section 5.2) |

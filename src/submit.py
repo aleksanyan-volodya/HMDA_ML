@@ -12,8 +12,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from data import SAMPLE   # path set by the data directory in src/data.py
+
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLE = ROOT / "data" / "sample_submission.csv"
 
 
 def validate(sub: pd.DataFrame, sample: pd.DataFrame) -> None:

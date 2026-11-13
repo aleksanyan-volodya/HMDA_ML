@@ -2,13 +2,21 @@
 same category levels, so a category code means the same thing on both sides.
 
 Reads data/raw/train.csv and data/raw/test.csv. Pipeline. Report: section 3.
+
+DATA_DIR below is the only line to change to read the data from another folder; every script
+takes the data paths from here.
 """
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
+# Data directory. It must hold raw/train.csv, raw/test.csv and sample_submission.csv (from Kaggle);
+# "make folds" writes processed/folds.parquet into it.
+DATA_DIR = ROOT / "data"
+RAW = DATA_DIR / "raw"
+SAMPLE = DATA_DIR / "sample_submission.csv"
+FOLDS = DATA_DIR / "processed" / "folds.parquet"
 TARGET = "accepted"
 
 # Real-valued quantities
