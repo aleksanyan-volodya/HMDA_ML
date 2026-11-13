@@ -1,0 +1,24 @@
+# Joint search over the XGBoost settings, ranges taken from what mattered for LightGBM (reports/tuning.md).
+# Everything not listed stays at the experiment's values (run 20261014T125236Z_f0fe3121, CV 0.91649).
+experiment: configs/experiments/xgb.yaml
+study_name: xgb_optuna
+n_trials: 60           # ~2.3 minutes at the current settings, several times that for deep trees; capped below
+timeout_hours: 1.9     # the search stops after the trial running at that time: done before 17:00
+seed: 0                # of the sampler: arbitrary, fixed so the search is reproducible
+section: xgb_params
+# eta stays at 0.05, as for LightGBM (refitting its winner at 0.02 gained nothing). max_cat_to_onehot stays at
+# 64 (+4.5 SE on LightGBM). Continuous ranges: the small categorical space repeated half of the ExtraTrees trials.
+space:
+  # max_depth 6 cost LightGBM -5.3 SE and 10 cost -1.0 SE, and it preferred ~113 leaves: 6 is probably the main
+  # limit here. Depth-wise growth, so depth 10 is up to 1,024 leaves: min_child_weight has to hold it back.
+  max_depth:        {type: int, low: 6, high: 12}
+  # Hessian sum in a leaf, ~0.13 per row at p = 0.85: 10 means ~80 rows, 0.65 means 5 rows. LightGBM's best leaf
+  # size was 5 to 9 rows (500 cost it -5.6 SE). Log scale: doubling matters about as much anywhere in the range.
+  min_child_weight: {type: float, low: 0.5, high: 30.0, log: true}
+  # Pulls small leaves towards 0: h / (h + lambda). XGBoost has no path_smooth, and LightGBM's small leaves only
+  # worked with path_smooth (+2.1 SE). lambda_l2 alone did nothing there, at 100-row leaves. Hence the joint search.
+  lambda:           {type: float, low: 0.5, high: 20.0, log: true}
+  # LightGBM's feature_fraction: 0.5 better on 5 of 5 folds, 0.40 to 0.59 in its 10 best trials.
+  colsample_bytree: {type: float, low: 0.3, high: 1.0}
+  # LightGBM's bagging_fraction: 0.5 cost -3.0 SE, 0.94 to 0.99 in its 10 best trials.
+  subsample:        {type: float, low: 0.6, high: 1.0}

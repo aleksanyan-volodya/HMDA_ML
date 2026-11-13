@@ -1,2 +1,0 @@
-# Pipeline check: predicts the training accept rate everywhere. Expected CV AUC = 0.5 exactly.
-model: constant

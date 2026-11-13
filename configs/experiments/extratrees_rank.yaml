@@ -1,0 +1,19 @@
+# ExtraTrees with numeric columns as ranks (fitted on the training fold). Compared with the ExtraTrees on raw numerics (run a5cb6cb2):
+# random split thresholds are drawn uniformly on the value range, which wastes them on skewed columns.
+model: extratrees
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income
+  # 4.3, raw county / MSA ids removed (adopted)
+  - drop_county_msa_ids
+extratrees_fit:
+  rank_numeric: true

@@ -1,0 +1,29 @@
+# Census tract accept rate on top of the tuned LightGBM (lgbm_optuna_best.yaml, run 20261003T084548Z_406e4210).
+# The tract is rebuilt from county + the 6 tract fields (features.py tract_key); its accept rate is target-encoded
+# inside each fold, shrunk towards the county's rate. Leave-one-out tract rate alone: AUC 0.696 on the 23k rows
+# in tracts with >= 5 rows (2026-10-19). The county rate alone added nothing (+0.00028, 0.6 SE): the tract is
+# the finer level that the trees cannot isolate from the 6 numeric fields (50k tracts).
+model: lgbm
+features:
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  - computed_ltv
+  - property_to_income
+  - drop_county_msa_ids
+  - tract_key
+target_encode:
+  # m = 20 as for the county (rows a tract needs before its own rate weighs as much as its county's); not
+  # searched, a value chosen on these folds would flatter the result.
+  - {column: tract_key, parent: county_code, m: 20}
+lgbm_params:
+  num_leaves: 113
+  min_data_in_leaf: 5
+  feature_fraction: 0.5748992881034819
+  bagging_fraction: 0.9485362062338821
+  path_smooth: 14.649295564192302
+  max_cat_to_onehot: 64

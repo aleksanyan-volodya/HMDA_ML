@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "catboost>=1.2.10",
     "lightgbm>=4.7.0",
     "matplotlib>=3.11.2",
     "optuna>=5.0.0",
@@ -12,6 +13,8 @@ dependencies = [
     "pyarrow>=25.0.1",
     "pyyaml>=6.0.3",
     "scikit-learn>=1.9.1",
+    "torch>=2.15.0",
+    "xgboost>=3.4.1",
 ]
 
 [tool.pytest.ini_options]
@@ -23,3 +26,13 @@ dev = [
     "ipykernel>=7.3.0",
     "pytest>=9.1.1",
 ]
+
+# torch comes from PyTorch's CPU-only index: the default wheel pulls ~2.5 GB of CUDA libraries that
+# nothing here uses (Colab, which has a GPU, ships its own torch).
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

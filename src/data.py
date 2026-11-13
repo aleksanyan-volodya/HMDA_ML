@@ -1,14 +1,22 @@
-"""Loading of the raw CSVs
+"""Loading of the raw CSVs, with an explicit type for every column. Train and test get the
+same category levels, so a category code means the same thing on both sides.
 
-Every column is assigned a type explicitly
-# [NOTE for Volodya] I have to come back here when I reach the TODO #3 with HMDA dictionary
+Reads data/raw/train.csv and data/raw/test.csv. Pipeline. Report: section 3.
+
+DATA_DIR below is the only line to change to read the data from another folder; every script
+takes the data paths from here.
 """
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
+# Data directory. It must hold raw/train.csv, raw/test.csv and sample_submission.csv (from Kaggle);
+# "make folds" writes processed/folds.parquet into it.
+DATA_DIR = ROOT / "data"
+RAW = DATA_DIR / "raw"
+SAMPLE = DATA_DIR / "sample_submission.csv"
+FOLDS = DATA_DIR / "processed" / "folds.parquet"
 TARGET = "accepted"
 
 # Real-valued quantities
@@ -38,8 +46,7 @@ CODED = [
 GEO_WIDTH = {"county_code": 5, "derived_msa-md": 5}
 
 # Text labels. 
-# DTI and ages stay raw here;
-## [NOTE to Volodya] I have to parse them in TODO 6.2 and 6.3.
+# DTI and ages stay text here; src/features.py turns them into ranks (dti_order, age_order).
 TEXT = [
     "state_code", "conforming_loan_limit", "derived_loan_product_type", "derived_dwelling_category",
     "derived_ethnicity", "derived_race", "derived_sex", "debt_to_income_ratio",

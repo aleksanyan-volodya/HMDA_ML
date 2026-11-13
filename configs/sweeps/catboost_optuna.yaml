@@ -1,0 +1,34 @@
+# Joint search over the CatBoost settings, on the CatBoost with raw county / MSA (run 20261014T085450Z_d96c8be4,
+# CV 0.91859). Ranges from what mattered for LightGBM and XGBoost (reports/tuning.md) and from a timing of 200
+# trees on one fold (2026-10-31), which is a hint only.
+experiment: configs/experiments/catboost_county.yaml
+study_name: catboost_optuna
+n_trials: 80           # ~3 to 15 minutes each depending on depth and one_hot_max_size; capped below
+timeout_hours: 8       # one night; the search stops after the trial running at that time
+seed: 0                # of the sampler: arbitrary, fixed so the search is reproducible
+section: catboost_params
+# A full nested CV is 25 fits, ~1h45. A trial here is 2 fits: scored on 2 hard folds (AUC ~0.91 for every
+# model so far), trained on 3 others, tree count taken on the last one. It ranks settings; it does not
+# score them. learning_rate stays at 0.05, as for LightGBM and XGBoost.
+search_folds: [0, 3]
+trial_overrides:
+  catboost_fit: {single_fit: true}
+space:
+  # Tuned LightGBM ~113 leaves, tuned XGBoost depth 10 to 12. Symmetric trees: depth 8 is 256 leaves. At 200
+  # trees depth 8 scored +0.0021 over depth 6, at 1.6x the time.
+  depth:              {type: int, low: 5, high: 10}
+  # Larger with deep trees on XGBoost (lambda 1 -> 4.8 to 12.3), so searched, although lambda_l2 alone did
+  # nothing on LightGBM. Log scale: doubling matters about as much anywhere in the range.
+  l2_leaf_reg:        {type: float, low: 1.0, high: 30.0, log: true}
+  # LightGBM feature_fraction 0.40 to 0.59, XGBoost colsample_bytree 0.49 to 0.71 in their 10 best trials.
+  rsm:                {type: float, low: 0.3, high: 1.0}
+  # 64 gave +4.5 SE on LightGBM; at 200 trees it scored +0.0009 here and ran 3.5x faster.
+  one_hot_max_size:   {type: categorical, choices: [2, 16, 64]}
+  # LightGBM 0.94 to 0.99, XGBoost 0.83 to 0.98 in their 10 best trials (MVS sampling on CPU, so this and not
+  # bagging_temperature, which has no effect here).
+  subsample:          {type: float, low: 0.6, high: 1.0}
+  # CatBoost's own noise on split scores; nothing known yet, library default 1.
+  random_strength:    {type: float, low: 0.0, high: 5.0}
+  # 2 = pairs of categories. The notes say some effects depend on such pairs (DTI limit by loan programme);
+  # at 200 trees 2 scored -0.0008 here, a weak hint against, too short to decide.
+  max_ctr_complexity: {type: categorical, choices: [1, 2]}

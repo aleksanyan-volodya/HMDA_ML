@@ -1,0 +1,19 @@
+# Reproducibility test (2026-11-11): catboost_county.yaml with max_ctr_complexity 4 instead of the 1 written
+# into base.yaml on 2026-10-31. Hypothesis: the logged run d96c8be4 (0.91859, set none of the 5 settings) used
+# feature combinations (CatBoost's documented CPU default, 4) and the re-run a8b526e0 (0.91738) did not.
+# Reproduced = the same 5 fold AUCs as d96c8be4.
+model: catboost
+features:
+  # block 0, cleaning (adopted)
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  - drop_derived_duplicates
+  - dti_order
+  - age_order
+  # block 2, ratios (adopted)
+  - computed_ltv
+  - property_to_income
+catboost_params:
+  max_ctr_complexity: 4

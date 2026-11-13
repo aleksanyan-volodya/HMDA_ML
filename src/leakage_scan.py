@@ -5,6 +5,9 @@ Usage:
 
 Covers every level of every categorical column, the missing level of every column,
 the special numeric values (<= 0), and the engineered flags of src/features.py.
+
+Reads data/raw/; prints the levels found, writes nothing.
+Evidence for report section 4 (reports/leakage.md), not part of the final model.
 """
 import pandas as pd
 

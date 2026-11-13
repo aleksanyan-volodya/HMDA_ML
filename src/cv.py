@@ -1,12 +1,19 @@
-"""Cross-validation runner: one experiment config in, per-fold AUC + OOF (out of fold) and test predictions out.
+"""Cross-validation of one experiment: per-fold AUC, out-of-fold (OOF) and test predictions.
 
 Usage:
-    uv run python src/cv.py configs/experiments/constant.yaml
+    uv run python src/cv.py configs/experiments/lgbm_optuna_best.yaml
+
+For each of the 5 frozen folds: target encodings are fitted on the other 4 folds, the model of
+src/models.py is fitted on them, and the held-out fold is predicted. The test prediction is the
+mean of the 5 fold models (no refit on all rows).
+
+Reads data/raw/, data/processed/folds.parquet and the config; logs the run (results/runs.csv,
+oof/, preds/; reports/coefs/ for linear models). Pipeline. Report: sections 5 and 10.2.
 """
 import argparse
 import time
+from pathlib import Path
 
-import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
@@ -15,60 +22,32 @@ from config import load_config
 from data import TARGET, load
 from features import build
 from folds import folds_hash, load_folds
+from models import MODELS
 from runlog import log_run
 from target_encoding import encode_fold
 
 
-class ConstantModel:
-    """Predicts the training accept rate for every row. All scores are tied, so no row is
-    ranked above another and AUC is 0.5 by construction: it checks the pipeline, not a model."""
-
-    def __init__(self, cfg: dict):
-        pass
-
-    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "ConstantModel":
-        self.rate_ = float(y.mean())
-        return self
-
-    def predict(self, X: pd.DataFrame) -> np.ndarray:
-        return np.full(len(X), self.rate_)
+def reweigh_weights(group: pd.Series, y: pd.Series) -> np.ndarray:
+    """Kamiran and Calders (2012): w(g, y) = P(g) P(y) / P(g, y) on the rows given, so group and label
+    are independent in the weighted data. The weights average exactly 1."""
+    g, y = pd.Series(group.astype(str).to_numpy()), pd.Series(np.asarray(y))
+    n = len(y)
+    p_g, p_y = g.map(g.value_counts()) / n, y.map(y.value_counts()) / n
+    p_gy = y.groupby([g, y]).transform("size") / n
+    return (p_g * p_y / p_gy).to_numpy()
 
 
-class LGBMModel:
-    """LightGBM whose tree count is tuned by an inner CV on the fit part only (nested CV).
-    Inner folds = the outer folds present in the fit part, so no new split is introduced."""
-
-    def __init__(self, cfg: dict):
-        # Single seed for the baseline; seed averaging is TODO 11.2.
-        self.params = {**cfg["lgbm_params"], "seed": cfg["model_seeds"][0]}
-        self.max_rounds = cfg["lgbm_fit"]["max_rounds"]
-        self.patience = cfg["lgbm_fit"]["early_stopping_rounds"]
-
-    def fit(self, X: pd.DataFrame, y: pd.Series, fold: np.ndarray) -> "LGBMModel":
-        inner = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
-        # lgb.cv averages the AUC curves of the inner folds; the tuned tree count is the
-        # peak of that mean curve.
-        history = lgb.cv(self.params, lgb.Dataset(X, y), num_boost_round=self.max_rounds,
-                         folds=inner, callbacks=[lgb.early_stopping(self.patience, verbose=False)])
-        mean_auc = np.asarray(history["valid auc-mean"])
-        if len(mean_auc) >= self.max_rounds:  # early stopping never triggered
-            raise RuntimeError(f"tree search hit max_rounds={self.max_rounds}: raise the cap")
-        self.n_trees_ = int(mean_auc.argmax()) + 1
-        self.booster_ = lgb.train(self.params, lgb.Dataset(X, y), num_boost_round=self.n_trees_)
-        return self
-
-    def predict(self, X: pd.DataFrame) -> np.ndarray:
-        return self.booster_.predict(X)
-
-
-MODELS = {"constant": ConstantModel, "lgbm": LGBMModel}
-
-
-def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
+def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = None,
+           only_folds: list[int] | None = None) -> tuple[pd.DataFrame, pd.DataFrame, list[float], list[str]]:
     """folds: (id, fold) to use instead of the frozen folds. Only for checks on fresh splits
-    (src/fresh_folds.py); such runs are not comparable with reports/runs.csv and are not logged."""
+    (src/fresh_folds.py); such runs are not comparable with results/runs.csv and are not logged.
+    coefs: if given, each fold model's coefficient table (linear models only) is appended to it.
+    only_folds: score these outer folds only, for a cheap search (tune_optuna.py). The predictions returned
+    are then incomplete and test predictions are skipped: such a run must not be logged."""
     if cfg["model"] not in MODELS:
         raise ValueError(f"model must be one of {sorted(MODELS)}, got {cfg['model']!r}")
+    if cfg["reweigh"] and cfg["model"] != "lgbm":
+        raise NotImplementedError("reweigh is implemented for lgbm only")
     train, test = load()
     train, test, features = build(train, test, cfg["features"])
     print(f"{len(features)} features + {len(cfg['target_encode'])} target-encoded", flush=True)
@@ -77,23 +56,35 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None) -> tuple[pd.DataFrame, 
     oof = np.full(len(train), np.nan)
     test_pred = np.zeros(len(test))
     fold_auc = []
-    for k in range(cfg["n_folds"]):
+    for k in (range(cfg["n_folds"]) if only_folds is None else only_folds):
         is_valid = (train["fold"] == k).to_numpy()
         # Target encodings use labels, so they are computed here, inside the fold.
         fit_part, valid_part, test_k, encoded = encode_fold(train[~is_valid], train[is_valid], test,
                                                             TARGET, cfg["target_encode"])
         cols = features + encoded
+        t_fold = time.perf_counter()
+        print(f"fold {k}: fitting on {len(fit_part)} rows", flush=True)
+        weighted = {}
+        if cfg["reweigh"]:   # weights from the fit part only; the column itself need not be a feature
+            weighted["weight"] = reweigh_weights(fit_part[cfg["reweigh"]], fit_part[TARGET])
+            print(f"  reweigh by {cfg['reweigh']}: weights {weighted['weight'].min():.2f} to "
+                  f"{weighted['weight'].max():.2f}", flush=True)
         model = MODELS[cfg["model"]](cfg).fit(fit_part[cols], fit_part[TARGET],
-                                               fit_part["fold"].to_numpy())
+                                               fit_part["fold"].to_numpy(), **weighted)
         oof[is_valid] = model.predict(valid_part[cols])
         fold_auc.append(float(roc_auc_score(valid_part[TARGET], oof[is_valid])))
-        extra = f"  trees {model.n_trees_}" if hasattr(model, "n_trees_") else ""
-        print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}", flush=True)
-        # Test prediction = average of the k fold models, càd exactly the models whose
+        extra = (f"  trees {model.n_trees_}" if hasattr(model, "n_trees_")
+                 else f"  epochs {model.n_epochs_}" if hasattr(model, "n_epochs_")
+                 else f"  C {model.C_}  l1_ratio {model.l1_ratio_}" if hasattr(model, "C_") else "")
+        if coefs is not None and hasattr(model, "coef_table"):
+            coefs.append(model.coef_table().assign(fold=k))
+        print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}  ({time.perf_counter() - t_fold:.0f}s)", flush=True)
+        # Test prediction = average of the k fold models, i.e. exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
-        test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
+        if only_folds is None:
+            test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
 
-    assert not np.isnan(oof).any(), "some train rows never received an OOF prediction"
+    assert only_folds is not None or not np.isnan(oof).any(), "some train rows never received an OOF prediction"
     oof_df = train[["id", "fold", TARGET]].assign(pred=oof)
     test_df = test[["id"]].assign(pred=test_pred)
     return oof_df, test_df, fold_auc, cols
@@ -106,11 +97,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
     cfg = load_config(args.experiment)
     t0 = time.perf_counter()
-    oof_df, test_df, fold_auc, features = run_cv(cfg)
+    coefs = []
+    oof_df, test_df, fold_auc, features = run_cv(cfg, coefs=coefs)
     wall = time.perf_counter() - t0
     auc = np.array(fold_auc)
     # SE = std / sqrt(k). Known to understate uncertainty (folds share training rows);
-    # the corrected version comes with TODO 5.3.
+    # src/compare.py gives the corrected SE for paired comparisons.
     print("fold AUC:", np.round(auc, 6).tolist())
     print(f"mean {auc.mean():.6f}  naive SE (lower bound) {auc.std(ddof=1) / np.sqrt(len(auc)):.6f}")
     print(f"oof rows {len(oof_df)}  test rows {len(test_df)}  test pred range "
@@ -120,3 +112,8 @@ if __name__ == "__main__":
         run_id = log_run(cfg, args.experiment, features, folds_hash(load_folds(cfg)),
                          fold_auc, wall, oof_df, test_df)
         print(f"logged run {run_id}")
+        if coefs:   # linear models: coefficients of the 5 fold models, e.g. which columns L1 set to 0
+            out = Path(__file__).resolve().parents[1] / "reports" / "coefs" / f"{run_id}.csv"
+            out.parent.mkdir(exist_ok=True)
+            pd.concat(coefs).to_csv(out, index=False)
+            print(f"coefficients written to {out.relative_to(out.parents[2])}")

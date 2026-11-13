@@ -1,0 +1,8 @@
+# Kaggle submission 5: tuned LightGBM + CatBoost with raw county / MSA, equal weights, mean of log-odds
+# (keeps SHAP additive). Logged run 20261014T115111Z_918eb62b (members 406e4210 and d96c8be4), CV 0.92014.
+# Members are given by experiment file: blend.py uses the latest logged run of each (make cv first).
+# The CatBoost member is catboost_county_ctr4.yaml, the rebuild of d96c8be4 (run 0810e0b4, identical predictions).
+members:
+  - configs/experiments/lgbm_optuna_best.yaml         # LightGBM, tuned
+  - configs/experiments/catboost_county_ctr4.yaml     # CatBoost + raw county / MSA, untuned
+method: logit

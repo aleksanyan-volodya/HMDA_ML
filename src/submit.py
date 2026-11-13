@@ -1,7 +1,10 @@
-"""Turn a logged run's test predictions into a validated Kaggle submission
+"""Turn a logged run's test predictions into a validated Kaggle submission.
 
 Usage:
     uv run python src/submit.py <run_id>    # writes submissions/<run_id>.csv
+
+Reads preds/<run_id>.parquet and data/sample_submission.csv; the file is checked against the
+sample (columns, ids, order, values in [0, 1]) before and after writing. Pipeline.
 """
 import argparse
 from pathlib import Path
@@ -9,8 +12,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from data import SAMPLE   # path set by the data directory in src/data.py
+
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLE = ROOT / "data" / "sample_submission.csv"
 
 
 def validate(sub: pd.DataFrame, sample: pd.DataFrame) -> None:
@@ -37,6 +41,7 @@ def make_submission(run_id: str) -> Path:
     validate(sub, sample)
 
     out = ROOT / "submissions" / f"{run_id}.csv"
+    out.parent.mkdir(exist_ok=True)   # not tracked by git: missing in a fresh clone
     # Full float precision: rounding would create ties, and ties can only lower AUC.
     sub.to_csv(out, index=False)
     validate(pd.read_csv(out), sample)

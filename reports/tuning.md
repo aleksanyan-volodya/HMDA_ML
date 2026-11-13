@@ -93,3 +93,72 @@ Result: the tuned LightGBM is "configs/experiments/lgbm_optuna_best.yaml" (learn
 
 - +0.00210 over the untuned model on the frozen folds, +0.00194 on fresh splits never used for any choice: selecting the best of 100 trials flattered it by only ~0.0002.
 - Per-fold fresh results: "reports/tuning/fresh_lgbm_optuna_best_vs_lgbm_best_features.csv".
+
+## ExtraTrees: joint search with Optuna (TODO 7.19)
+
+Search file "configs/sweeps/extratrees_optuna.yaml", on the ranked-numerics ExtraTrees (run 20261014T135428Z_542eac1f, CV 0.90185). TPE sampler (seed 0), trial 0 = the untuned settings, 300 trees fixed (more trees only reduce averaging noise). Night of 2026-10-18: stopped by the 8 h cap after 47 of 60 trials; every trial in "reports/tuning/extratrees_optuna.csv".
+
+| setting | untuned | best (trial 23) | range searched |
+|---|---|---|---|
+| max_features | sqrt (17 of 307 columns) | 0.35 (107 columns) | sqrt, 0.1, 0.2, 0.35 |
+| min_samples_leaf | 1 | 5 | 1 to 30 |
+| bootstrap | false | false | false, true |
+| max_depth | none | 20 | none, 30, 20 |
+
+| | CV AUC | gain | gain / corrected SE | folds up |
+|---|---|---|---|---|
+| untuned (trial 0) | 0.90185 | | | |
+| best, logged refit (run 20261019T060754Z_7bc88a0b) | 0.91484 | +0.01299 | 41.0 | 5 of 5 |
+| median of the 47 trials | 0.91286 | | | |
+
+- The refit reproduces trial 23 exactly. Adopted as the ExtraTrees candidate: the gain is far beyond the selection effect of ~25 distinct trials.
+- The number of columns per split matters most: median AUC 0.907 at 0.1, 0.912 at 0.2, 0.914 at 0.35, still rising at the largest value searched. max_depth 20, the shallowest value searched, beats 30 and no limit. Both are at the edge of their range, so a wider search would probably gain a little more. Bootstrap never reached the top trials.
+- About half the trials repeated settings already tried (small, mostly categorical space): ~25 distinct settings were scored.
+- Tuning made ExtraTrees stronger but more like the boosted models: rank correlation with LightGBM 0.785 -> 0.910.
+
+## XGBoost: joint search with Optuna
+
+Search file "configs/sweeps/xgb_optuna.yaml", on the XGBoost with starting values (run 20261014T125236Z_f0fe3121, CV 0.91649), ranges taken from what mattered for LightGBM; each range's reason is in the file. TPE sampler (seed 0), trial 0 = the untuned settings, eta fixed at 0.05. Run on 2026-10-31: stopped by the 1.9 h cap after 42 of 60 trials; every trial in "reports/tuning/xgb_optuna.csv".
+
+| setting | untuned | best (trial 21) | 10 best trials | range searched |
+|---|---|---|---|---|
+| max_depth | 6 | 11 | 10 to 12 | 6 to 12 |
+| min_child_weight | 10 | 1.64 | 1.6 to 7.5 | 0.5 to 30 |
+| lambda | 1 | 4.76 | 4.8 to 12.3 | 0.5 to 20 |
+| colsample_bytree | 0.8 | 0.71 | 0.49 to 0.71 | 0.3 to 1.0 |
+| subsample | 0.8 | 0.83 | 0.83 to 0.98 | 0.6 to 1.0 |
+
+| | CV AUC | gain | gain / corrected SE | folds up |
+|---|---|---|---|---|
+| untuned (trial 0) | 0.91649 | | | |
+| best, logged refit (run 20261031T215118Z_05b22e57) | 0.91848 | +0.00199 | 7.1 | 5 of 5 |
+| median of the 42 trials | 0.91811 | | | |
+
+- Adopted as the XGBoost: the refit reproduces trial 21, and the gain is close to LightGBM's +0.0021. Tree counts 141 to 173.
+- Depth was the main limit, as the LightGBM screening suggested: the two trials at depth 6 peak at 0.91742. The best depth is inside the range and the 10 best trials are within 0.0002, so a wider search is unlikely to add much.
+- Level with the untuned CatBoost (-0.00011, -0.3 SE) and with the tuned LightGBM (-0.00057, -1.0 SE): neither gap is significant.
+
+## CatBoost: joint search with Optuna, cheap trials
+
+Search file "configs/sweeps/catboost_optuna.yaml", on the CatBoost with raw county / MSA (run 20261014T085450Z_d96c8be4, CV 0.91859). A full CV was ~1h45, so each trial was 2 single fits: scored on folds 0 and 3, trained on 3 other folds (63,000 rows), tree count taken on the last one, no refit. TPE sampler (seed 0), 80 trials, 3 hours, 2026-10-31/11-01; every trial in "reports/tuning/catboost_optuna.csv".
+
+| setting | untuned | best (trial 61) | 10 best trials |
+|---|---|---|---|
+| depth | 6 | 9 | 7 to 9 |
+| one_hot_max_size | 2 | 64 | 64 |
+| max_ctr_complexity | 1 | 2 | 2 |
+| l2_leaf_reg | 3 | 24 | 12.7 to 29 |
+| rsm | 1 | 0.53 | 0.49 to 0.62 |
+| subsample | 0.8 | 0.71 | 0.67 to 0.76 |
+| random_strength | 1 | 0.35 | 0.06 to 0.82 |
+
+| | untuned | winner | gain |
+|---|---|---|---|
+| cheap trial, mean of folds 0 and 3 | 0.91070 | 0.91318 | +0.00248 |
+| full CV, folds 0 and 3 | 0.91372 | 0.91400 | +0.00028 |
+| full CV, 5 folds (run 20261101T090757Z_9ef0b007) | 0.91859 | 0.91837 | -0.00022, -0.6 SE, 3 of 5 folds up |
+
+Rejected: the untuned CatBoost stays. Blends are worse with the winner too (see "reports/models.md").
+
+- The search's assumption failed: cheap trials do not rank settings as a full CV does. It is not the choice of folds: on the same folds 0 and 3, a gain of +0.0025 in the trials is +0.0003 in the full CV. From the trial to the full CV (84,000 rows, refit) the untuned model gains +0.00302, the winner +0.00082. On fewer rows the search favoured settings that need fewer rows, which is not what the final model needs. Why the untuned model gains more was not tested.
+- The winner runs ~6 times faster for the same AUC (20 minutes against ~2 hours, trees 735 to 1,043), but speed is not in the rule.

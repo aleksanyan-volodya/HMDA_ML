@@ -1,8 +1,9 @@
-"""Add records of every CV run.
-
-One row per run in reports/runs.csv, plus the run's predictions:
+"""Logging of every run: one row in results/runs.csv, plus the run's predictions:
     oof/<run_id>.parquet    id, fold, accepted, pred   (105,000 rows)
     preds/<run_id>.parquet  id, pred                   (45,000 rows)
+
+The row holds the full merged config, the commit, whether the code had uncommitted changes, the
+fold hash, the per-fold AUCs and the library versions. Pipeline.
 """
 import hashlib
 import json
@@ -17,7 +18,7 @@ import pandas as pd
 from config import config_hash
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNS = ROOT / "reports" / "runs.csv"
+RUNS = ROOT / "results" / "runs.csv"
 CODE_PATHS = ["src", "configs", "pyproject.toml", "uv.lock"]
 LIBS = ["numpy", "pandas", "scikit-learn", "lightgbm", "pyarrow"]
 
@@ -36,6 +37,8 @@ def log_run(cfg: dict, experiment: str, features: list[str], folds_hash: str,
 
     oof_path = ROOT / "oof" / f"{run_id}.parquet"
     pred_path = ROOT / "preds" / f"{run_id}.parquet"
+    for folder in (oof_path.parent, pred_path.parent):   # not tracked by git: missing in a fresh clone
+        folder.mkdir(exist_ok=True)
     oof_df.to_parquet(oof_path, index=False)
     test_df.to_parquet(pred_path, index=False)
 

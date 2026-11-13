@@ -5,10 +5,17 @@ Usage:
 
 - The first trial is the experiment unchanged, so the search ends at the reference or better.
 - Trials are stored in reports/tuning/<study_name>.db: stop with Ctrl-C and relaunch to resume.
-- Trials are NOT logged in reports/runs.csv. At the end the best settings are written to
+- Trials are NOT logged in results/runs.csv. At the end the best settings are written to
   configs/experiments/<study_name>_best.yaml, to be run and compared like any experiment.
 - The best of many trials on the same folds is optimistic: it must still pass "make compare"
   and the fresh-folds check before being adopted.
+- Optional in the sweep file, for models too slow for a full CV per trial: search_folds (score these
+  outer folds only) and trial_overrides (settings applied to the trials only, never to the written
+  best experiment). A trial score is then only good for ranking settings: its SE below means nothing,
+  and the best settings must go through a full CV.
+
+Writes reports/tuning/<study_name>.db and .csv, and configs/experiments/<study_name>_best.yaml.
+Evidence for report section 6.3, not part of the final model (its output configs are).
 """
 import argparse
 import copy
@@ -61,14 +68,19 @@ if __name__ == "__main__":
 
     def objective(trial: optuna.Trial) -> float:
         cfg = copy.deepcopy(base)
+        for part, values in sweep.get("trial_overrides", {}).items():
+            cfg[part].update(values)
         for name, spec in space.items():
             cfg[section][name] = suggest(trial, name, spec)
-        _, _, fold_auc, _ = run_cv(cfg)
+        _, _, fold_auc, _ = run_cv(cfg, only_folds=sweep.get("search_folds"))
         trial.set_user_attr("fold_auc", fold_auc)
         return float(np.mean(fold_auc))
 
     finished = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
-    study.optimize(objective, n_trials=max(0, sweep["n_trials"] - len(finished)))
+    # Optional wall-clock cap (hours): the search stops after the trial running at that time,
+    # so a night run ends by morning and still writes the best settings below.
+    timeout = sweep["timeout_hours"] * 3600 if "timeout_hours" in sweep else None
+    study.optimize(objective, n_trials=max(0, sweep["n_trials"] - len(finished)), timeout=timeout)
 
     trials = study.trials_dataframe(attrs=("number", "value", "params", "user_attrs", "state"))
     trials.to_csv(OUT / f"{sweep['study_name']}.csv", index=False)       # readable record of every trial

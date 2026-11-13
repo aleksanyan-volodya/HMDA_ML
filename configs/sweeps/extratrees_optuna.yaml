@@ -1,0 +1,21 @@
+# Joint search over the ExtraTrees settings, on the ranked-numerics ExtraTrees (CV 0.90185,
+# run 20261014T135428Z_542eac1f). Everything not listed stays at the experiment's values.
+experiment: configs/experiments/extratrees_rank.yaml
+study_name: extratrees_optuna
+n_trials: 60           # ~3 to 16 minutes each depending on max_features; capped by timeout_hours anyway
+timeout_hours: 8       # one night; the search stops after the trial running at that time
+seed: 0                # of the sampler: arbitrary, fixed so the search is reproducible
+section: extratrees_params
+# n_estimators stays at 300: more trees only reduce averaging noise (200 and 500 scored the same on a
+# 30k-row sample), so the search would push it to the cap and spend the night on it.
+space:
+  # 307 columns after one-hot, sqrt = 17 (5.5%). More columns per split = stronger but more correlated
+  # trees; the cost grows about linearly (0.35 is ~6x sqrt).
+  max_features:     {type: categorical, choices: [sqrt, 0.1, 0.2, 0.35]}
+  # 1 was best on the 30k-row sample (0.888 vs 0.881 at 5, 0.867 at 20); with bootstrap or more columns
+  # per split the best can move. Log scale: doubling matters about as much anywhere in the range.
+  min_samples_leaf: {type: int, low: 1, high: 30, log: true}
+  # true: each tree sees a bootstrap sample (~63% distinct rows): more diverse trees, faster.
+  bootstrap:        {type: categorical, choices: [false, true]}
+  # Overlaps with min_samples_leaf (both limit tree size), so only three choices. null = no limit.
+  max_depth:        {type: categorical, choices: [null, 30, 20]}

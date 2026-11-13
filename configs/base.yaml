@@ -1,13 +1,12 @@
 # Settings shared by every experiment.
 
-# Seed for the CV split. Every CV score we compare is computed on the split it
-# produces, so we just fix it here (actually changing it is refused unless
-# the run is started with --allow-fold-change bahahhahahahhahahahaha).
-# The value 42 is arbitrary and carries no meaning... Well, maybe it does, but we don't care.
+# Seed for the CV split. Every CV score we compare is computed on the split it produces, so it is
+# fixed here; src/folds.py refuses to rebuild the folds with another value unless run with
+# --allow-fold-change. The value 42 is arbitrary.
 fold_seed: 42
 
-# Number of CV folds. 5 just because it's a commun thing to do and I don't see any reason to use other thing.
-# 10 folds would train on 90% (slightly less pessimistic) at 2x the compute.
+# Number of CV folds. 5 is the usual choice; 10 folds would train on 90% of the rows (slightly less
+# pessimistic) at 2x the compute.
 n_folds: 5
 
 # Seeds for model randomness like bagging, feature subsampling.
@@ -24,6 +23,10 @@ features: []
 # Target encodings (src/target_encoding.py). They use labels, so they are computed inside
 # each CV fold, not with the features above. Each entry: {column, parent, m}. Empty = none.
 target_encode: []
+
+# Fair model (reweighing, Kamiran and Calders 2012): a column whose groups get training weights
+# w(g, y) = P(g) P(y) / P(g, y), computed in each fold's fit part. null = unweighted. lgbm only.
+reweigh: null
 
 # LightGBM: Library defaults are used for anything not listed.
 lgbm_params:
@@ -58,3 +61,82 @@ lgbm_fit:
   early_stopping_rounds: 200   # compute saver for the inner search: stop once the inner mean AUC has
                                # not improved for 200 trees
                                # at lr 0.05 that is a long plateau
+
+# Logistic regression (model: logreg, src/models.py LogRegModel).
+logreg:
+  C_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]   # inverse penalty strength, one value per decade (the
+                                                 # penalty acts multiplicatively). Chosen by inner CV; a best
+                                                 # value at either end stops the run (the grid must be widened)
+  l1_ratio_grid: [0.0]         # share of L1 in the penalty, chosen with C by the inner CV. 0 = pure L2 (lbfgs,
+                               # run 83e8fb23); 1 = pure L1 (lasso); between = elastic net. > 0 uses saga
+  spline_knots: 5             # min, quartiles, max on the rank scale (quartile knots, as in notebook 02)
+  max_iter: 2000               # upper cap for the solver; a fit that has not converged stops the run
+
+# CatBoost (model: catboost, src/models.py CatBoostModel). Starting values, not tuned.
+catboost_params:
+  loss_function: Logloss
+  eval_metric: AUC             # the competition metric, used to pick the tree count
+  learning_rate: 0.05          # same step size as the LightGBM, so tree counts are comparable
+  depth: 6                     # CatBoost grows symmetric trees: depth 6 = 64 leaves, close to LightGBM's 63
+  l2_leaf_reg: 3.0             # library default
+  # The next five were written out on 2026-10-31 so that tuning can change them, read with get_all_params
+  # on a short fit. Four of them are the values CatBoost uses here when left out. max_ctr_complexity is
+  # NOT: its default depends on the number of trees requested (1 at 30 trees, 4 at 999 or more,
+  # checked 2026-11-11), and our runs request 5,000. Runs logged before 2026-10-31 (no value written)
+  # used 4. Kept at 1 so that every run since then still reproduces; catboost_county_ctr4.yaml
+  # reproduces the logged CatBoost of the final blend (d96c8be4).
+  rsm: 1.0                     # share of columns tried at each split
+  one_hot_max_size: 2          # categories with at most this many levels are one-hot, the others target-encoded
+  subsample: 0.8               # share of rows per tree (bootstrap_type MVS, the default on CPU)
+  random_strength: 1.0         # noise added to split scores
+  max_ctr_complexity: 1        # 1 = categories are not combined with each other; NOT the default here (4), see above
+  allow_writing_files: false   # no catboost_info/ folder in the repo
+  logging_level: Silent        # no per-iteration output (the CV prints its own summary)
+catboost_fit:
+  max_rounds: 5000             # upper cap; hitting it stops the run
+  early_stopping_rounds: 200   # same patience as LightGBM
+  single_fit: false            # true = one fit, no refit: for the search only (tune_optuna.py trial_overrides)
+
+# XGBoost (model: xgb, src/models.py XGBModel). Starting values, not tuned.
+xgb_params:
+  objective: "binary:logistic"
+  eval_metric: auc             # the competition metric, used to pick the tree count
+  tree_method: hist            # histogram splits, like LightGBM
+  eta: 0.05                    # learning rate, same as the LightGBM and CatBoost
+  max_depth: 6                 # depth-wise trees, up to 64 leaves (LightGBM: 63 by default)
+  subsample: 0.8               # share of rows per tree
+  colsample_bytree: 0.8        # share of columns per tree
+  min_child_weight: 10         # minimum hessian sum in a leaf: ~ at least 80 rows at p = 0.85
+  lambda: 1.0                  # L2 penalty on leaf values (library default)
+  max_cat_to_onehot: 64        # carried over from the LightGBM screening (+4.5 SE there): categories
+                               # split one level at a time instead of grouped
+xgb_fit:
+  max_rounds: 5000             # upper cap; hitting it stops the run
+  early_stopping_rounds: 200   # same patience as LightGBM and CatBoost
+
+# ExtraTrees (model: extratrees, src/models.py ExtraTreesModel). Nothing searched; checked once on a
+# 30k-row sample of fold 0 (leaf 1 / 5 / 20 x 200 / 500 trees): leaf 1 best, 200 = 500 trees.
+extratrees_params:
+  n_estimators: 300            # more trees only reduce averaging noise; 200 and 500 scored the same
+  min_samples_leaf: 1          # fully grown trees: best on the sample (0.888 vs 0.881 at 5, 0.867 at 20)
+  max_features: sqrt           # random subset of sqrt(columns) per split (library default)
+  bootstrap: false             # library default: every tree sees all rows (true = a bootstrap sample)
+  max_depth: null              # library default: no depth limit, trees grow until min_samples_leaf
+extratrees_fit:
+  rank_numeric: false          # true = numeric columns replaced by their rank in [0, 1] before the forest
+                               # (random thresholds then fall where the rows are, not in skewed tails)
+
+# MLP with categorical embeddings (model: mlp, src/mlp.py). Starting values, not tuned.
+mlp:
+  device: auto                 # auto = the GPU if there is one, else the CPU
+  hidden: [512, 256, 128]      # width of each layer; narrowing funnel, the usual shape for tabular data
+  dropout: 0.2                 # share of units switched off, also on the embeddings: 84k rows overfit fast
+  emb_max_dim: 32              # cap on an embedding's size: uncapped, county alone would get 139 dimensions
+  min_level_rows: 5            # levels with fewer rows share one "rare or unseen" embedding (same floor
+                               # as the 5-row leaves of the tuned LightGBM)
+  numeric_bins: 0              # 0 = one quantile-normal input per numeric column; > 0 = piecewise-linear encoding
+  batch_size: 1024             # ~80 steps per epoch on 84k rows; small enough to be noisy, fast on a GPU
+  lr: 0.001                    # Adam's usual starting value; follows a cosine down to 0 over max_epochs
+  weight_decay: 0.01           # AdamW's default; limits embedding sizes, which dropout alone does not
+  max_epochs: 60               # length of the learning-rate curve: raise it to train longer
+  patience: 15                 # epochs without a better inner AUC before stopping; a quarter of max_epochs

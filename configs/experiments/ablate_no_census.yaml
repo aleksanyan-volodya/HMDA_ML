@@ -1,0 +1,21 @@
+# Ablation A3 (report T9): lgbm_optuna_best.yaml without the 6 tract columns and the MSA median family income; 48 columns.
+model: lgbm
+features:
+- census_zero_to_nan
+- tract_income_zero_to_nan
+- housing_age_negative_to_nan
+- multifamily_levels
+- drop_derived_duplicates
+- dti_order
+- age_order
+- computed_ltv
+- property_to_income
+- drop_county_msa_ids
+- drop_census
+lgbm_params:
+  num_leaves: 113
+  min_data_in_leaf: 5
+  feature_fraction: 0.5748992881034819
+  bagging_fraction: 0.9485362062338821
+  path_smooth: 14.649295564192302
+  max_cat_to_onehot: 64

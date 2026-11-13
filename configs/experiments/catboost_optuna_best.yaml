@@ -1,0 +1,21 @@
+# Best of 80 Optuna trials (configs/sweeps/catboost_optuna.yaml), trial 61, CV AUC 0.91318.
+# Selected on the frozen folds, so optimistic: adopt only after make compare + the fresh-folds check.
+model: catboost
+features:
+- census_zero_to_nan
+- tract_income_zero_to_nan
+- housing_age_negative_to_nan
+- multifamily_levels
+- drop_derived_duplicates
+- dti_order
+- age_order
+- computed_ltv
+- property_to_income
+catboost_params:
+  depth: 9
+  l2_leaf_reg: 24.046247401585987
+  rsm: 0.5300744955706409
+  one_hot_max_size: 64
+  subsample: 0.7142855714166836
+  random_strength: 0.3491869203055185
+  max_ctr_complexity: 2

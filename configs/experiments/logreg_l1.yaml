@@ -1,0 +1,41 @@
+# L1 (lasso) logistic regression: the L2 logistic regression (run 83e8fb23) with a pure L1 penalty, C chosen by the same
+# inner CV. Compared with the L2 run 20261013T154151Z_83e8fb23; the columns it sets to 0 are written
+# to reports/coefs/<run_id>.csv.
+model: logreg
+features:
+  # block 0 cleaning; derived_* duplicates are KEPT (ready-made crossings for a linear model),
+  # DTI and ages stay categorical (one-hot) instead of ranks
+  - census_zero_to_nan
+  - tract_income_zero_to_nan
+  - housing_age_negative_to_nan
+  - multifamily_levels
+  # block 1 row states (rejected for trees, a linear model needs them)
+  - exempt_code_count
+  - entity_applicant
+  - location_unknown
+  - has_coapplicant
+  - income_le_0
+  # block 2 ratios
+  - computed_ltv
+  - property_to_income
+  # block 3 segment and rule flags (rejected for trees)
+  - manufactured_conventional
+  - manufactured_location_unknown
+  - dti_above_program_limit
+  - ltv_at_standard_value
+  # raw county / MSA ids out: county comes back as its smoothed rate below
+  - drop_county_msa_ids
+  # linear only
+  - linear_bands
+  - linear_crossings
+  - linear_extra
+target_encode:
+  - {column: county_code, parent: state_code, m: 20}
+logreg:
+  l1_ratio_grid: [1.0]         # pure L1
+  # Half-decade steps around the peak. Timed on one inner split of fold 0 (2026-10-18): L2 chose C = 0.1
+  # in all 5 folds; the L1 path peaks at 0.1-1 (0.91004 / 0.90995); C <= 0.001 zeroes almost every column
+  # (AUC <= 0.83); C >= 10 costs 250-290 s per saga fit and scores lower. 3.0 is kept as the upper edge
+  # so that a peak at 1.0 is not at the edge of the grid.
+  C_grid: [0.01, 0.03, 0.1, 0.3, 1.0, 3.0]
+  max_iter: 5000               # saga needed up to 1,666 iterations at C = 10; a non-converged fit still stops the run

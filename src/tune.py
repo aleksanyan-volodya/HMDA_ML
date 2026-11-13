@@ -1,5 +1,5 @@
 """Run a one-at-a-time sweep: each run changes ONE setting of an experiment, and is logged
-like any other run (reports/runs.csv, oof/, preds/).
+like any other run (results/runs.csv, oof/, preds/).
 
 Usage:
     uv run python src/tune.py configs/sweeps/<name>.yaml            # run (skips variants already logged)
@@ -7,6 +7,8 @@ Usage:
 
 The summary compares every variant with the sweep's reference run, on the same folds, with
 the paired per-fold difference and the corrected SE of src/compare.py.
+
+Evidence for report section 6.3 (the LightGBM screening), not part of the final model.
 """
 import argparse
 import copy
