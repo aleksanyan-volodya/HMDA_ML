@@ -11,6 +11,10 @@ average, so filling it would hide a real signal. The model handles the NaN.
 
 The rates are learned from labels, so a row must never be encoded with its own label:
 use oof_encode for the rows the rates are learned on, fit + transform for other rows.
+
+Reads and writes nothing (called by src/cv.py in every fold). The final model uses no target
+encoding ("target_encode: []"); configs that do: lgbm_county_rate, lgbm_tract_rate, logreg_l1.
+Report: section 6.1 (T7) and ablation A4.
 """
 import numpy as np
 import pandas as pd

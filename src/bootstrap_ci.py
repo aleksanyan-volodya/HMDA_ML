@@ -1,11 +1,14 @@
-"""95% confidence interval on the pooled out-of-fold AUC of logged runs (TODO 13.4).
+"""95% confidence interval on the pooled out-of-fold AUC of logged runs.
 
 Usage:
     uv run python src/bootstrap_ci.py <run_id> [<run_id> ...]
 
 Stratified bootstrap, as in src/compare.py: each resample keeps the observed numbers of accepted and
 denied rows. It measures the noise from WHICH ROWS were scored (105,000 of them), not the variation from
-retraining the models: the fresh-split checks (reports/tuning/fresh_*.csv) measure that part.
+retraining the models: the fresh-split checks (src/fresh_folds.py) measure that part.
+
+Reads results/runs.csv and oof/; prints the table, writes nothing.
+Evidence for report T1, not part of the final model.
 """
 import argparse
 
@@ -15,7 +18,7 @@ from sklearn.metrics import roc_auc_score
 
 from compare import BOOT_SEED, ROOT, _run, weighted_auc
 
-N_BOOT = 2000   # TODO 13.4 asks for >= 1000; 2000 halves the Monte-Carlo error of the bounds for ~1 more minute
+N_BOOT = 2000   # Monte-Carlo error of the bounds 1/sqrt(2) of that with 1000 resamples, for ~1 more minute
 
 
 def bootstrap_ci(run_id: str) -> dict:

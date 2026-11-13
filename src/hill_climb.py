@@ -1,4 +1,4 @@
-"""Blend weights by hill climbing (TODO 11.4), from logged runs only.
+"""Blend weights by hill climbing, from logged runs only.
 
 Usage:
     uv run python src/hill_climb.py configs/blends/<name>.yaml
@@ -18,6 +18,9 @@ squares, which fits probability error).
 Weights chosen on the folds they are scored on flatter the blend, so the procedure is also run
 NESTED: for each fold k the climb is redone on the other folds only and its blend is scored on k.
 Only the nested score is compared with the reference blend, under the project rule.
+
+Reads results/runs.csv and oof/; prints the result, writes nothing.
+Evidence for report section 6.4 (it found the weights of the final blend), not part of the final model.
 """
 import argparse
 from collections import Counter

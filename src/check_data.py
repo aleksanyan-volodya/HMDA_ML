@@ -1,9 +1,11 @@
-"""
-Check the integrity of the raw data files.
+"""Check the raw data files against the SHA256 sums in configs/data_checksums.txt.
 
-How to use:
+Usage:
     uv run python src/check_data.py           # verify, exit 1 on any mismatch
     uv run python src/check_data.py --write   # record the reference hashes
+
+Reads data/raw/train.csv, data/raw/test.csv, data/sample_submission.csv.
+Pipeline (make check-data). Report: section 10.2.
 """
 import argparse
 import hashlib

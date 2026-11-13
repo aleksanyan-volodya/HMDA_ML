@@ -13,6 +13,9 @@ Usage:
   outer folds only) and trial_overrides (settings applied to the trials only, never to the written
   best experiment). A trial score is then only good for ranking settings: its SE below means nothing,
   and the best settings must go through a full CV.
+
+Writes reports/tuning/<study_name>.db and .csv, and configs/experiments/<study_name>_best.yaml.
+Evidence for report section 6.3, not part of the final model (its output configs are).
 """
 import argparse
 import copy

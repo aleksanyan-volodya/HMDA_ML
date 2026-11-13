@@ -1,4 +1,4 @@
-"""TODO 12.3, proxy check: how well the columns a fair model keeps predict an applicant's race.
+"""Proxy check: how well the columns a fair model keeps predict an applicant's race.
 
 Usage:
     uv run python src/proxy_check.py configs/experiments/ablate_no_demographics.yaml
@@ -7,8 +7,10 @@ For each race group with >= MIN_ROWS rows, a LightGBM (the experiment's settings
 as in src/cv.py) predicts "this applicant is in the group" against everyone else, on the frozen folds, from
 two column sets: all the experiment's columns, then the geography columns only (features.BLOCKS).
 AUC 0.5 = the columns say nothing about that group; the closer to 1, the more a model that never sees race
-can still act on it. Writes reports/tuning/proxy_check.csv, and the out-of-fold scores to
-oof/proxy_race.parquet for the fairness agent.
+can still act on it.
+
+Reads data/raw/ and the folds; writes reports/tuning/proxy_check.csv and the out-of-fold scores
+to oof/proxy_race.parquet. Evidence for report section 9.3, not part of the final model.
 """
 import argparse
 import time

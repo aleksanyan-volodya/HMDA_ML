@@ -1,5 +1,5 @@
-"""Blend logged runs into a new logged run (TODO section 11). No model is retrained: the members'
-saved out-of-fold and test predictions are combined.
+"""Blend logged runs into a new logged run. No model is retrained: the members' saved
+out-of-fold and test predictions are combined with fixed weights.
 
 Usage:
     uv run python src/blend.py configs/blends/<name>.yaml
@@ -13,6 +13,9 @@ Blend file:
     logit: weighted mean of each member's log-odds, mapped back to a probability. A fixed linear
            combination of log-odds keeps SHAP values additive: the blend's SHAP values are the
            weighted sum of the members' SHAP values.
+
+Reads results/runs.csv and the members' oof/ and preds/ files; logs the blend as a new run.
+Pipeline: builds the final model (configs/blends/lgbm_cat_et_xgb.yaml). Report: section 6.4.
 """
 import argparse
 import time

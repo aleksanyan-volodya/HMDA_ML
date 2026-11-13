@@ -53,7 +53,7 @@ class LGBMModel:
     Inner folds = the outer folds present in the fit part, so no new split is introduced."""
 
     def __init__(self, cfg: dict):
-        # Single seed for the baseline; seed averaging is TODO 11.2.
+        # One seed per run: other seeds are separate experiments (lgbm_optuna_best_seed1.yaml to seed4).
         self.params = {**cfg["lgbm_params"], "seed": cfg["model_seeds"][0]}
         self.max_rounds = cfg["lgbm_fit"]["max_rounds"]
         self.patience = cfg["lgbm_fit"]["early_stopping_rounds"]

@@ -3,11 +3,13 @@
     uv run --locked python reports/figs/make_figures.py               # every step
     uv run --locked python reports/figs/make_figures.py slices shap   # some steps
 
-Reads data/raw, oof/<run_id>.parquet, results/runs.csv and reports/submissions.md, writes
-reports/figs/, and pastes each generated table into reports/report.md between its
-"<!-- begin name -->" and "<!-- end name -->" markers. Trains nothing, except the "shap" step:
-one LightGBM fit with the tuned settings on folds 1-4 (about a minute), because importance
+Reads data/raw, oof/<run_id>.parquet of the runs named in RUNS below, results/runs.csv and
+reports/submissions.md; writes reports/figs/, and pastes each generated table into reports/report.md
+between its "<!-- begin name -->" and "<!-- end name -->" markers. Trains nothing, except the "shap"
+step: one LightGBM fit with the tuned settings on folds 1-4 (about a minute), because importance
 needs a model and only predictions are logged.
+
+Evidence: figures F1 to F9 and tables T2, T3, T5, T6, T10, T11 of the report, not part of the final model.
 """
 import json
 import re

@@ -1,7 +1,14 @@
-"""Cross-validation runner: one experiment config in, per-fold AUC + OOF (out of fold) and test predictions out.
+"""Cross-validation of one experiment: per-fold AUC, out-of-fold (OOF) and test predictions.
 
 Usage:
     uv run python src/cv.py configs/experiments/lgbm_optuna_best.yaml
+
+For each of the 5 frozen folds: target encodings are fitted on the other 4 folds, the model of
+src/models.py is fitted on them, and the held-out fold is predicted. The test prediction is the
+mean of the 5 fold models (no refit on all rows).
+
+Reads data/raw/, data/processed/folds.parquet and the config; logs the run (results/runs.csv,
+oof/, preds/; reports/coefs/ for linear models). Pipeline. Report: sections 5 and 10.2.
 """
 import argparse
 import time
@@ -72,7 +79,7 @@ def run_cv(cfg: dict, folds: pd.DataFrame | None = None, coefs: list | None = No
         if coefs is not None and hasattr(model, "coef_table"):
             coefs.append(model.coef_table().assign(fold=k))
         print(f"fold {k}  AUC {fold_auc[-1]:.6f}{extra}  ({time.perf_counter() - t_fold:.0f}s)", flush=True)
-        # Test prediction = average of the k fold models, càd exactly the models whose
+        # Test prediction = average of the k fold models, i.e. exactly the models whose
         # scores we measured (a refit on all of train would be an unvalidated model).
         if only_folds is None:
             test_pred += model.predict(test_k[cols]) / cfg["n_folds"]
@@ -95,7 +102,7 @@ if __name__ == "__main__":
     wall = time.perf_counter() - t0
     auc = np.array(fold_auc)
     # SE = std / sqrt(k). Known to understate uncertainty (folds share training rows);
-    # the corrected version comes with TODO 5.3.
+    # src/compare.py gives the corrected SE for paired comparisons.
     print("fold AUC:", np.round(auc, 6).tolist())
     print(f"mean {auc.mean():.6f}  naive SE (lower bound) {auc.std(ddof=1) / np.sqrt(len(auc)):.6f}")
     print(f"oof rows {len(oof_df)}  test rows {len(test_df)}  test pred range "

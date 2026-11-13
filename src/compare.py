@@ -4,7 +4,12 @@ Usage:
     uv run python src/compare.py <baseline_run_id> <candidate_run_id>
 
 Both runs must use the same folds (same folds_hash), so every comparison is paired:
-the two models are scored on exactly the same rows.
+the two models are scored on exactly the same rows. Prints the per-fold differences, the naive and
+corrected SE, a paired bootstrap CI and the verdict of the decision rule.
+
+Reads results/runs.csv and oof/; writes nothing.
+Evidence: the rule of report section 5.3, behind every adopt / reject in sections 6, 7 and 9.
+Not part of the final model.
 """
 import argparse
 import json
@@ -101,7 +106,7 @@ if __name__ == "__main__":
           f"   -> {ratio} corrected SE")
     print(f"pooled OOF diff {b['pooled_diff']:+.5f}   paired bootstrap 95% CI "
           f"[{b['ci_low']:+.5f}, {b['ci_high']:+.5f}]")
-    # Decision rule (TODO 5.4): adopt iff the mean per-fold gain >= 2 x the corrected SE
+    # Decision rule (report section 5.3): adopt iff the mean per-fold gain >= 2 x the corrected SE
     # (and is positive: with identical runs both sides are 0).
     adopt = f["mean_diff"] > 0 and f["mean_diff"] >= 2 * f["corrected_se"]
     print(f"verdict: {'ADOPT' if adopt else 'REJECT'}  (rule: mean gain >= 2 x corrected SE)")

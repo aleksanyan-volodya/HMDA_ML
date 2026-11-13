@@ -1,4 +1,4 @@
-"""Weighted blend (TODO 11.8): weights fitted by non-negative least squares on the members' log-odds.
+"""Weighted blend: weights fitted by non-negative least squares on the members' log-odds.
 
 Usage:
     uv run python src/weight_blend.py configs/blends/<selection>.yaml
@@ -9,6 +9,9 @@ and correlated members cannot get large cancelling weights fitted to noise.
 
 Honest estimate (nested): for each fold k, the weights are fitted on the other folds only and the
 blend is scored on fold k. Then the weights fitted on all folds are written to a blend file.
+
+Reads results/runs.csv and oof/; writes configs/blends/<selection>_weighted.yaml.
+Evidence for report section 6.4, not part of the final model.
 """
 import argparse
 from pathlib import Path

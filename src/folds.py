@@ -1,10 +1,13 @@
-"""Frozen CV folds: built once into data/processed/folds.parquet, and is loaded everywhere.
+"""Frozen CV folds: built once into data/processed/folds.parquet, then loaded everywhere.
 
-The seed and fold count are stored inside the parquet file. 
+The seed and fold count are stored inside the parquet file, and loading refuses a file built with
+other settings than configs/base.yaml.
 
 Usage:
     uv run python src/folds.py                       # build (refuses to overwrite a different split)
     uv run python src/folds.py --allow-fold-change   # deliberately rebuild with new settings
+
+Reads data/raw/train.csv; writes data/processed/folds.parquet. Pipeline. Report: section 5.2.
 """
 import argparse
 import hashlib

@@ -1,11 +1,51 @@
-"""Feature pipeline: named transforms, applied identically to train and test.
+"""Feature transforms: named, row-wise, applied identically to train and test.
 
-An experiment lists the transforms it uses ("features: [...]" in its config), so a block of
-reports/feature_plan.md can be tested as a whole and, if it fails, split into its items with
-no code change. Numbers in brackets are the plan's rows.
+An experiment lists the transforms it uses ("features: [...]" in its config); build() applies them
+in that order. A block of reports/feature_plan.md can so be tested as a whole and, if it fails,
+split into its items with no code change. Numbers in brackets are the plan's rows.
 
-Every transform here is row-wise and uses no labels, so applying it before the CV split
-leaks nothing. (Target encoding, plan block 4, will need fold-aware fitting instead.)
+Every transform here is row-wise and uses no labels, so applying it before the CV split leaks
+nothing. Encodings that use labels (county and tract accept rates) are fitted inside each fold
+by src/target_encoding.py instead.
+
+Reads and writes nothing (called by src/cv.py). Pipeline. Report: sections 3 and 6.1.
+
+Index: transform, what it does, configs that use it. "Final" = the 4 members of the final blend.
+
+  Block 0, cleaning (adopted; every config except lgbm_baseline and ablate_raw)
+    census_zero_to_nan            census block of location-unknown rows: 0 -> NaN
+    tract_income_zero_to_nan      tract income 0% of its area's -> NaN
+    housing_age_negative_to_nan   median housing age < 0 -> NaN
+    multifamily_levels            missing total_units -> 5 ("5 or more"), missing loan limit -> own level
+    drop_derived_duplicates       drops 2 columns that are exact functions of others (not the logregs)
+    dti_order, age_order          DTI and age bands -> ranks (not the logistic regressions)
+  Block 1, row-state flags (rejected for trees, T7; lgbm_block1 and the logistic regressions)
+    exempt_code_count, entity_applicant, location_unknown, has_coapplicant, income_le_0
+  Block 2, ratios (adopted, T7; final)
+    computed_ltv                  loan / property value, and its gap to the reported combined LTV
+    property_to_income            property value in years of income
+  Block 3, segment flags (rejected, T7; lgbm_block3 and the logistic regressions)
+    manufactured_conventional, manufactured_location_unknown, dti_above_program_limit,
+    ltv_at_standard_value
+  Error analysis (error_hypotheses.yaml, report section 8.3)
+    error_hypotheses              3 flags suggested by the worst errors (rejected)
+  Linear model only (logreg_l1, ablate_logreg_no_te)
+    linear_bands                  DTI, loan term and LTV as bands
+    linear_crossings              the 4 strongest pairs as crossed levels (needs linear_bands first)
+    linear_extra                  exempt-record flag and loan / income
+  Census tract key (lgbm_tract_rate, T7)
+    tract_key                     tract id rebuilt from county + census fields, for its target encoding only
+  Column lists: remove or keep columns, no computation (see TRANSFORMS and BLOCKS below)
+    drop_county_msa_ids           raw county and MSA ids out (adopted, T7; final except CatBoost)
+    drop_process_artefacts        the 2 confirmed leaks out (fair_clean, fair_strict, fair_unaware,
+                                  fair_reweigh, fair_reweigh_no_geo; report sections 4 and 9)
+    drop_partial_leaks            also the partial leaks (fair_strict, ablation A10)
+    drop_demographics             the 17 demographic fields out (ablation A1, race-blind fair models)
+    drop_geography                the geography block out (fair_reweigh_no_geo, report section 9.4)
+    drop_process_fields           ablation A2
+    drop_census                   ablation A3
+    only_finance, only_geography, only_process, only_demographics
+                                  one block of columns only (expert_*.yaml; sections 6.2 and 9.3)
 """
 import numpy as np
 import pandas as pd
@@ -17,6 +57,8 @@ TRACT = ["tract_population", "tract_minority_population_percent", "tract_to_msa_
 DTI_ORDER = ["<20%", "20%-<30%", "30%-<36%", *[str(i) for i in range(36, 50)], "50%-60%", ">60%"]
 AGE_ORDER = ["<25", "25-34", "35-44", "45-54", "55-64", "65-74", ">74"]
 
+
+# ---------------------------------------------------------------- block 0: cleaning
 
 def census_zero_to_nan(df: pd.DataFrame) -> pd.DataFrame:
     """[0.1] On location-unknown rows the whole census block is 0: a missing code, not a count."""
@@ -75,6 +117,8 @@ def age_order(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# ---------------------------------------------------------------- block 1: row-state flags
+
 def exempt_code_count(df: pd.DataFrame) -> pd.DataFrame:
     """[1.1] 1111 is one row-level fact (2,942 train rows carry it in all 14 coded columns), not
     14 separate ones. The count per row states it once. The yes/no flag is count >= 1, one split
@@ -85,8 +129,8 @@ def exempt_code_count(df: pd.DataFrame) -> pd.DataFrame:
 
 def entity_applicant(df: pd.DataFrame) -> pd.DataFrame:
     """[1.2] applicant_sex = 4 ("not applicable") = the applicant is not a natural person: 2,910
-    rows with no person-level fields. Trees also see it in applicant_sex, but that column is a
-    protected attribute and leaves the fair model; this flag stays."""
+    rows with no person-level fields. Trees also see it in applicant_sex; the flag states it
+    without a protected attribute."""
     df["entity_applicant"] = (df.applicant_sex.astype("string") == "4").astype("int64")
     return df
 
@@ -100,8 +144,7 @@ def location_unknown(df: pd.DataFrame) -> pd.DataFrame:
 
 def has_coapplicant(df: pd.DataFrame) -> pd.DataFrame:
     """[1.4] co-applicant_sex = 5 is "no co-applicant", the same ~57.5k rows in every co-applicant
-    column. The flag keeps that signal when the fair model drops the demographic columns
-    (its own fairness status, as a proxy for joint / married applications, is checked in 12)."""
+    column. The flag states it once, without a demographic column."""
     df["has_coapplicant"] = (df["co-applicant_sex"].astype("string") != "5").astype("int64")
     return df
 
@@ -112,6 +155,8 @@ def income_le_0(df: pd.DataFrame) -> pd.DataFrame:
     df["income_le_0"] = (df.income <= 0).astype("int64")
     return df
 
+
+# ---------------------------------------------------------------- block 2: ratios
 
 def computed_ltv(df: pd.DataFrame) -> pd.DataFrame:
     """[2.1, 2.2] The reported LTV is HMDA's combined LTV: all debt secured by the property / its
@@ -130,6 +175,8 @@ def property_to_income(df: pd.DataFrame) -> pd.DataFrame:
     df["property_to_income"] = df.property_value / income_dollars
     return df
 
+
+# ---------------------------------------------------------------- block 3: segment flags
 
 def _is(df: pd.DataFrame, col: str, *codes: str) -> pd.Series:
     return df[col].astype("string").isin(list(codes)).fillna(False).astype(bool)
@@ -166,6 +213,8 @@ def ltv_at_standard_value(df: pd.DataFrame) -> pd.DataFrame:
     df["ltv_at_standard_value"] = df.loan_to_value_ratio.isin([80, 90, 95, 97, 100]).astype("int64")
     return df
 
+
+# ---------------------------------------------------------------- error analysis (report section 8.3)
 
 def error_hypotheses(df: pd.DataFrame) -> pd.DataFrame:
     """[9.2] H1-H3 from the worst errors of the final blend (report 8.3, notebook 03), tested as one
@@ -233,6 +282,17 @@ def linear_crossings(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def linear_extra(df: pd.DataFrame) -> pd.DataFrame:
+    """[1.1 flag, 2.4] For the linear model only: the exempt-record flag (a tree reads it from the
+    count) and loan / income (+0.011 AUC for the linear model in notebook 02, 4b; fails for trees)."""
+    df["is_exempt_record"] = (df[CODED].astype("string") == "1111").any(axis=1).astype("int64")
+    income_dollars = (df.income * 1000).where(df.income > 0)
+    df["loan_to_income"] = df.loan_amount / income_dollars
+    return df
+
+
+# ---------------------------------------------------------------- census tract key (target encoding input)
+
 def tract_key(df: pd.DataFrame) -> pd.DataFrame:
     """Census tract id rebuilt from the county + the 6 tract fields (no tract id in the data): 50,587
     distinct keys in train, 76% of train rows share theirs with another row, 76% of test rows have
@@ -247,14 +307,7 @@ def tract_key(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def linear_extra(df: pd.DataFrame) -> pd.DataFrame:
-    """[1.1 flag, 2.4] For the linear model only: the exempt-record flag (a tree reads it from the
-    count) and loan / income (+0.011 AUC for the linear model in notebook 02, 4b; fails for trees)."""
-    df["is_exempt_record"] = (df[CODED].astype("string") == "1111").any(axis=1).astype("int64")
-    income_dollars = (df.income * 1000).where(df.income > 0)
-    df["loan_to_income"] = df.loan_amount / income_dollars
-    return df
-
+# ---------------------------------------------------------------- registry: name -> transform, columns removed, columns added
 
 # name -> (transform or None, columns it removes from the feature list, columns it adds)
 TRANSFORMS = {
@@ -291,7 +344,7 @@ TRANSFORMS = {
     "tract_key": (tract_key, [], []),
     # confirmed leaks, each value is reported because of the decision (reports/leakage.md)
     "drop_process_artefacts": (None, ["preapproval", "initially_payable_to_institution"], []),
-    # strict list for the 12.9 sensitivity check only (reports/leakage.md); must come LAST in a config
+    # strict list (fair_strict.yaml, ablation A10; reports/leakage.md); must come LAST in a config
     "drop_partial_leaks": (None, ["aus-1", "loan_to_value_ratio", "property_value", "debt_to_income_ratio",
                                   "dti_order", "computed_ltv", "ltv_gap", "property_to_income",
                                   "tract_population", "tract_minority_population_percent",
@@ -302,7 +355,7 @@ TRANSFORMS = {
 }
 
 
-# Expert models (TODO 7.14-7.16, 7.23, [N11]): the 55 adopted columns split by meaning, each block a
+# Expert models (expert_*.yaml, report section 6.2): the 55 adopted columns split by meaning, each block a
 # model of its own. A restricted model is worse alone but its errors differ, which is what a blend needs.
 # only_<block> keeps one block: it must come LAST in a config, after every transform that adds columns.
 BLOCKS = {
@@ -315,7 +368,7 @@ BLOCKS = {
                 "balloon_payment", "other_nonamortizing_features", "construction_method", "occupancy_type",
                 "manufactured_home_secured_property_type", "manufactured_home_land_property_interest",
                 "submission_of_application", "initially_payable_to_institution", "aus-1", "total_units"],
-    # 7.16: a fairness result first ([N12]), not a blend candidate unless decided in writing in 12.8
+    # the demographics-only model is a fairness result (report section 9.3), never used in a blend
     "demographics": ["applicant_ethnicity-1", "co-applicant_ethnicity-1", "applicant_ethnicity_observed",
                      "co-applicant_ethnicity_observed", "applicant_race-1", "co-applicant_race-1",
                      "applicant_race_observed", "co-applicant_race_observed", "applicant_sex", "co-applicant_sex",

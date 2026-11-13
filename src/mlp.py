@@ -1,9 +1,9 @@
-"""MLP with categorical embeddings (TODO 7.24), a candidate for the blend.
+"""MLP with categorical embeddings, run by src/cv.py for configs with "model: mlp".
 
 Self-contained on purpose: numpy, pandas, scikit-learn and torch only, no project import, so this
 file can be copied as it is into a notebook. It uses the GPU when there is one.
 
-Same interface as the models of src/cv.py:
+Same interface as the models of src/models.py:
     model = MLPModel(cfg).fit(X, y, fold)     cfg: {"mlp": {...}, "model_seeds": [seed, ...]}
     model.predict(X)                          X: DataFrame; category dtype = embedded, the rest = numeric
 fold holds the inner fold number of each row of X: the scored outer fold must not be in X.
@@ -11,6 +11,8 @@ fold holds the inner fold number of each row of X: the scored outer fold must no
 Same nested scheme as the tree count of the boosted models: the number of epochs is chosen on an
 inner fold, never on the scored fold. One inner fold only (not all of them): a net costs much more
 than a booster. The net is then refitted on all of X for that number of epochs.
+
+Reads and writes nothing. Evidence for report section 6.2, not part of the final model.
 """
 import time
 

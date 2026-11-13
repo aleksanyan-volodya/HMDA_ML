@@ -7,6 +7,8 @@ Usage:
 
 The summary compares every variant with the sweep's reference run, on the same folds, with
 the paired per-fold difference and the corrected SE of src/compare.py.
+
+Evidence for report section 6.3 (the LightGBM screening), not part of the final model.
 """
 import argparse
 import copy

@@ -1,4 +1,4 @@
-"""Choose the final blend by forward selection (TODO 11.4 / 11.10), from logged runs only.
+"""Choose blend members by forward selection, from logged runs only.
 
 Usage:
     uv run python src/select_blend.py configs/blends/<selection>.yaml
@@ -15,6 +15,9 @@ no addition passes.
 Choosing members on the same folds flatters the result, so the selection is also run NESTED:
 for each fold k, the whole selection is redone on the other folds only, and the blend it picks
 is scored on fold k. The mean of those 5 scores is the honest estimate of the procedure.
+
+Reads results/runs.csv and oof/; writes configs/blends/<selection>_result.yaml.
+Evidence for report section 6.4, not part of the final model.
 """
 import argparse
 from pathlib import Path

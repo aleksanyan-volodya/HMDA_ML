@@ -1,4 +1,4 @@
-"""Re-check a selected model on fresh fold splits (TODO 5.5).
+"""Re-check a selected model on fresh fold splits.
 
 A model picked among many runs on the frozen folds is flattered by that choice. Here the
 reference and the candidate are scored again on fold splits that were never used for any
@@ -6,6 +6,7 @@ choice, and compared fold by fold.
 
 Usage:
     uv run python src/fresh_folds.py <reference_experiment.yaml> <candidate_experiment.yaml>
+    uv run python src/fresh_folds.py <reference_experiment.yaml> --blend-with <experiment.yaml>
     uv run python src/fresh_folds.py --blends configs/blends/<name>.yaml
 
 Blends file (weights in log-odds, normalised):
@@ -15,7 +16,9 @@ Blends file (weights in log-odds, normalised):
 With --blends the out-of-fold predictions of each member are saved in oof/fresh/, one file per experiment,
 config and split: a run that stops resumes there, and a later blend only runs what changed.
 
-Nothing is logged in results/runs.csv (other folds), and data/processed/folds.parquet is untouched.
+Reads data/raw/ and the configs; writes reports/tuning/fresh_*.csv. Nothing is logged in
+results/runs.csv (other folds), and data/processed/folds.parquet is untouched.
+Evidence for report sections 5.3, 6.3, T1 and ablation A6b, not part of the final model.
 """
 import argparse
 from pathlib import Path
@@ -32,7 +35,7 @@ from cv import run_cv
 from data import TARGET, load
 
 # Seeds of the fresh splits: arbitrary, only required to differ from fold_seed (42) and from
-# each other. 3 repeats x 5 folds = 15 paired comparisons (the "3 x 5" of TODO 5.5).
+# each other. 3 repeats x 5 folds = 15 paired comparisons.
 FRESH_SEEDS = [1, 2, 3]
 ROOT = Path(__file__).resolve().parents[1]
 

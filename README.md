@@ -80,7 +80,7 @@ the report quotes, but is not part of the final model.
 | src/check_data.py | pipeline: SHA256 check of the raw files (section 10.2) |
 | src/data.py | pipeline: typed loading of the CSVs (section 3) |
 | src/features.py | pipeline: the named feature transforms and column lists (sections 3, 6.1) |
-| src/target_encoding.py | pipeline: out-of-fold county and tract accept rates (section 6.1, ablation A4) |
+| src/target_encoding.py | pipeline code path: out-of-fold county and tract accept rates (section 6.1, ablation A4); the final model uses none |
 | src/folds.py | pipeline: the frozen folds (section 5.2) |
 | src/cv.py | pipeline: the cross-validation loop, logging of the run (section 5) |
 | src/models.py | pipeline: the models, one class per "model:" value (section 6.2) |

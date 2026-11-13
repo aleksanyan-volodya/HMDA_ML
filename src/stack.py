@@ -1,4 +1,4 @@
-"""Stacking: a logistic regression on the models' out-of-fold predictions (TODO 11.5, 11.9).
+"""Stacking: a logistic regression on the models' out-of-fold predictions.
 
 Usage:
     uv run python src/stack.py configs/blends/<name>.yaml
@@ -10,8 +10,11 @@ Stack file:
 
 For each fold k the meta-model is fitted on the other folds' rows and scores fold k, so the quoted AUC
 never uses a label of the fold it is scored on. Slightly optimistic all the same: the inputs of those
-rows come from models that trained on fold k (TODO 11.10 is the full nested evaluation).
-The three kinds of input of TODO 11.9 are compared; the coefficients are printed for the log-odds one.
+rows come from models that trained on fold k. Three kinds of input are compared (log-odds, ranks,
+probabilities); the coefficients are printed for the log-odds one.
+
+Reads results/runs.csv and oof/; prints the result, writes nothing.
+Evidence for report section 6.4, not part of the final model.
 """
 import argparse
 from pathlib import Path

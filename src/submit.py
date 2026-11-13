@@ -1,7 +1,10 @@
-"""Turn a logged run's test predictions into a validated Kaggle submission
+"""Turn a logged run's test predictions into a validated Kaggle submission.
 
 Usage:
     uv run python src/submit.py <run_id>    # writes submissions/<run_id>.csv
+
+Reads preds/<run_id>.parquet and data/sample_submission.csv; the file is checked against the
+sample (columns, ids, order, values in [0, 1]) before and after writing. Pipeline.
 """
 import argparse
 from pathlib import Path

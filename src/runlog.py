@@ -1,8 +1,9 @@
-"""Add records of every CV run.
-
-One row per run in results/runs.csv, plus the run's predictions:
+"""Logging of every run: one row in results/runs.csv, plus the run's predictions:
     oof/<run_id>.parquet    id, fold, accepted, pred   (105,000 rows)
     preds/<run_id>.parquet  id, pred                   (45,000 rows)
+
+The row holds the full merged config, the commit, whether the code had uncommitted changes, the
+fold hash, the per-fold AUCs and the library versions. Pipeline.
 """
 import hashlib
 import json

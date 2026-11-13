@@ -1,5 +1,8 @@
-""" base.yaml is... the base... and it lists every allowed key with its default. An experiment
-file may only override keys that already exist there.
+"""Experiment configs: configs/base.yaml lists every allowed key with its default, and an
+experiment file may only override keys that already exist there (an unknown key is an error, so a
+typo cannot become a silent new setting).
+
+Reads configs/base.yaml and the experiment file. Pipeline.
 """
 import hashlib
 import json
