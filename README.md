@@ -160,3 +160,4 @@ Everything below is generated, not tracked, and rebuilt by a command:
   (make fresh, fresh-blend, fresh-blends), proxy check (src/proxy_check.py).
 - reports/coefs/: coefficients of the logistic regression fold models (make cv on a logreg config).
 - reports/figs/: figures and generated tables (make figures).
+- results/commit_map.txt: commit ids changed on 2026-11-14 when the data files were removed from the history; the commit ids in results/runs.csv and reports/report.md are the old ones (left column), the right column gives the current one.
